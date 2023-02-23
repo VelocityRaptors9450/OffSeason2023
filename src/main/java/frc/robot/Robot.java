@@ -7,6 +7,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -27,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private TalonFX motor1 = new TalonFX(1);
+  private CANSparkMax motor2 = new CANSparkMax(27, MotorType.kBrushless);
   private DoubleLogEntry telemetry;
   private RobotContainer m_robotContainer;
   private Timer time = new Timer();
@@ -39,7 +43,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    motor1.set(ControlMode.PercentOutput, 0);    
+    motor1.set(ControlMode.PercentOutput, 0); 
   }
 
   /**
@@ -95,6 +99,7 @@ public class Robot extends TimedRobot {
     }
     time.restart();
     motor1.setSelectedSensorPosition(0);
+    motor2.getEncoder().setPosition(0);
    // DataLogManager.start();
     //DataLog log = DataLogManager.getLog();
     //telemetry = new DoubleLogEntry(log, "/my/double");
@@ -114,12 +119,18 @@ public class Robot extends TimedRobot {
     // motor1.set(ControlMode.PercentOutput, 0);
 
     //2048 tics / revolution
+    /*
      while(motor1.getSelectedSensorPosition() < 5000){
       motor1.set(ControlMode.PercentOutput, 0.2);
       telemetry.append(motor1.getSelectedSensorPosition());
     }
     motor1.set(ControlMode.PercentOutput, 0);
-    
+    */
+    while(motor2.getEncoder().getPosition() < 42){
+      motor2.set(0.2);
+      System.out.println(motor2.getEncoder().getPosition());
+    }
+    motor2.set(0);
     /*
      
     while(angle.getPosition() < 180){

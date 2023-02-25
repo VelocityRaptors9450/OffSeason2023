@@ -4,8 +4,18 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.commands.ExampleCommand;
 
 public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -22,6 +32,7 @@ public class ExampleSubsystem extends SubsystemBase {
     return runOnce(
         () -> {
           /* one-time action goes here */
+
         });
   }
 
@@ -34,10 +45,46 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-
+  private CANSparkMax motor2 = new CANSparkMax(2, MotorType.kBrushless);
+  Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
+  private double startPos = motor2.getEncoder().getPosition();
+  public static Timer t = new Timer();
+  
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
+    /* 
+    if(42-motor2.getEncoder().getPosition() > 0 ){
+        motor2.set(0.2);
+    }else{
+      motor2.set(0);
+    }
+    */
+    
+    //System.out.println(motor2.get());
+    
+    if(testingSolenoid_PH.get() == false){
+      if(t.get() >= 1.0){
+        testingSolenoid_PH.set(true);
+        t.restart();
+      }
+    }else{
+      if(t.get() >= 1.0){
+        testingSolenoid_PH.set(false);
+        t.restart();
+      }
+    }
+  //  testingSolenoid_PH.toggle();
+    // try {
+    //   wait(5000);
+    // } catch (Exception E) {
+    //   //System.out.print(E);
+    // }
+    
+    // testingSolenoid_PH.toggle();
+
+
   }
 
   @Override

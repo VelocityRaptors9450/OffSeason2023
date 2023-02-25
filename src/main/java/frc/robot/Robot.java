@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ExampleSubsystem;
 
 
 
@@ -29,11 +30,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private TalonFX motor1 = new TalonFX(1);
-  private CANSparkMax motor2 = new CANSparkMax(27, MotorType.kBrushless);
-  private DoubleLogEntry telemetry;
+  //private TalonFX motor1 = new TalonFX(1);
+  //private DoubleLogEntry telemetry;
   private RobotContainer m_robotContainer;
-  private Timer time = new Timer();
+ // private Timer time = new Timer();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    motor1.set(ControlMode.PercentOutput, 0); 
+    //motor1.set(ControlMode.PercentOutput, 0); 
   }
 
   /**
@@ -97,9 +97,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    time.restart();
-    motor1.setSelectedSensorPosition(0);
-    motor2.getEncoder().setPosition(0);
+    ExampleSubsystem.t.restart();
+    
+   // time.restart();
+    //motor1.setSelectedSensorPosition(0);
    // DataLogManager.start();
     //DataLog log = DataLogManager.getLog();
     //telemetry = new DoubleLogEntry(log, "/my/double");
@@ -126,11 +127,13 @@ public class Robot extends TimedRobot {
     }
     motor1.set(ControlMode.PercentOutput, 0);
     */
+    /* 
     while(motor2.getEncoder().getPosition() < 42){
       motor2.set(0.2);
       System.out.println(motor2.getEncoder().getPosition());
     }
     motor2.set(0);
+    */
     /*
      
     while(angle.getPosition() < 180){

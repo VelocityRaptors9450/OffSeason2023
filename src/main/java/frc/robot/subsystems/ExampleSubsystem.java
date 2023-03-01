@@ -55,7 +55,7 @@ public class ExampleSubsystem extends SubsystemBase {
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
   Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
 
-  Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  Compressor pcmCompressor = new Compressor(7, PneumaticsModuleType.CTREPCM);
   
 
   private double startPos = motor6.getEncoder().getPosition();
@@ -95,9 +95,9 @@ public class ExampleSubsystem extends SubsystemBase {
 
     // if compressor disabled, then pcmCompressor.enabled();
     // max pressure 60, min pressure 50
-    
-    /* 
     System.out.println(pcmCompressor.getPressure());
+    /* 
+    
     if (pcmCompressor.getPressure() <= 50) {
       refillSolenoid.set(true);
     } else {

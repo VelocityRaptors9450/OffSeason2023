@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -48,7 +50,13 @@ public class ExampleSubsystem extends SubsystemBase {
     return false;
   }
   private CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
+  // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
+  Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
+
+  Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  
+
   private double startPos = motor6.getEncoder().getPosition();
   public static Timer t = new Timer();
 
@@ -56,18 +64,21 @@ public class ExampleSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
-
-    if(42-motor6.getEncoder().getPosition() > 0){
-        motor6.set(0.3);  
-    }else{
-      motor6.set(0);
-    }
+    // motorRunning();
     
     
 
     
     //System.out.println(motor2.get());
-    /* 
+    
+    pneumatics();
+
+
+
+  }
+
+  public void pneumatics() {
+    // 
     if(testingSolenoid_PH.get() == false){
       if(t.get() >= 1.0){
         testingSolenoid_PH.set(true);
@@ -79,12 +90,28 @@ public class ExampleSubsystem extends SubsystemBase {
         t.restart();
       }
     }
-    */
 
+    // if compressor disabled, then pcmCompressor.enabled();
+    // max pressure 60, min pressure 50
+    if (pcmCompressor.getPressure() <= 50) {
+      refillSolenoid.set(true);
+    } else {
+      refillSolenoid.set(false);
 
+    }
 
+    
+    
+    
   }
 
+  public void motorRunning() {
+    if(42-motor6.getEncoder().getPosition() > 0){
+        motor6.set(0.3);  
+    }else{
+      motor6.set(0);
+    }
+  }
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation

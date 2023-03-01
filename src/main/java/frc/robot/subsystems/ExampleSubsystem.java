@@ -19,7 +19,9 @@ import frc.robot.commands.ExampleCommand;
 
 public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+  public ExampleSubsystem() {
+    motor6.getEncoder().setPosition(0);
+  }
 
   /**
    * Example command factory method.
@@ -45,25 +47,27 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  private CANSparkMax motor2 = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
-  private double startPos = motor2.getEncoder().getPosition();
+  private double startPos = motor6.getEncoder().getPosition();
   public static Timer t = new Timer();
-  
+
   @Override
   public void periodic() {
 
     // This method will be called once per scheduler run
-    /* 
-    if(42-motor2.getEncoder().getPosition() > 0 ){
-        motor2.set(0.2);
+
+    if(42-motor6.getEncoder().getPosition() > 0){
+        motor6.set(0.3);  
     }else{
-      motor2.set(0);
+      motor6.set(0);
     }
-    */
+    
+    
+
     
     //System.out.println(motor2.get());
-    
+    /* 
     if(testingSolenoid_PH.get() == false){
       if(t.get() >= 1.0){
         testingSolenoid_PH.set(true);
@@ -75,14 +79,8 @@ public class ExampleSubsystem extends SubsystemBase {
         t.restart();
       }
     }
-  //  testingSolenoid_PH.toggle();
-    // try {
-    //   wait(5000);
-    // } catch (Exception E) {
-    //   //System.out.print(E);
-    // }
-    
-    // testingSolenoid_PH.toggle();
+    */
+
 
 
   }

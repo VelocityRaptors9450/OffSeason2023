@@ -23,6 +23,7 @@ public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
     motor6.getEncoder().setPosition(0);
+    refillSolenoid.set(false);
   }
 
   /**
@@ -93,6 +94,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
     // if compressor disabled, then pcmCompressor.enabled();
     // max pressure 60, min pressure 50
+    System.out.println(pcmCompressor.getPressure());
     if (pcmCompressor.getPressure() <= 50) {
       refillSolenoid.set(true);
     } else {

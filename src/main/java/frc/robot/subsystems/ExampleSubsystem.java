@@ -59,6 +59,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
   private double startPos = motor6.getEncoder().getPosition();
   public static Timer t = new Timer();
+  public static Timer l = new Timer();
 
   @Override
   public void periodic() {
@@ -93,13 +94,27 @@ public class ExampleSubsystem extends SubsystemBase {
 
     // if compressor disabled, then pcmCompressor.enabled();
     // max pressure 60, min pressure 50
+    
+    /* 
     if (pcmCompressor.getPressure() <= 50) {
       refillSolenoid.set(true);
     } else {
       refillSolenoid.set(false);
 
     }
+*/
 
+    if(refillSolenoid.get() == false){
+      if(l.get() >= 5.0){
+        refillSolenoid.set(true);
+        l.restart();
+      }
+    }else{
+      if(l.get() >= 1.0){
+        refillSolenoid.set(false);
+        l.restart();
+      }
+    }
     
     
     

@@ -50,7 +50,7 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  private CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
+  public static CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
   // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
   Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
@@ -66,7 +66,7 @@ public class ExampleSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
-    // motorRunning();
+     //motorRunning();
     
     
 

@@ -81,7 +81,7 @@ public class ExampleSubsystem extends SubsystemBase {
     
     //System.out.println(motor2.get());
     
-    //pneumatics();
+    pneumatics();
 
 
 

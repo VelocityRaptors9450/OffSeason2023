@@ -61,19 +61,27 @@ public class ExampleSubsystem extends SubsystemBase {
   private double startPos = motor6.getEncoder().getPosition();
   public static Timer t = new Timer();
   public static Timer l = new Timer();
+  public static Timer g = new Timer();
 
+
+  private static double error = 0.0;
+  private static double priorError = 0.0;
+  private static double proportion = 0.05;
+  private static double derivative = 0.0;
+  private static double pdPower = 0.0;
+  private static double timeChange = 0.0;
   @Override
   public void periodic() {
 
     // This method will be called once per scheduler run
-    // motorRunning();
+    motorRunning();
     
     
 
     
     //System.out.println(motor2.get());
     
-    pneumatics();
+    //pneumatics();
 
 
 
@@ -123,11 +131,28 @@ public class ExampleSubsystem extends SubsystemBase {
   }
 
   public void motorRunning() {
-    if(42-motor6.getEncoder().getPosition() > 0){
-        motor6.set(0.3);  
-    }else{
+    System.out.println(motor6.getEncoder().getPosition());
+
+    if(20-motor6.getEncoder().getPosition() > 0){
+        motor6.set(PDWriting(20));  
+    }else {
       motor6.set(0);
     }
+  }
+  
+
+  public double PDWriting(int target) {
+    timeChange = g.get();
+    error = Math.abs(motor6.getEncoder().getPosition() - target);
+    pdPower = error * proportion + (error - priorError) / timeChange * derivative;
+    
+    if (pdPower > 0.3) {
+      pdPower = 0.3;
+    }
+
+    priorError = error;
+    g.restart();
+    return pdPower; 
   }
   @Override
   public void simulationPeriodic() {

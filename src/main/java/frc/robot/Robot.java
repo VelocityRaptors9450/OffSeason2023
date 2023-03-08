@@ -99,6 +99,7 @@ public class Robot extends TimedRobot {
     }
     ExampleSubsystem.t.restart();
     ExampleSubsystem.l.restart();
+    ExampleSubsystem.motor6.getEncoder().setPosition(0);
     ExampleSubsystem.g.restart();
     
    // time.restart();

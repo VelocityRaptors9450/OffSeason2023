@@ -74,14 +74,14 @@ public class ExampleSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
-     //motorRunning();
+     motorRunning();
     
     
 
     
     //System.out.println(motor2.get());
     
-    pneumatics();
+    //pneumatics();
 
 
 
@@ -131,20 +131,21 @@ public class ExampleSubsystem extends SubsystemBase {
   }
 
   public void motorRunning() {
-    System.out.println(motor6.getEncoder().getPosition());
+    double i = 20;
+    System.out.println(motor6.getEncoder().getPosition()/15.1147);
 
-    if(20-motor6.getEncoder().getPosition() > 0){
-        motor6.set(PDWriting(20));  
+    if(20-motor6.getEncoder().getPosition()/15.1147 > 0){
+        motor6.set(PDWriting(i));  
     }else {
       motor6.set(0);
     }
   }
   
   //test commit - raghav
-  public double PDWriting(int target) {
+  public double PDWriting(double target) {
     timeChange = g.get();
-    error = Math.abs(motor6.getEncoder().getPosition() - target);
-    pdPower = error * proportion + (error - priorError) / timeChange * derivative;
+    error = Math.abs(motor6.getEncoder().getPosition()/15.1147 - target);
+    pdPower = error * proportion + Math.abs(error - priorError) / Math.abs(g.get() - timeChange) * derivative;
     
     if (pdPower > 0.3) {
       pdPower = 0.3;

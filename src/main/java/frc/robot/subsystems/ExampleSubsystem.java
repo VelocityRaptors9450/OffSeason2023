@@ -67,7 +67,7 @@ public class ExampleSubsystem extends SubsystemBase {
   private static double error = 0.0;
   private static double priorError = 0.0;
   private static double proportion = 0.05;
-  private static double derivative = 0.0001;
+  private static double derivative = 0.00005;
   private static double pdPower = 0.0;
   private static double timeChange = 0.0;
   @Override

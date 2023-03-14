@@ -67,7 +67,7 @@ public class ExampleSubsystem extends SubsystemBase {
   private static double error = 0.0;
   private static double priorError = 0.0;
   private static double proportion = 0.05;
-  private static double derivative = 0.0;
+  private static double derivative = 0.00005;
   private static double pdPower = 0.0;
   private static double timeChange = 0.0;
   @Override
@@ -131,20 +131,21 @@ public class ExampleSubsystem extends SubsystemBase {
   }
 
   public void motorRunning() {
-    System.out.println(motor6.getEncoder().getPosition());
+    double i = 20;
+    System.out.println(motor6.getEncoder().getPosition()/15.1147);
 
-    if(20-motor6.getEncoder().getPosition() > 0){
-        motor6.set(PDWriting(20));  
+    if(20-motor6.getEncoder().getPosition()/15.1147 > 0){
+        motor6.set(PDWriting(i));  
     }else {
       motor6.set(0);
     }
   }
   
   //test commit - raghav
-  public double PDWriting(int target) {
+  public double PDWriting(double target) {
     timeChange = g.get();
-    error = Math.abs(motor6.getEncoder().getPosition() - target);
-    pdPower = error * proportion + (error - priorError) / timeChange * derivative;
+    error = Math.abs(motor6.getEncoder().getPosition()/15.1147 - target);
+    pdPower = error * proportion + Math.abs(error - priorError) / Math.abs(g.get() - timeChange) * derivative;
     
     if (pdPower > 0.3) {
       pdPower = 0.3;

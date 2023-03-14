@@ -74,14 +74,14 @@ public class ExampleSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
-     //motorRunning();
+     motorRunning();
     
     
 
     
     //System.out.println(motor2.get());
     
-    pneumatics();
+    //pneumatics();
 
 
 

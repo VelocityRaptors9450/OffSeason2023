@@ -23,7 +23,7 @@ public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
     motor6.getEncoder().setPosition(0);
-    refillSolenoid.set(false);
+    //refillSolenoid.set(false);
   }
 
   /**
@@ -77,8 +77,8 @@ public class ExampleSubsystem extends SubsystemBase {
     //1:18
     //42 tics per rev
     // This method will be called once per scheduler run
-    quit.restart();
-     motorRunning(18);
+    motor6.set(0.3);
+     //motorRunning(18);
      /*
       * 
       FIGURE OUT HOW TO RUN TWO THINGS.....
@@ -87,7 +87,6 @@ public class ExampleSubsystem extends SubsystemBase {
     
 
     
-    System.out.println("plz" );    
     //pneumatics();
 
 
@@ -110,7 +109,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
     // if compressor disabled, then pcmCompressor.enabled();
     // max pressure 60, min pressure 50
-    System.out.println(pcmCompressor.getPressure());
+    //System.out.println(pcmCompressor.getPressure());
     /* 
     
     if (pcmCompressor.getPressure() <= 50) {
@@ -140,10 +139,10 @@ public class ExampleSubsystem extends SubsystemBase {
   public void motorRunning(double i) {
     System.out.println(motor6.getEncoder().getPosition());
     
-        if(i-motor6.getEncoder().getPosition()/*/15.1147*/ > 0 && quit.get() < 2){
-          motor6.set(PDWriting(i)); 
+        if(i-motor6.getEncoder().getPosition()/*/15.1147*/ > 0 ){
+          motor6.set(0.3); 
         }else {
-          motor6.set(0);
+          motor6.set(-0.3);
         }   
    
      

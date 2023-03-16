@@ -50,7 +50,7 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  public static CANSparkMax motor6 = new CANSparkMax(5, MotorType.kBrushless);
+  public static CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
   // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
   Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
@@ -141,7 +141,7 @@ public class ExampleSubsystem extends SubsystemBase {
     System.out.println(motor6.getEncoder().getPosition());
     
         if(i-motor6.getEncoder().getPosition()/*/15.1147*/ > 0 && quit.get() < 2){
-          motor6.set(PDWriting(i)); 
+          motor6.set(0.4); 
         }else {
           motor6.set(0);
         }   

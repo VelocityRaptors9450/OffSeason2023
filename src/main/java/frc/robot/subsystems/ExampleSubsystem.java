@@ -50,7 +50,7 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  public static CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
+  public static CANSparkMax motor6 = new CANSparkMax(5, MotorType.kBrushless);
   // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
   Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
@@ -67,8 +67,8 @@ public class ExampleSubsystem extends SubsystemBase {
 
   private static double error = 0.0;
   private static double priorError = 0.0;
-  private static double proportion = 0.06;
-  private static double derivative = 0.00;
+  private static double proportion = 0.09;
+  private static double derivative = 0.000012;
   private static double pdPower = 0.0;  
   private static double timeChange = 0.0;
 
@@ -77,8 +77,8 @@ public class ExampleSubsystem extends SubsystemBase {
     //1:18
     //42 tics per rev
     // This method will be called once per scheduler run
-    motor6.set(0.3);
-     //motorRunning(18);
+    
+    motorRunning(18);
      /*
       * 
       FIGURE OUT HOW TO RUN TWO THINGS.....
@@ -140,7 +140,7 @@ public class ExampleSubsystem extends SubsystemBase {
     System.out.println(motor6.getEncoder().getPosition());
     
         if(i-motor6.getEncoder().getPosition()/*/15.1147*/ > 0 ){
-          motor6.set(0.3); 
+          motor6.set(PDWriting(18)); 
         }else {
           motor6.set(-0.3);
         }   
@@ -151,13 +151,17 @@ public class ExampleSubsystem extends SubsystemBase {
   //test commit - raghav
   public double PDWriting(double target) {
     timeChange = g.get();
-    error = Math.abs(motor6.getEncoder().getPosition()/*/15.1147*/ - target);
-    pdPower = error * proportion + Math.abs(error - priorError) / Math.abs(g.get() - timeChange) * derivative;
+    error = target - motor6.getEncoder().getPosition()/*/15.1147*/;
+    pdPower = error * proportion + 
+    ((error - priorError) / (g.get() - timeChange)) * derivative;
     
     if (pdPower > 0.3) {
       pdPower = 0.3;
+    } else if (pdPower < -0.3) {
+      pdPower = -0.3;
     }
-
+   
+    System.out.println("POWER: " + pdPower + "  dv/dt: " + ((error - priorError) / (g.get() - timeChange)) * derivative);
     priorError = error;
     g.restart();
     return pdPower; 

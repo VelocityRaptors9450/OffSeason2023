@@ -22,7 +22,10 @@ import frc.robot.commands.ExampleCommand;
 public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
-    motor6.getEncoder().setPosition(0);
+    // motor6.getEncoder().setPosition(0);
+    intakeLeft.getEncoder().setPosition(0);
+    intakeRight.getEncoder().setPosition(0);
+
     //refillSolenoid.set(false);
   }
 
@@ -50,7 +53,10 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  public static CANSparkMax motor6 = new CANSparkMax(5, MotorType.kBrushless);
+  // public static CANSparkMax motor6 = new CANSparkMax(5, MotorType.kBrushless);
+  public static CANSparkMax intakeRight = new CANSparkMax(6, MotorType.kBrushless);
+  public static CANSparkMax intakeLeft = new CANSparkMax(4, MotorType.kBrushless);
+
   // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
   Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
@@ -58,7 +64,7 @@ public class ExampleSubsystem extends SubsystemBase {
   Compressor pcmCompressor = new Compressor(7, PneumaticsModuleType.CTREPCM);
   
 
-  private double startPos = motor6.getEncoder().getPosition();
+  // private double startPos = motor6.getEncoder().getPosition();
   public static Timer t = new Timer();
   public static Timer l = new Timer();
   public static Timer g = new Timer();
@@ -70,15 +76,25 @@ public class ExampleSubsystem extends SubsystemBase {
   private static double proportion = 0.09;
   private static double derivative = 0.000012;
   private static double pdPower = 0.0;  
-  private static double timeChange = 0.0;
+  private static double timeChange = 0.02;
+  private static double oldpos = 0;
+  private static boolean temp = true;
+  private static boolean isOutput = false;
+  private static boolean initial = true;
+  private static boolean rampUPToggle = true;
+  public static double velocity = 10;
+  private static double time = 0;
+  
 
   @Override
   public void periodic() {
     //1:18
     //42 tics per rev
     // This method will be called once per scheduler run
+    intake(true, 0.4);
     
-    motorRunning(18);
+    
+    //motorRunning(18);
      /*
       * 
       FIGURE OUT HOW TO RUN TWO THINGS.....
@@ -91,6 +107,93 @@ public class ExampleSubsystem extends SubsystemBase {
 
 
 
+  }
+  public double rampUp(double time, double powerTo) {
+    return 2 * powerTo / (1 + Math.pow(Math.E, -9*(time))) - 0.4;
+
+  }
+  public double rampDown(double time, double powerFrom) {
+    return -(2 * powerFrom / (1 + Math.pow(Math.E, -9*(time - 1))) - 0.4);
+
+  }
+
+
+  public void intake(boolean in, double power) {
+    //System.out.println("Velocity Left: " + Math.round(intakeLeft.getEncoder().getVelocity()) + "  Velocity Right: " + Math.round(intakeLeft.getEncoder().getVelocity()));
+    
+    
+    // timeChange = g.get();
+    // g.reset();
+    double changeInPos = (Math.abs(intakeRight.getEncoder().getPosition()) + Math.abs(intakeLeft.getEncoder().getPosition())) / 2 - oldpos;
+    velocity = changeInPos / 0.02;
+    System.out.println("Velocity: " + velocity);
+    oldpos = (Math.abs(intakeRight.getEncoder().getPosition()) + Math.abs(intakeLeft.getEncoder().getPosition())) / 2;
+    
+    // approximately 19 revolutions / second
+    
+    if (velocity < 70 && initial) {
+      if (rampUPToggle) {
+        t.reset();
+        rampUPToggle = false;
+      }
+      
+
+      if (rampUp(t.get(), 0.4) > 0.4) {
+        intakeLeft.set(power);
+        intakeRight.set(-power);
+      } else {
+        System.out.println("------------------- \n RAMPING UP \n ---------------------------");
+
+        intakeLeft.set(rampUp(t.get(), 0.4));
+        intakeRight.set(-rampUp(t.get(), 0.4));
+      }
+      
+    } else if (!isOutput && velocity > 70) { // intake 
+      initial = false;
+      intakeLeft.set(power);
+      intakeRight.set(-power);
+    } else if (!isOutput){
+      if (temp) {
+        g.reset(); 
+
+        temp = false;
+        System.out.println("------------------- \n SLOW SPEED \n ---------------------------");
+
+        intakeLeft.set(0.04);
+        intakeRight.set(-0.04);
+        
+      }
+      if (g.get() >= 2.0) {
+        System.out.println("------------------- \n OUTPUTTING \n ---------------------------");
+        intakeLeft.set(-0.4);
+        intakeRight.set(0.4);
+            
+        
+      } 
+      if (g.get() >= 3.5) {
+        isOutput = true;
+        g.reset();
+        t.reset();
+      }
+    }
+
+     if (rampDown(t.get(), 0.4) > 0 && t.get() <= 1 && isOutput) {
+      System.out.println("------------------- \n RAMPING DOWN, t = " + t.get() + "\n ---------------------------");
+      intakeLeft.set(-rampDown(t.get(), 0.4));
+      intakeRight.set(rampDown(t.get(), 0.4));
+    } else if (t.get() > 2 && g.get() > 2 && isOutput) {
+      intakeLeft.set(0);
+      intakeRight.set(0);
+
+      temp = true;
+      isOutput = false;
+      initial = true;
+      rampUPToggle = true;
+      velocity = 0;
+    }
+    
+    
+    
   }
 
   public void pneumatics() {
@@ -135,11 +238,11 @@ public class ExampleSubsystem extends SubsystemBase {
     
     
   }
-
+/* 
   public void motorRunning(double i) {
     System.out.println(motor6.getEncoder().getPosition());
     
-        if(i-motor6.getEncoder().getPosition()/*/15.1147*/ > 0 ){
+        if(i-motor6.getEncoder().getPosition() > 0 ){
           motor6.set(PDWriting(18)); 
         }else {
           motor6.set(-0.3);
@@ -147,11 +250,13 @@ public class ExampleSubsystem extends SubsystemBase {
    
      
   }
+
+  
   
   //test commit - raghav
   public double PDWriting(double target) {
     timeChange = g.get();
-    error = target - motor6.getEncoder().getPosition()/*/15.1147*/;
+    error = target - motor6.getEncoder().getPosition();
     pdPower = error * proportion + 
     ((error - priorError) / (g.get() - timeChange)) * derivative;
     
@@ -159,13 +264,17 @@ public class ExampleSubsystem extends SubsystemBase {
       pdPower = 0.3;
     } else if (pdPower < -0.3) {
       pdPower = -0.3;
+    } else if (pdPower < 0.05) {
+      pdPower += (0.1 - 0.1/(1+Math.pow(Math.E, -0.5*(motor6.getEncoder().getPosition()-19))));
     }
+   
    
     System.out.println("POWER: " + pdPower + "  dv/dt: " + ((error - priorError) / (g.get() - timeChange)) * derivative);
     priorError = error;
     g.restart();
     return pdPower; 
   }
+  */
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation

@@ -71,6 +71,16 @@ public class ExampleSubsystem extends SubsystemBase {
   Timer quit = new Timer();
 
 
+  public static enum IntakeStep {
+    INITIAL_RAMP_UP,
+    INITIAL, // rampUpToggle boolean equivalent
+    SLOW_INTAKE,
+    IS_OUTPUTTING,
+    DONE_OUTPUTTING,
+  }
+
+  private IntakeStep intakeStep = IntakeStep.INITIAL;
+  
   private static double error = 0.0;
   private static double priorError = 0.0;
   private static double proportion = 0.09;
@@ -133,6 +143,9 @@ public class ExampleSubsystem extends SubsystemBase {
     
     if (velocity < 70 && initial) {
       if (rampUPToggle) {
+        // assigns current state
+        intakeStep = IntakeStep.INITIAL_RAMP_UP;
+       
         t.reset();
         rampUPToggle = false;
       }
@@ -149,6 +162,7 @@ public class ExampleSubsystem extends SubsystemBase {
       }
       
     } else if (!isOutput && velocity > 70) { // intake 
+      intakeStep = IntakeStep.INITIAL;
       initial = false;
       intakeLeft.set(power);
       intakeRight.set(-power);
@@ -158,19 +172,21 @@ public class ExampleSubsystem extends SubsystemBase {
 
         temp = false;
         System.out.println("------------------- \n SLOW SPEED \n ---------------------------");
-
+        intakeStep = IntakeStep.SLOW_INTAKE;
         intakeLeft.set(0.04);
         intakeRight.set(-0.04);
         
       }
       if (g.get() >= 2.0) {
         System.out.println("------------------- \n OUTPUTTING \n ---------------------------");
+        intakeStep = IntakeStep.IS_OUTPUTTING;
         intakeLeft.set(-0.4);
         intakeRight.set(0.4);
             
         
       } 
       if (g.get() >= 3.5) {
+        
         isOutput = true;
         g.reset();
         t.reset();
@@ -178,6 +194,7 @@ public class ExampleSubsystem extends SubsystemBase {
     }
 
      if (rampDown(t.get(), 0.4) > 0 && t.get() <= 1 && isOutput) {
+      intakeStep = IntakeStep.DONE_OUTPUTTING;
       System.out.println("------------------- \n RAMPING DOWN, t = " + t.get() + "\n ---------------------------");
       intakeLeft.set(-rampDown(t.get(), 0.4));
       intakeRight.set(rampDown(t.get(), 0.4));

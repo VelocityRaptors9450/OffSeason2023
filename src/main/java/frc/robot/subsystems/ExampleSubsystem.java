@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -29,12 +30,13 @@ public class ExampleSubsystem extends SubsystemBase {
     //refillSolenoid.set(false);
   }
 
+
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public CommandBase exampleMethodCommand() {
+  public CommandBase  exampleMethodCommand() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
@@ -53,9 +55,22 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
+
+  
+  public static CANSparkMax motor6 = new CANSparkMax(1, MotorType.kBrushless);
+  public static CANSparkMax motor4 = new CANSparkMax(2, MotorType.kBrushless);
+
+  private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
+  //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
+  //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
+
+  private Joystick joy1 = new Joystick(0);
+
   // public static CANSparkMax motor6 = new CANSparkMax(5, MotorType.kBrushless);
   public static CANSparkMax intakeRight = new CANSparkMax(6, MotorType.kBrushless);
   public static CANSparkMax intakeLeft = new CANSparkMax(4, MotorType.kBrushless);
+
 
   // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
@@ -101,9 +116,28 @@ public class ExampleSubsystem extends SubsystemBase {
     //1:18
     //42 tics per rev
     // This method will be called once per scheduler run
+
+     motorRunning();
+
     intake(true, 0.4);
+
+
+    //motor4.set(0.1);
+    //motor6.set(-0.05);
+    //motor4.set(0.05);
+    // set when velocity is lower lower power out put on intake
+     /*
+      * 
+      
+      */
+    //get position return number of rotations
     
-    
+
+
+    //rightMotor2.set(-right);
+
+    //System.out.println(motor2.get());
+
     //motorRunning(18);
      /*
       * 
@@ -113,6 +147,7 @@ public class ExampleSubsystem extends SubsystemBase {
     
 
     
+
     //pneumatics();
 
 

@@ -4,6 +4,7 @@
 
 package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -13,9 +14,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -29,9 +32,18 @@ import frc.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
+  //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
+  //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
+  //private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
+  //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
+
+  //private Joystick joy1 = new Joystick(0);
+
+
   private Command m_autonomousCommand;
   //private TalonFX motor1 = new TalonFX(1);
+  
   //private DoubleLogEntry telemetry;
   private RobotContainer m_robotContainer;
  // private Timer time = new Timer();
@@ -45,6 +57,21 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     //motor1.set(ControlMode.PercentOutput, 0); 
+
+    //inverting directions
+    //leftMotor1.setInverted(true);
+    //rightMotor1.setInverted(true);
+
+    // "slave" settings
+    /* 
+    leftMotor2.follow(leftMotor1);
+    rightMotor2.follow(rightMotor1);
+
+    leftMotor2.setInverted(true);
+    rightMotor2.setInverted(true);
+*/
+    //init encoders(only init if want ot reset)
+    
   }
 
   /**
@@ -61,6 +88,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    //SmartDashboard.putNumber("DrivePower", leftMotor1.getEncoder().getPosition() * Constants.ModuleConversion.drivetcks2ftfactor);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -71,8 +99,10 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  Timer t = new Timer();
   @Override
   public void autonomousInit() {
+    t.restart();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -84,11 +114,22 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
+    if(t.get() < 3){
+      //leftMotor1.set(0.1);
+     // leftMotor2.set(0.1);
+      //rightMotor1.set(-0.1);
+     // rightMotor2.set(-0.1);
+    }else{
+      //leftMotor1.set(0);
+      //leftMotor2.set(0);
+      //rightMotor1.set(0);
+     // rightMotor2.set(0);
+    }
 
 
   }
-
+  private CANSparkMax test = new CANSparkMax(5, MotorType.kBrushless);
+  private Joystick stick = new Joystick(0);
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
@@ -150,7 +191,8 @@ public class Robot extends TimedRobot {
     }
     motor1.set(ControlMode.PercentOutput, 0);
     */
-    
+
+
 
   }
 

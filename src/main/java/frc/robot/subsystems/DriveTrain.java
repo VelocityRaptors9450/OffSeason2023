@@ -4,42 +4,47 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
-  /** Creates a new DriveTrain. */
-  CANSparkMax fl = new CANSparkMax(5, MotorType.kBrushless);
-  CANSparkMax fr = new CANSparkMax(4, MotorType.kBrushless);
-  CANSparkMax bl = new CANSparkMax(3, MotorType.kBrushless);
-  CANSparkMax br = new CANSparkMax(2, MotorType.kBrushless);
-  WPI_PigeonIMU gyro = new WPI_PigeonIMU(0);
-  DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(39.37));
-  //DifferentialDriveOdometry odo = new DifferentialDriveOdometry(kinematics, getHeading());
-  public DriveTrain() {
-    //passes power to the following motors
-    //could run each motor on its own
-    fr.follow(fl);
-    br.follow(bl);
-    //revese motor diections so it won't spin in place
-    //left side reversed right side normal
-    fl.setInverted(false);
-    br.setInverted(true);
-    /*
-     * When scoring or parking, make wheels a cross x to not move
-     */
-  }
+  private CANSparkMax flMove = new CANSparkMax(Constants.OperatorConstants.FL_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax flTurn = new CANSparkMax(Constants.OperatorConstants.FL_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax blMove = new CANSparkMax(Constants.OperatorConstants.BL_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax blTurn = new CANSparkMax(Constants.OperatorConstants.BL_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax frMove = new CANSparkMax(Constants.OperatorConstants.FR_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax frTurn = new CANSparkMax(Constants.OperatorConstants.FR_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax brMove = new CANSparkMax(Constants.OperatorConstants.BR_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax brTurn = new CANSparkMax(Constants.OperatorConstants.BR_TURN_MOTOR_ID, MotorType.kBrushless);
+
+
+  /* Creates a new DriveTrain. */
+  public DriveTrain(){
+    flMove.setInverted(true);
+    blMove.setInverted(true);
+    flTurn.setInverted(true);
+    blTurn.setInverted(true);
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public void drive(double forward, double rotate){
+    flMove.set(forward);
+    frMove.set(forward);
+    blMove.set(forward);
+    brMove.set(forward);
+    flTurn.set(rotate);
+    frTurn.set(rotate);
+    blTurn.set(rotate);
+    brTurn.set(rotate);  
+  }
+
 }

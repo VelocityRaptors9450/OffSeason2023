@@ -29,6 +29,7 @@ import frc.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
+  
   private Command m_autonomousCommand;
   //private TalonFX motor1 = new TalonFX(1);
   //private DoubleLogEntry telemetry;

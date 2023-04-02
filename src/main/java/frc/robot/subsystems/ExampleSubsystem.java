@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -26,12 +27,13 @@ public class ExampleSubsystem extends SubsystemBase {
     refillSolenoid.set(false);
   }
 
+
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public CommandBase exampleMethodCommand() {
+  public CommandBase  exampleMethodCommand() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
@@ -50,7 +52,16 @@ public class ExampleSubsystem extends SubsystemBase {
     // Query some boolean state, such as a digital sensor.
     return false;
   }
-  public static CANSparkMax motor6 = new CANSparkMax(6, MotorType.kBrushless);
+  
+  public static CANSparkMax motor6 = new CANSparkMax(1, MotorType.kBrushless);
+  public static CANSparkMax motor4 = new CANSparkMax(2, MotorType.kBrushless);
+
+  private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
+  //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
+  //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
+
+  private Joystick joy1 = new Joystick(0);
   // solenoid not connected to air thing
   Solenoid testingSolenoid_PH = new Solenoid(7, PneumaticsModuleType.REVPH, 7);
   Solenoid refillSolenoid = new Solenoid(7, PneumaticsModuleType.REVPH, 6);
@@ -74,13 +85,48 @@ public class ExampleSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
+<<<<<<< Updated upstream
      motorRunning();
     
+=======
+    //motor4.set(0.1);
+    //motor6.set(-0.05);
+    //motor4.set(0.05);
+    // set when velocity is lower lower power out put on intake
+     /*
+      * 
+      FIGURE OUT HOW TO RUN TWO THINGS.....
+      */
+    //get position return number of rotations
+>>>>>>> Stashed changes
     
+    double speed = -joy1.getRawAxis(1) * 0.4;
+    double turn = joy1.getRawAxis(2) * 0.1;
 
+    double left = speed + turn;
+    double right = speed - turn;
+
+    leftMotor1.set(left);
+    //leftMotor2.set(left);
+    rightMotor1.set(-right);
+
+    if(joy1.getRawButton(11)){
+      leftMotor1.set(0.2);
+      //leftMotor2.set(left);
+      rightMotor1.set(-0.2);
+    }else if(joy1.getRawButton(12)){
+      leftMotor1.set(-0.2);
+      //leftMotor2.set(left);
+      rightMotor1.set(0.2);
+    }
+
+    //rightMotor2.set(-right);
     
+<<<<<<< Updated upstream
     //System.out.println(motor2.get());
     
+=======
+>>>>>>> Stashed changes
     //pneumatics();
 
 

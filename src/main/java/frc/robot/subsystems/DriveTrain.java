@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -28,12 +29,13 @@ public class DriveTrain extends SubsystemBase {
     blMove.setInverted(true);
     flTurn.setInverted(true);
     blTurn.setInverted(true);
-  }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
   public void drive(double forward, double rotate){
     flMove.set(forward);
     frMove.set(forward);
@@ -44,4 +46,5 @@ public class DriveTrain extends SubsystemBase {
     blTurn.set(rotate);
     brTurn.set(rotate);  
   }
+
 }

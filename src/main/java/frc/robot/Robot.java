@@ -32,12 +32,14 @@ import frc.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
+
   //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
   //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
   //private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
   //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
 
   //private Joystick joy1 = new Joystick(0);
+
 
   private Command m_autonomousCommand;
   //private TalonFX motor1 = new TalonFX(1);
@@ -139,7 +141,11 @@ public class Robot extends TimedRobot {
     }
     ExampleSubsystem.t.restart();
     ExampleSubsystem.l.restart();
-    ExampleSubsystem.motor6.getEncoder().setPosition(0);
+    // ExampleSubsystem.motor6.getEncoder().setPosition(0);
+    ExampleSubsystem.intakeRight.getEncoder().setPosition(0);
+
+    ExampleSubsystem.intakeLeft.getEncoder().setPosition(0);
+
     ExampleSubsystem.g.restart();
     
    // time.restart();

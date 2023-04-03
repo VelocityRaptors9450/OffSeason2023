@@ -117,7 +117,7 @@ public class ExampleSubsystem extends SubsystemBase {
     //42 tics per rev
     // This method will be called once per scheduler run
 
-     motorRunning();
+     
 
     intake(true, 0.4);
 

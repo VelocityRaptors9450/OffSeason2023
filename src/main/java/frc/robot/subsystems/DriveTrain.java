@@ -29,6 +29,7 @@ public class DriveTrain extends SubsystemBase {
     blMove.setInverted(true);
     flTurn.setInverted(true);
     blTurn.setInverted(true);
+  }
 
 
   @Override

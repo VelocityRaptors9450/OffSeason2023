@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ExampleSubsystem;
+// import frc.robot.subsystems.ExampleSubsystem;
 
 
 
@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     t.restart();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -139,14 +139,14 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    ExampleSubsystem.t.restart();
-    ExampleSubsystem.l.restart();
-    // ExampleSubsystem.motor6.getEncoder().setPosition(0);
-    ExampleSubsystem.intakeRight.getEncoder().setPosition(0);
+    // ExampleSubsystem.t.restart();
+    // ExampleSubsystem.l.restart();
+    // // ExampleSubsystem.motor6.getEncoder().setPosition(0);
+    // ExampleSubsystem.intakeRight.getEncoder().setPosition(0);
 
-    ExampleSubsystem.intakeLeft.getEncoder().setPosition(0);
+    // ExampleSubsystem.intakeLeft.getEncoder().setPosition(0);
 
-    ExampleSubsystem.g.restart();
+    // ExampleSubsystem.g.restart();
     
    // time.restart();
     //motor1.setSelectedSensorPosition(0);

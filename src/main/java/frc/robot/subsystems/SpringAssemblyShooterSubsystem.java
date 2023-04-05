@@ -29,4 +29,6 @@ public class SpringAssemblyShooterSubsystem extends SubsystemBase {
     outputRight.set(power);
     outputLeft.set(-power);
   }
+
+  
 }

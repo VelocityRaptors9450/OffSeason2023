@@ -6,8 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ShooterLinkageMoverCommand;
 // import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SpringAssemblyShooterCommand;
+import frc.robot.subsystems.ShooterLinkageMoverSubsystem;
 // import frc.robot.subsystems.ExampleSubsystem;
 //import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
@@ -30,6 +32,8 @@ public class RobotContainer {
   //private final IntakeSubsystem intake = new IntakeSubsystem();
   private final SpringAssemblyShooterSubsystem shooter = new SpringAssemblyShooterSubsystem(1);
   private final SpringAssemblyShooterCommand shooterCommand = new SpringAssemblyShooterCommand(shooter);
+  private final ShooterLinkageMoverSubsystem linkage = new ShooterLinkageMoverSubsystem();
+  private final ShooterLinkageMoverCommand linkageCommand = new ShooterLinkageMoverCommand(linkage);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -39,8 +43,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     
-    shooter.setDefaultCommand(shooterCommand);
-    //configureBindings();
+    //shooter.setDefaultCommand(shooterCommand);
+    //linkage.setDefaultCommand(linkageCommand);
+    configureBindings();
   }
 
   /**
@@ -60,8 +65,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    driverController.x().onTrue(shooterCommand);
-    driverController.y().getAsBoolean();
+    driverController.a().onTrue(linkageCommand);
+    //driverController.y().getAsBoolean();
     
   }
 

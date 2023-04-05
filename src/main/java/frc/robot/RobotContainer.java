@@ -6,8 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.SwerveSubsystemKrish;
+import frc.robot.commands.ShooterLinkageMoverCommand;
+import frc.robot.commands.SpringAssemblyShooterCommand;
+import frc.robot.subsystems.ShooterLinkageMoverSubsystem;
+import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,10 +29,7 @@ public class RobotContainer {
   private final SpringAssemblyShooterSubsystem shooter = new SpringAssemblyShooterSubsystem(1);
   private final SpringAssemblyShooterCommand shooterCommand = new SpringAssemblyShooterCommand(shooter);
   private final ShooterLinkageMoverSubsystem linkage = new ShooterLinkageMoverSubsystem();
-  private final ShooterLinkageMoverCommand linkageCommand = new ShooterLinkageMoverCommand(linkage);
-  private final SwerveSubsystemKrish swerve = new SwerveSubsystemKrish();
-  private final ShooterSubsystem shooter2 = new ShooterSubsystem();
-  private final Joystick joystick1 = new Joystick(0);
+  private final ShooterLinkageMoverCommand linkageCommand = new ShooterLinkageMoverCommand(linkage);  private final Joystick joystick1 = new Joystick(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =

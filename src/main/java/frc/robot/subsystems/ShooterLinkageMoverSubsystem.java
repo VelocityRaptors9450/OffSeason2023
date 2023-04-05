@@ -17,7 +17,7 @@ public class ShooterLinkageMoverSubsystem extends SubsystemBase {
 
   // private double startPos = motor6.getEncoder().getPosition();
   public static Timer t = new Timer();
-  public static Timer l = new Timer();
+  public Timer rampTimer = new Timer();
   public static Timer g = new Timer();
   Timer quit = new Timer();
 
@@ -46,7 +46,9 @@ public class ShooterLinkageMoverSubsystem extends SubsystemBase {
   public void toggle(double target) {
     
     if (turn.getEncoder().getPosition() > -(target * 75 - 0.5) && close) {
-      turn.set(-PDWriting(target * 75));
+      
+      turn.set(-fullLinearRamp(0.5, rampTimer.get(), 0.4));
+      System.out.println(rampTimer.get() + "  " + turn.getEncoder().getPosition());
       t.restart();
     } else {
       // hold for quarter second
@@ -60,6 +62,30 @@ public class ShooterLinkageMoverSubsystem extends SubsystemBase {
     }
     
   }
+
+  public double linearRampUp(double timeToRamp, double currentTime, double powerTo) {
+    return powerTo * currentTime / timeToRamp;
+  }
+
+  public double linearRampDown(double timeToRamp, double currentTime, double powerFrom) {
+    return -powerFrom * currentTime / timeToRamp + powerFrom;
+  }
+
+  public double fullLinearRamp(double timeToRamp, double currentTime, double powerTo) {
+    return -Math.abs(powerTo * (currentTime - (timeToRamp / 2)) / (timeToRamp / 2)) + powerTo;
+  }
+
+  //logistic ramp
+  public double rampUp(double time, double powerTo) {
+    return 2 * powerTo / (1 + Math.pow(Math.E, -9*(time))) - 0.4;
+
+  }
+  //logistic ramp
+  public double rampDown(double time, double powerFrom) {
+    return -(2 * powerFrom / (1 + Math.pow(Math.E, -9*(time - 1))) - 0.4);
+
+  }
+
     public double PDWriting(double target) {
       timeChange = g.get();
       error = target - turn.getEncoder().getPosition();

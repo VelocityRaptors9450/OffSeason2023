@@ -22,7 +22,7 @@ public class ShooterLinkageMoverCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    linkage.rampTimer.restart();
     
   }
 

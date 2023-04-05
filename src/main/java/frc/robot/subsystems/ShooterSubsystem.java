@@ -9,7 +9,11 @@ public class ShooterSubsystem extends SubsystemBase{
     CANSparkMax motor1 = new CANSparkMax(0,MotorType.kBrushless);
     CANSparkMax motor2 = new CANSparkMax(0,MotorType.kBrushless);
 
+    //Velocity Constants
     private double originalPosition1, currentVelocity1, previousTime1, originalPosition2, currentVelocity2, previousTime2;
+
+    //PID Update Constants
+    private double pVel, dVel, previousPIDTime, currentPIDTime, previousPIDError1, previousPIDError2;
     
 
     public ShooterSubsystem(){
@@ -29,6 +33,17 @@ public class ShooterSubsystem extends SubsystemBase{
 
         motor1.set(power);
         motor2.set(power);
+    }
+
+    public void setPower(double power1, double power2){
+        if(power1 < 1) power1 = -1;
+        if(power1 > 1) power1 = 1;
+
+        if(power1 < 1) power2 = -1;
+        if(power2 > 1) power2 = 1;
+
+        motor1.set(power1);
+        motor2.set(power2);
     }
 
     public void velPD(int target){
@@ -62,6 +77,54 @@ public class ShooterSubsystem extends SubsystemBase{
     public double getVelocity2(){
         return currentVelocity2;
     }
+
+    public void velPDUpdate(double targetVel, double limiter){
+        currentPIDTime = System.currentTimeMillis();
+
+        double error1 = targetVel - getVelocity1();
+        double error2 = targetVel - getVelocity2();
+
+        double derivative1 = (error1 - previousPIDError1)/(currentPIDTime - previousPIDTime);
+        double derivative2 = (error2 - previousPIDError2)/(currentPIDTime - previousPIDTime);
+
+        double power1 = ((pVel * error1) + (dVel * derivative1));
+        double power2 = ((pVel * error2) + (dVel * derivative2));
+
+        if(Math.abs(power1) > limiter){
+            if(power1 < 0){
+                power1 = -1 * limiter;
+            }else{
+                power1 = limiter;
+            }
+        }
+
+        if(Math.abs(power2) > limiter){
+            if(power2 < 0){
+                power2 = -1 * limiter;
+            }else{
+                power2 = limiter;
+            }
+        }
+
+        setPower(power1, power2);
+
+        previousPIDTime = currentPIDTime;
+        previousPIDError1 = error1;
+        previousPIDError2 = error2;
+
+
+
+        
+    }
+
+
+    @Override
+    public void periodic(){
+        updateMotor1Vel();
+        updateMotor2Vel();
+    }
+
+    
 
     
     

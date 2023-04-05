@@ -13,6 +13,8 @@ public class SwerveJoystickCmdKrish extends CommandBase{
     public SwerveJoystickCmdKrish(Supplier<Double> power, SwerveSubsystemKrish swerve){
         this.power = power;
         this.swerve = swerve;
+
+        addRequirements(swerve);
     }
 
 

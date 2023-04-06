@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -34,6 +35,8 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class Robot extends TimedRobot {
 
+  CANCoder cancoder = new CANCoder(0);
+  
   //private ShooterSubsystem shooter = new ShooterSubsystem();
   //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
   //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
@@ -166,6 +169,10 @@ public class Robot extends TimedRobot {
   
   @Override
   public void teleopPeriodic() {
+
+    System.out.println(cancoder.getPosition());
+    System.out.println(cancoder.getAbsolutePosition());
+    
 
     
     

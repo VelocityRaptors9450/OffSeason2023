@@ -32,10 +32,15 @@ public class SwerveJoystickComplexCmd extends CommandBase{
     public void execute(){
         double realTimeDrivePower =  -1 * drivePower.get() / 3;
         double realTimeTurnPower =  1 * turnPower.get() / 3;
-        swerve.setDrivePower(realTimeDrivePower);
-        swerve.setTurningPower(realTimeTurnPower, 0, 0, 0);
 
-        System.out.println(swerve.getTurningEncoderFL());
+        if(realTimeDrivePower > 0.05 || realTimeTurnPower > 0.05){
+
+            double angle = Math.atan2(realTimeDrivePower, realTimeTurnPower);
+            swerve.setDrivePower(realTimeDrivePower);
+            swerve.pid(angle, angle, angle, angle, 0.3);
+
+            System.out.println(swerve.getTurningEncoderFL());
+        }
 
         
         

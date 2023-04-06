@@ -65,8 +65,8 @@ public class RobotContainer {
 
     driverController.a().onTrue(new SwerveTurningOrientationCmd(swerve, false));
     driverController.b().onTrue(new SwerveTurningOrientationCmd(swerve, true));
-    //driverController.x().onTrue(new LinkageSlowCommand(shooter, true, 0.5));
-    //driverController.x().onFalse(new LinkageSlowCommand(shooter, false, 0));
+    driverController.x().onTrue(new LinkageSlowCommand(shooter, 1));
+    driverController.y().onTrue(new LinkageSlowCommand(shooter, 0));
 
 
     

@@ -29,10 +29,10 @@ public class ShootingCommand extends CommandBase{
   @Override
   public void execute() {
     double realLinkagePower = power.get() / 4;
-    double realShootingPower = power.get() / 2;
+    
 
     shooter.setLinkagePower(realLinkagePower);
-    shooter.setPower(realShootingPower);
+    
     
 
    

@@ -8,14 +8,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class LinkageSlowCommand extends CommandBase{
 
     ShooterSubsystem shooter;
-    boolean go = true;
     double power;
     
 
 
-    public LinkageSlowCommand(ShooterSubsystem shooter, boolean go, double power){
+    public LinkageSlowCommand(ShooterSubsystem shooter, double power){
         this.shooter = shooter;
-        this.go = go;
         this.power = power;
 
         addRequirements(shooter);
@@ -24,20 +22,13 @@ public class LinkageSlowCommand extends CommandBase{
 //Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    shooter.setPower(power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(go){
-        shooter.setLinkagePower(0.25);
-        shooter.setPower(power);
-
-    }else{
-        shooter.setLinkagePower(0);
-        shooter.setPower(0);
-    }
+    
 
     
 
@@ -56,7 +47,7 @@ public class LinkageSlowCommand extends CommandBase{
   @Override
   public boolean isFinished() {
 
-    return false;
+    return true;
   }
 
 }

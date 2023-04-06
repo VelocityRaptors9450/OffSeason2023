@@ -43,6 +43,9 @@ public class ShooterLinkageMoverSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void turn() {
+    turn.set(0.3);
+  }
   public void toggle(double target) {
     
     if (turn.getEncoder().getPosition() > -(target * 75 - 0.5) && close) {

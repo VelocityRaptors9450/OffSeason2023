@@ -30,7 +30,7 @@ public class ShooterLinkageMoverCommand extends CommandBase {
   @Override
   public void execute() {
     // target = number of revolutions
-    linkage.toggle(0.5);
+    linkage.turn();
     System.out.println("linkage toggled");
   }
 

@@ -39,7 +39,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     
-    //shooter.setDefaultCommand(shooterCommand);
+    shooter.setDefaultCommand(shooterCommand);
     //linkage.setDefaultCommand(linkageCommand);
     configureBindings();
   }

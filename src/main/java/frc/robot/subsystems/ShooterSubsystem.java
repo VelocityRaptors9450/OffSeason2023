@@ -13,13 +13,13 @@ public class ShooterSubsystem extends SubsystemBase{
     CANSparkMax motor1 = new CANSparkMax(13,MotorType.kBrushless);
     CANSparkMax motor2 = new CANSparkMax(7,MotorType.kBrushless);
 
-
+/*
     CANSparkMax linkage = new CANSparkMax(4,MotorType.kBrushless);
 
     
 
     RelativeEncoder linkageEncoder = linkage.getEncoder();
-
+*/
 
     //Velocity Constants
     private double originalPosition1, currentVelocity1, previousTime1, originalPosition2, currentVelocity2, previousTime2;
@@ -37,27 +37,37 @@ public class ShooterSubsystem extends SubsystemBase{
         previousTime2 = previousTime1;
         currentVelocity2 = 0;
 
+        /*
         linkage.setIdleMode(IdleMode.kCoast);
         linkageEncoder.setPosition(0);
 
-        
+        */
 
     }
 
+/*
     public void setLinkagePower(double power){
-        linkage.set(power);
+         linkage.set(power); 
     }
-
+    */
+/* 
     public double getLinkagePosition(){
         return linkageEncoder.getPosition();
     }
+    */
 
     public void setPower(double power){
-        if(power < 1) power = -1;
+        if(power < -1) power = -1;
         if(power > 1) power = 1;
 
-        motor1.set(power);
-        motor2.set(-power);
+        
+
+        motor1.set(-power);
+        motor2.set(power);
+    }
+    public void stopMotor() {
+        motor1.stopMotor();
+        motor2.stopMotor();
     }
 
     public void setPower(double power1, double power2){

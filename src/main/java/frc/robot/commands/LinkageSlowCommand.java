@@ -39,7 +39,8 @@ public class LinkageSlowCommand extends CommandBase{
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    shooter.setPower(0);
+    shooter.stopMotor();
 
   }
 
@@ -47,7 +48,7 @@ public class LinkageSlowCommand extends CommandBase{
   @Override
   public boolean isFinished() {
 
-    return true;
+    return false;
   }
 
 }

@@ -37,9 +37,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    swerve.setDefaultCommand(new SwerveJoystickCmdKrish(() -> driverController.getLeftY(), () -> driverController.getRightX(), swerve));
-    shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
-    
+    // swerve.setDefaultCommand(new SwerveJoystickCmdKrish(() -> driverController.getLeftY(), () -> driverController.getRightX(), swerve));
+    // shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
+    //shooter.setDefaultCommand(new LinkageSlowCommand(shooter, 1));
    
     // Configure the trigger bindings
     configureBindings();
@@ -63,11 +63,13 @@ public class RobotContainer {
     // new JoystickButton(joystick1, 0).whileTrue(new SwerveTurningOrientationCmd(swerve, false));
     // new JoystickButton(joystick1, 0).whileTrue(new SwerveTurningOrientationCmd(swerve, false));
 
-    driverController.a().onTrue(new SwerveTurningOrientationCmd(swerve, false));
-    driverController.b().onTrue(new SwerveTurningOrientationCmd(swerve, true));
+    // driverController.a().onTrue(new SwerveTurningOrientationCmd(swerve, false));
+    // driverController.b().onTrue(new SwerveTurningOrientationCmd(swerve, true));
     driverController.x().onTrue(new LinkageSlowCommand(shooter, 1));
+
     driverController.y().onTrue(new LinkageSlowCommand(shooter, 0));
 
+    driverController.a().onTrue(new LinkageSlowCommand(shooter, 0.3));
 
     
 

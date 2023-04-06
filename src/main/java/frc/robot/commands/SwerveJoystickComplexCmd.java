@@ -5,14 +5,14 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystemKrish;
 
-public class SwerveJoystickCmdKrish extends CommandBase{
+public class SwerveJoystickComplexCmd extends CommandBase{
 
     private final Supplier<Double> drivePower;
     private final Supplier<Double> turnPower;
 
     private final SwerveSubsystemKrish swerve;
 
-    public SwerveJoystickCmdKrish(Supplier<Double> drivePower, Supplier<Double> turnPower, SwerveSubsystemKrish swerve){
+    public SwerveJoystickComplexCmd(Supplier<Double> drivePower, Supplier<Double> turnPower, SwerveSubsystemKrish swerve){
         this.drivePower = drivePower;
         this.turnPower = turnPower;
         this.swerve = swerve;
@@ -24,7 +24,7 @@ public class SwerveJoystickCmdKrish extends CommandBase{
 
     @Override
     public void initialize(){
-        System.out.println("It started");
+       
 
     }
 
@@ -43,7 +43,7 @@ public class SwerveJoystickCmdKrish extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        System.out.println("It ended");
+       
         
     }
 

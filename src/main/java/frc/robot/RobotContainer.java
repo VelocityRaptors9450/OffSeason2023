@@ -6,9 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.LinkageSlowCommand;
+import frc.robot.commands.ShootingCommand;
+import frc.robot.commands.SwerveJoystickCmdKrish;
+import frc.robot.commands.SwerveTurningOrientationCmd;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystemKrish;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -24,14 +29,18 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystemKrish swerve = new SwerveSubsystemKrish();
   private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final Joystick joystick1 = new Joystick(0);
-
+  //private final Joystick joystick1 = new Joystick(0);
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    swerve.setDefaultCommand(new SwerveJoystickCmdKrish(() -> driverController.getLeftY(), () -> driverController.getRightX(), swerve));
+    shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
+    
+   
     // Configure the trigger bindings
     configureBindings();
   }
@@ -49,7 +58,24 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.    
+    // cancelling on release.  
+
+    // new JoystickButton(joystick1, 0).whileTrue(new SwerveTurningOrientationCmd(swerve, false));
+    // new JoystickButton(joystick1, 0).whileTrue(new SwerveTurningOrientationCmd(swerve, false));
+
+    driverController.a().onTrue(new SwerveTurningOrientationCmd(swerve, false));
+    driverController.b().onTrue(new SwerveTurningOrientationCmd(swerve, true));
+    //driverController.x().onTrue(new LinkageSlowCommand(shooter, true, 0.5));
+    //driverController.x().onFalse(new LinkageSlowCommand(shooter, false, 0));
+
+
+    
+
+    
+
+
+   
+    
   }
 
   /**

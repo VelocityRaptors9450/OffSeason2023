@@ -41,8 +41,26 @@ public final class Constants {
     public static final double drivetcks2ftfactor = 1.0 / 4096 * 6 * Math.PI / 12;
 
   }
-  public static class Positions{
+  
+  public static final int flDriveId = 14;
+  public static final int flTurnId = 9;
+  public static final int flAbsoluteId = 0;
 
-  }
+
+  public static final int frDriveId = 0;
+  public static final int frTurnId = 0;
+  public static final int frAbsoluteId = 0;
+
+
+  public static final int blDriveId = 0;
+  public static final int blTurnId = 0;
+  public static final int blAbsoluteId = 0;
+
+
+  public static final int brDriveId = 0;
+  public static final int brTurnId = 0;
+  public static final int brAbsoluteId = 0;
+
+
 
 }

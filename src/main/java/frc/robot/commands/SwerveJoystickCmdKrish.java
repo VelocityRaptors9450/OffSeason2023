@@ -35,7 +35,7 @@ public class SwerveJoystickCmdKrish extends CommandBase{
         swerve.setDrivePower(realTimeDrivePower);
         swerve.setTurningPower(realTimeTurnPower, 0, 0, 0);
 
-        System.out.println(swerve.getTurningEncoderFL());
+        //System.out.println(swerve.getTurningEncoderFL());
 
         
         

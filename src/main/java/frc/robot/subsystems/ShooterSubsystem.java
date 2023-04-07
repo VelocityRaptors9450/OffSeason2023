@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase{
@@ -14,11 +15,13 @@ public class ShooterSubsystem extends SubsystemBase{
     CANSparkMax motor2 = new CANSparkMax(7,MotorType.kBrushless);
 
 
-    CANSparkMax linkage = new CANSparkMax(4,MotorType.kBrushless);
+    CANSparkMax linkage;
+    // = new CANSparkMax(4,MotorType.kBrushless);
 
     
 
-    RelativeEncoder linkageEncoder = linkage.getEncoder();
+    RelativeEncoder linkageEncoder;
+    // = linkage.getEncoder();
 
 
     //Velocity Constants
@@ -37,8 +40,10 @@ public class ShooterSubsystem extends SubsystemBase{
         previousTime2 = previousTime1;
         currentVelocity2 = 0;
 
-        linkage.setIdleMode(IdleMode.kCoast);
-        linkageEncoder.setPosition(0);
+        //linkage.setIdleMode(IdleMode.kCoast);
+        //linkageEncoder.setPosition(0);
+
+        
 
         
 
@@ -53,11 +58,11 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public void setPower(double power){
-        if(power < 1) power = -1;
+        if(power < -1) power = -1;
         if(power > 1) power = 1;
 
-        motor1.set(power);
-        motor2.set(-power);
+        motor1.set(-power);
+        motor2.set(power);
     }
 
     public void setPower(double power1, double power2){
@@ -67,13 +72,25 @@ public class ShooterSubsystem extends SubsystemBase{
         if(power1 < 1) power2 = -1;
         if(power2 > 1) power2 = 1;
 
-        motor1.set(power1);
+        motor1.set(-power1);
         motor2.set(power2);
     }
 
-    public void velPD(int target){
+    
 
+    public double getPower(){
+        return (-motor1.get() + motor2.get()) / 2;
+        
     }
+
+    public double getMotor1Power(){
+        return motor1.get();
+    }
+
+    public double getMotor2Power(){
+        return motor2.get();
+    }
+    
 
     public void updateMotor1Vel(){
 

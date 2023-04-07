@@ -35,7 +35,10 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class Robot extends TimedRobot {
 
-  CANCoder cancoder = new CANCoder(0);
+  CANCoder cancoder = new CANCoder(1);
+  CANCoder cancoder1 = new CANCoder(2);
+  CANCoder cancoder2 = new CANCoder(3);
+  CANCoder cancoder3 = new CANCoder(4);
   
   //private ShooterSubsystem shooter = new ShooterSubsystem();
   //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
@@ -170,8 +173,19 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println(cancoder.getPosition());
-    System.out.println(cancoder.getAbsolutePosition());
+    // System.out.println(cancoder.getPosition());
+    // System.out.println(cancoder.getAbsolutePosition());
+    // System.out.println();
+    // System.out.println(cancoder1.getPosition());
+    // System.out.println(cancoder1.getAbsolutePosition());
+    // System.out.println();
+    // System.out.println(cancoder2.getPosition());
+    // System.out.println(cancoder2.getAbsolutePosition());
+    // System.out.println();
+    // System.out.println(cancoder3.getPosition());
+    // System.out.println(cancoder3.getAbsolutePosition());
+    // System.out.println();
+    // System.out.println();
     
 
     

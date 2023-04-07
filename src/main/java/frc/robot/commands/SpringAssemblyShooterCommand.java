@@ -21,7 +21,7 @@ public class SpringAssemblyShooterCommand extends CommandBase {
   public void initialize() {
     shooter.outputLeft.getEncoder().setPosition(0);
     shooter.outputRight.getEncoder().setPosition(0);
-    System.out.println("Started shooting");
+    //System.out.println("Started shooting");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +33,7 @@ public class SpringAssemblyShooterCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Stopped shooting");
+    //System.out.println("Stopped shooting");
 
   }
 

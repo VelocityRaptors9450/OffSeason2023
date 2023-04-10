@@ -17,14 +17,15 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class OperatorConstants{
       public static final int DRIVER_CONTROLLER_PORT = 0;
-      public static final int FL_MOVE_MOTOR_ID = 1;
-      public static final int FL_TURN_MOTOR_ID = 2;
+      public static final int FL_MOVE_MOTOR_ID = 16;
+      public static final int FL_TURN_MOTOR_ID = 15;
       public static final int BL_MOVE_MOTOR_ID = 3;
-      public static final int BL_TURN_MOTOR_ID = 4;
-      public static final int FR_MOVE_MOTOR_ID = 5;
-      public static final int FR_TURN_MOTOR_ID = 6;
-      public static final int BR_MOVE_MOTOR_ID = 7;
-      public static final int BR_TURN_MOTOR_ID = 8;
+      public static final int BL_TURN_MOTOR_ID = 17;
+      public static final int FR_MOVE_MOTOR_ID = 6;
+      public static final int FR_TURN_MOTOR_ID = 8;
+      public static final int BR_MOVE_MOTOR_ID = 14;
+      public static final int BR_TURN_MOTOR_ID = 9;
+      
 
   }
 

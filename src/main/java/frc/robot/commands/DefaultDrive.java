@@ -4,16 +4,25 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.sensors.CANCoder;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.SwerveTest;
 
 public class DefaultDrive extends CommandBase {
   /** Creates a new DefaultDrive. */
-  private SwerveTest swerveDrive = new SwerveTest();
-  public DefaultDrive() {
+  DriveTrain driveTrain;
+ 
+  //private SwerveTest swerveDrive;
+  private CommandXboxController cont;
+  public DefaultDrive(DriveTrain drive, CommandXboxController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
+    //swerveDrive = sw;
     
+    cont = controller;
+    driveTrain = drive;
   }
 
   // Called when the command is initially scheduled.
@@ -23,7 +32,20 @@ public class DefaultDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double fwd = cont.getLeftY();
+    double strafe = cont.getLeftX();
+    double rot = cont.getRightX();
+    if(rot != 0){
+      
+    }else if(fwd != 0){
+      driveTrain.rotateToZero();
+    }else{
+      driveTrain.drive(fwd, strafe, rot);
+    }
+   
+    
 
+    
   }
 
   // Called once the command ends or is interrupted.

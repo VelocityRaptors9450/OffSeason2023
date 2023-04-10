@@ -85,48 +85,15 @@ public class ExampleSubsystem extends SubsystemBase {
   public void periodic() {
 
     // This method will be called once per scheduler run
-<<<<<<< Updated upstream
      motorRunning();
     
-=======
-    //motor4.set(0.1);
-    //motor6.set(-0.05);
-    //motor4.set(0.05);
-    // set when velocity is lower lower power out put on intake
-     /*
-      * 
-      FIGURE OUT HOW TO RUN TWO THINGS.....
-      */
-    //get position return number of rotations
->>>>>>> Stashed changes
     
-    double speed = -joy1.getRawAxis(1) * 0.4;
-    double turn = joy1.getRawAxis(2) * 0.1;
-
-    double left = speed + turn;
-    double right = speed - turn;
-
-    leftMotor1.set(left);
-    //leftMotor2.set(left);
-    rightMotor1.set(-right);
-
-    if(joy1.getRawButton(11)){
-      leftMotor1.set(0.2);
-      //leftMotor2.set(left);
-      rightMotor1.set(-0.2);
-    }else if(joy1.getRawButton(12)){
-      leftMotor1.set(-0.2);
-      //leftMotor2.set(left);
-      rightMotor1.set(0.2);
-    }
+    
 
     //rightMotor2.set(-right);
     
-<<<<<<< Updated upstream
     //System.out.println(motor2.get());
     
-=======
->>>>>>> Stashed changes
     //pneumatics();
 
 

@@ -10,6 +10,8 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.CANCoderFaults;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.ctre.phoenix.sensors.SensorTimeBase;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -65,7 +67,7 @@ public class DriveTrain extends SubsystemBase {
     blMove.setInverted(true);
     flTurn.setInverted(true);
     blTurn.setInverted(true);
-  }
+
 
   @Override
   public void periodic() {
@@ -124,4 +126,5 @@ public class DriveTrain extends SubsystemBase {
   private double modulo(double val, double divideBy){
     return val % divideBy;
   }
+
 }

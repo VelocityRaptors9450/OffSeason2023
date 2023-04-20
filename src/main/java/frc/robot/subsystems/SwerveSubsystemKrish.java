@@ -36,9 +36,9 @@ public class SwerveSubsystemKrish extends SubsystemBase{
 
     public void setDrivePower(double power){
         fl.setDrivePower(power);
-        fr.setDrivePower(power);
-        bl.setDrivePower(power);
-        br.setDrivePower(power);
+        fr.setDrivePower(-power);
+        bl.setDrivePower(-power);
+        br.setDrivePower(-power);
     }
 
     public void setTurningPower(double flPower, double frPower, double blPower, double brPower){

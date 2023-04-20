@@ -8,13 +8,17 @@ import frc.robot.subsystems.SwerveSubsystemKrish;
 public class SwerveJoystickComplexCmd extends CommandBase{
 
     private final Supplier<Double> drivePower;
-    private final Supplier<Double> turnPower;
+    private final Supplier<Double> turnY;
+    private final Supplier<Double> turnX;
+
 
     private final SwerveSubsystemKrish swerve;
 
-    public SwerveJoystickComplexCmd(Supplier<Double> drivePower, Supplier<Double> turnPower, SwerveSubsystemKrish swerve){
+    public SwerveJoystickComplexCmd(Supplier<Double> drivePower, Supplier<Double> turnY, Supplier<Double> turnX, SwerveSubsystemKrish swerve){
         this.drivePower = drivePower;
-        this.turnPower = turnPower;
+        this.turnY = turnY;
+        this.turnX = turnX;
+
         this.swerve = swerve;
 
         addRequirements(swerve);
@@ -31,15 +35,23 @@ public class SwerveJoystickComplexCmd extends CommandBase{
     @Override
     public void execute(){
         double realTimeDrivePower =  -1 * drivePower.get() / 3;
-        double realTimeTurnPower =  1 * turnPower.get() / 3;
+        double realTimeTurnPowerY =  1 * turnY.get() / 3;
+        double realTimeTurnPowerX =  1 * turnX.get() / 3;
 
-        if(realTimeDrivePower > 0.05 || realTimeTurnPower > 0.05){
 
-            double angle = Math.atan2(realTimeDrivePower, realTimeTurnPower);
+        if(realTimeDrivePower > 0.05 || realTimeTurnPowerX > 0.05 || realTimeTurnPowerY > 0.05){
+
+            double angle = Math.atan2(realTimeTurnPowerY, realTimeTurnPowerX);
             swerve.setDrivePower(realTimeDrivePower);
             swerve.pid(angle, angle, angle, angle, 0.3);
 
-            System.out.println(swerve.getTurningEncoderFL());
+            //System.out.println(swerve.getTurningEncoderFL());
+        }else{
+            swerve.setTurningPower(0, 0, 0, 0);
+        }
+
+        if(realTimeDrivePower < 0.05){
+            swerve.setDrivePower(0);
         }
 
         

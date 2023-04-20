@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystemKrish;
 
 
 
@@ -35,16 +36,13 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class Robot extends TimedRobot {
 
-  CANCoder cancoder = new CANCoder(1);
-  CANCoder cancoder1 = new CANCoder(2);
-  CANCoder cancoder2 = new CANCoder(3);
-  CANCoder cancoder3 = new CANCoder(4);
   
   //private ShooterSubsystem shooter = new ShooterSubsystem();
   //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
   //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
   //private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
   //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
+
 
   //private Joystick joy1 = new Joystick(0);
 
@@ -123,17 +121,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if(time.get() < 3){
-      //leftMotor1.set(0.1);
-     // leftMotor2.set(0.1);
-      //rightMotor1.set(-0.1);
-     // rightMotor2.set(-0.1);
-    }else{
-      //leftMotor1.set(0);
-      //leftMotor2.set(0);
-      //rightMotor1.set(0);
-     // rightMotor2.set(0);
-    }
+
+    
 
 
   }

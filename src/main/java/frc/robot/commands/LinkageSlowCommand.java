@@ -53,11 +53,11 @@ public class LinkageSlowCommand extends CommandBase{
       power = -1;
     }
 
-    System.out.println("startPower: " + startPower);
-    System.out.println("time elapsed: " + time.get());
-    System.out.println("slope: " + slope);
+    //System.out.println("startPower: " + startPower);
+    //System.out.println("time elapsed: " + time.get());
+    //System.out.println("slope: " + slope);
 
-    System.out.println("power: " + power);
+    //System.out.println("power: " + power);
 
     shooter.setPower(power);
 
@@ -65,9 +65,9 @@ public class LinkageSlowCommand extends CommandBase{
       isDone = true;
     }
 
-    System.out.println("getPower: " + shooter.getPower());
-    System.out.println("motor1 Power: " + shooter.getMotor1Power());
-    System.out.println("motor2 Power: " + shooter.getMotor2Power());
+    // System.out.println("getPower: " + shooter.getPower());
+    // System.out.println("motor1 Power: " + shooter.getMotor1Power());
+    // System.out.println("motor2 Power: " + shooter.getMotor2Power());
 
 
     

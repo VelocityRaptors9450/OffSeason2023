@@ -8,7 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.LinkageSlowCommand;
 import frc.robot.commands.ShootingCommand;
-import frc.robot.commands.SwerveJoystickCmdKrish;
+import frc.robot.commands.SwerveJoystickComplexCmd;
 import frc.robot.commands.SwerveTurningOrientationCmd;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystemKrish;
@@ -37,7 +37,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    swerve.setDefaultCommand(new SwerveJoystickCmdKrish(() -> driverController.getLeftY(), () -> driverController.getRightX(), swerve));
+    swerve.setDefaultCommand(new SwerveJoystickComplexCmd(() -> driverController.getLeftY(),() -> driverController.getRightY(), () -> driverController.getRightX(), swerve));
     //shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
     
    

@@ -42,23 +42,23 @@ public final class Constants {
 
   }
   
-  public static final int flDriveId = 14;
-  public static final int flTurnId = 9;
+  public static final int flDriveId = 16;
+  public static final int flTurnId = 15;
   public static final int flAbsoluteId = 0;
 
 
-  public static final int frDriveId = 0;
-  public static final int frTurnId = 0;
+  public static final int frDriveId = 6;
+  public static final int frTurnId = 8;
   public static final int frAbsoluteId = 0;
 
 
-  public static final int blDriveId = 0;
-  public static final int blTurnId = 0;
+  public static final int blDriveId = 17;
+  public static final int blTurnId = 3;
   public static final int blAbsoluteId = 0;
 
 
-  public static final int brDriveId = 0;
-  public static final int brTurnId = 0;
+  public static final int brDriveId = 14;
+  public static final int brTurnId = 9;
   public static final int brAbsoluteId = 0;
 
 

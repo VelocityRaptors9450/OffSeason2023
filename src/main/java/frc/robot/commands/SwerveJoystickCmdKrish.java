@@ -33,7 +33,7 @@ public class SwerveJoystickCmdKrish extends CommandBase{
         double realTimeDrivePower =  -1 * drivePower.get() / 3;
         double realTimeTurnPower =  1 * turnPower.get() / 3;
         swerve.setDrivePower(realTimeDrivePower);
-        swerve.setTurningPower(realTimeTurnPower, 0, 0, 0);
+        swerve.setTurningPower(realTimeTurnPower, realTimeTurnPower, realTimeTurnPower, realTimeTurnPower);
 
         //System.out.println(swerve.getTurningEncoderFL());
 

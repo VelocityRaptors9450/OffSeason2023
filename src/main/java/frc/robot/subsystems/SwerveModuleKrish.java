@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 
+import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -12,7 +13,8 @@ public class SwerveModuleKrish {
 
     private final CANSparkMax driveMotor, turningMotor;
     private final RelativeEncoder driveEncoder, turningEncoder;
-    private final AnalogInput absoluteEncoder;
+    private final CANCoder absolute;
+    //private final AnalogInput absoluteEncoder;
     private final boolean absoluteEncoderReversed;
 
     // In case when installed, the forward on the encoder isnt the actual forward
@@ -23,7 +25,8 @@ public class SwerveModuleKrish {
             boolean absoluteEncoderReversed) {
         this.absoluteEncoderOffset = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
-        absoluteEncoder = new AnalogInput(absoluteEncoderId);
+        //absoluteEncoder = new AnalogInput(absoluteEncoderId);
+        absolute = new CANCoder(absoluteEncoderId);
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
@@ -57,12 +60,32 @@ public class SwerveModuleKrish {
         return turningEncoder.getPosition();
     }
 
-    public double getAbsoluteEncoderRad() {
-        double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
-        angle *= 2.0 * Math.PI;
-        angle -= absoluteEncoderOffset;
-        return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
+    // public double getAbsoluteEncoderRad() {
+    //     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
+    //     angle *= 2.0 * Math.PI;
+    //     angle -= absoluteEncoderOffset;
+    //     return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
 
+    // }
+
+    public double getAbsoluteEncoderRad(){
+        return wrapAngle(absolute.getAbsolutePosition() * Math.PI / 180);
+    }
+
+
+    private double wrapAngle(double angle){
+
+        double temp = angle;
+
+        while(temp > Math.PI){
+            temp -= (2 * Math.PI);
+        }
+
+        while(temp < -1 * Math.PI){
+            temp += (2 * Math.PI);
+        }
+
+        return temp;
     }
 
     public void resetEncoders() {

@@ -9,17 +9,17 @@ import frc.robot.Constants;
 public class SwerveSubsystemKrish extends SubsystemBase{
 
     private SwerveModuleKrish fl, fr, bl, br;
-    private double currentPIDTime, previousPIDTime, previousPIDErrorFL, previousPIDErrorFR, previousPIDErrorBL, previousPIDErrorBR, p = 0.0001, i = 0, d = 0;
+    private double currentPIDTime, previousPIDTime, previousPIDErrorFL, previousPIDErrorFR, previousPIDErrorBL, previousPIDErrorBR, p = 0.1, i = 0, d = 0;
 
     
 
     public SwerveSubsystemKrish(){
-        fl = new SwerveModuleKrish(Constants.flDriveId, Constants.flTurnId, false, false, 0, Constants.flAbsoluteId, false);
-        //fr = new SwerveModuleKrish(Constants.frDriveId, Constants.frTurnId, false, false, 0, 0, false);
-        //bl = new SwerveModuleKrish(Constants.blDriveId, Constants.blTurnId, false, false, 0, 0, false);
-        //br = new SwerveModuleKrish(Constants.brDriveId, Constants.brTurnId, false, false, 0, 0, false);
+        fl = new SwerveModuleKrish(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
+        fr = new SwerveModuleKrish(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
+        bl = new SwerveModuleKrish(Constants.blDriveId, Constants.blTurnId, false, false, 4, 0, false);
+        br = new SwerveModuleKrish(Constants.brDriveId, Constants.brTurnId, false, false, 3, 0, false);
 
-        //setMode(IdleMode.kBrake);
+        setMode(IdleMode.kBrake);
     
     }
 
@@ -29,31 +29,31 @@ public class SwerveSubsystemKrish extends SubsystemBase{
 
     public void setMode(IdleMode mode){
         fl.setMode(mode);
-        //fr.setMode(mode);
-        //bl.setMode(mode);
-        //br.setMode(mode);
+        fr.setMode(mode);
+        bl.setMode(mode);
+        br.setMode(mode);
     }
 
     public void setDrivePower(double power){
         fl.setDrivePower(power);
-        //fr.setDrivePower(power);
-        //bl.setDrivePower(power);
-        //br.setDrivePower(power);
+        fr.setDrivePower(power);
+        bl.setDrivePower(power);
+        br.setDrivePower(power);
     }
 
     public void setTurningPower(double flPower, double frPower, double blPower, double brPower){
-        fl.setTurningPower(flPower);
-        //fr.setTurningPower(frPower);
-        //bl.setTurningPower(blPower);
-        //br.setTurningPower(brPower);
+        fl.setTurningPower(-flPower);
+        fr.setTurningPower(-frPower);
+        bl.setTurningPower(-blPower);
+        br.setTurningPower(-brPower);
     }
 
     private double wrapAngle(double angle){
-        while(angle > 2 * Math.PI){
+        while(angle > Math.PI){
             angle -= 2 * Math.PI;
         }
 
-        while(angle < 0){
+        while(angle < -Math.PI){
             angle += 2 * Math.PI;
         }
 
@@ -68,42 +68,46 @@ public class SwerveSubsystemKrish extends SubsystemBase{
         blTarget = wrapAngle(blTarget);
         brTarget = wrapAngle(brTarget);
 
-        if(flTarget == 0 || flTarget == 2 * Math.PI){
-            if(0 - fl.getAbsoluteEncoderRad() > 2 * Math.PI - fl.getAbsoluteEncoderRad()){
-                flTarget = 2 * Math.PI;
+        if(flTarget == Math.PI || flTarget == -Math.PI){
+            if(Math.abs(Math.PI - fl.getAbsoluteEncoderRad()) > Math.abs(-Math.PI - fl.getAbsoluteEncoderRad())){
+                flTarget = -Math.PI;
             }else{
-                flTarget = 0;
+                flTarget = Math.PI;
             }
         }
 
-        if(frTarget == 0 || frTarget == 2 * Math.PI){
-            if(0 - fr.getAbsoluteEncoderRad() > 2 * Math.PI - fr.getAbsoluteEncoderRad()){
-                frTarget = 2 * Math.PI;
+        if(frTarget == Math.PI || frTarget == -Math.PI){
+            if(Math.abs(Math.PI - fr.getAbsoluteEncoderRad()) > Math.abs(-Math.PI - fr.getAbsoluteEncoderRad())){
+                frTarget = -Math.PI;
             }else{
-                frTarget = 0;
+                frTarget = Math.PI;
             }
         }
 
-        if(blTarget == 0 || blTarget == 2 * Math.PI){
-            if(0 - bl.getAbsoluteEncoderRad() > 2 * Math.PI - bl.getAbsoluteEncoderRad()){
-                blTarget = 2 * Math.PI;
+        if(blTarget == Math.PI || blTarget == -Math.PI){
+            if(Math.abs(Math.PI - bl.getAbsoluteEncoderRad()) > Math.abs(-Math.PI - bl.getAbsoluteEncoderRad())){
+                blTarget = -Math.PI;
             }else{
-                blTarget = 0;
+                blTarget = Math.PI;
             }
         }
 
-        if(brTarget == 0 || brTarget == 2 * Math.PI){
-            if(0 - br.getAbsoluteEncoderRad() > 2 * Math.PI - br.getAbsoluteEncoderRad()){
-                brTarget = 2 * Math.PI;
+        if(brTarget == Math.PI || brTarget == -Math.PI){
+            if(Math.abs(Math.PI - br.getAbsoluteEncoderRad()) > Math.abs(-Math.PI - br.getAbsoluteEncoderRad())){
+                brTarget = -Math.PI;
             }else{
-                brTarget = 0;
+                brTarget = Math.PI;
             }
         }
+
+
 
         double flError = flTarget - fl.getAbsoluteEncoderRad();
         double frError = frTarget - fr.getAbsoluteEncoderRad();
         double blError = blTarget - bl.getAbsoluteEncoderRad();
         double brError = brTarget - br.getAbsoluteEncoderRad();
+
+
 
         double flIntegral = 0.5 * (flError + previousPIDErrorFL) * (currentPIDTime - previousPIDTime);
         double frIntegral = 0.5 * (frError + previousPIDErrorFR) * (currentPIDTime - previousPIDTime);
@@ -152,6 +156,8 @@ public class SwerveSubsystemKrish extends SubsystemBase{
                 brPower = limiter;
             }
         }
+
+
 
         setTurningPower(flPower, frPower, blPower, brPower);
 

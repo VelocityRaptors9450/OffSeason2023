@@ -67,6 +67,7 @@ public class DriveTrain extends SubsystemBase {
     blMove.setInverted(true);
     flTurn.setInverted(true);
     blTurn.setInverted(true);
+  }
 
 
   @Override
@@ -100,7 +101,10 @@ public class DriveTrain extends SubsystemBase {
       blTurn.set(0.7);
       brTurn.set(0.7);
     }else{
-      driveForwBack(rotate);
+      flMove.set(rotate);
+      frMove.set(rotate);
+      blMove.set(rotate);
+      brMove.set(rotate);
     }
     
   }

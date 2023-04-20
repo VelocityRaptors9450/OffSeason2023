@@ -14,7 +14,7 @@ import frc.robot.subsystems.SwerveTest;
 public class DefaultDrive extends CommandBase {
   /** Creates a new DefaultDrive. */
   DriveTrain driveTrain;
- 
+
   //private SwerveTest swerveDrive;
   private CommandXboxController cont;
   public DefaultDrive(DriveTrain drive, CommandXboxController controller) {
@@ -32,20 +32,17 @@ public class DefaultDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double fwd = cont.getLeftY();
+    double fwd = cont.getLeftY() * 0.5;
     double strafe = cont.getLeftX();
-    double rot = cont.getRightX();
+    double rot = cont.getRightX() * 0.5;
     if(rot != 0){
-      
+      driveTrain.driveRotate(rot);
     }else if(fwd != 0){
-      driveTrain.rotateToZero();
+      driveTrain.driveForwBack(fwd);
     }else{
-      driveTrain.drive(fwd, strafe, rot);
+      //driveTrain.drive(fwd, strafe, rot);
     }
-   
-    
-
-    
+       
   }
 
   // Called once the command ends or is interrupted.

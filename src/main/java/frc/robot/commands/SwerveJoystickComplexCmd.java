@@ -52,11 +52,7 @@ public class SwerveJoystickComplexCmd extends CommandBase{
             startTime = time.get();
         }
 
-        System.out.println("RightY: " + realTimeTurnPowerY);
-        System.out.println("RightX: " + realTimeTurnPowerX);
-        System.out.println("LeftY: " + realTimeDrivePower);
-        System.out.println("Angle: " + Math.atan2(realTimeTurnPowerY, realTimeTurnPowerX));
-
+        
         if(Math.abs(realTimeDrivePower) > 0.05){
             swerve.setDrivePower(realTimeDrivePower);
 

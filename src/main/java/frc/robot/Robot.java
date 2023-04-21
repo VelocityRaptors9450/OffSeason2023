@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ExtensionSubsystem;
 
 
 
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
   
   //private DoubleLogEntry telemetry;
   private RobotContainer m_robotContainer;
+
+  private final ExtensionSubsystem extension = new ExtensionSubsystem();
  // private Timer time = new Timer();
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -103,28 +106,14 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     t.restart();
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    extension.t.restart();
+     extension.rotateHalfSecond();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if(t.get() < 3){
-      //leftMotor1.set(0.1);
-     // leftMotor2.set(0.1);
-      //rightMotor1.set(-0.1);
-     // rightMotor2.set(-0.1);
-    }else{
-      //leftMotor1.set(0);
-      //leftMotor2.set(0);
-      //rightMotor1.set(0);
-     // rightMotor2.set(0);
-    }
+   
 
 
   }

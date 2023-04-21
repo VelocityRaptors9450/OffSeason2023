@@ -6,8 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.ShooterLinkageMoverCommand;
 import frc.robot.commands.SpringAssemblyShooterCommand;
+import frc.robot.subsystems.ExtensionSubsystem;
 import frc.robot.subsystems.ShooterLinkageMoverSubsystem;
 import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,6 +32,8 @@ public class RobotContainer {
   private final SpringAssemblyShooterCommand shooterCommand = new SpringAssemblyShooterCommand(shooter);
   private final ShooterLinkageMoverSubsystem linkage = new ShooterLinkageMoverSubsystem();
   private final ShooterLinkageMoverCommand linkageCommand = new ShooterLinkageMoverCommand(linkage);  private final Joystick joystick1 = new Joystick(0);
+  //private final ExtensionSubsystem extension = new ExtensionSubsystem();
+  //private final ExtensionCommand extensionCommand = new ExtensionCommand(extension);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -39,9 +43,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     
-    shooter.setDefaultCommand(shooterCommand);
+    // extension.setDefaultCommand(extensionCommand);
+    //shooter.setDefaultCommand(shooterCommand);
     //linkage.setDefaultCommand(linkageCommand);
-    configureBindings();
+    //configureBindings();
   }
 
   /**

@@ -105,15 +105,19 @@ public class Robot extends TimedRobot {
   Timer t = new Timer();
   @Override
   public void autonomousInit() {
+    
+    
+    extension.move(0.1);
     t.restart();
     extension.t.restart();
-     extension.rotateHalfSecond();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-   
+    if (t.get() > 0.25) {
+     extension.stop();
+    }
 
 
   }

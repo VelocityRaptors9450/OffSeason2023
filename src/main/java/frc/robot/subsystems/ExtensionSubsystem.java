@@ -46,6 +46,16 @@ public class ExtensionSubsystem extends SubsystemBase {
 
   }
 
+  public void move(double power) {
+    
+    extensionMovement.set(power > 1 ? 1 : power);
+
+  }
+
+  public void stop() {
+    extensionMovement.set(0);
+  }
+
   public void testMovement() {
     extensionMovement.set(0.2);
   }

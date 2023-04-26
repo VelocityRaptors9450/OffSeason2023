@@ -16,6 +16,7 @@ import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
 import frc.robot.subsystems.TestingSubsystemforParallelLinkage;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,6 +32,7 @@ public class RobotContainer {
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   //private final IntakeSubsystem intake = new IntakeSubsystem();
   private final TestingSubsystemforParallelLinkage paraLinkage = new TestingSubsystemforParallelLinkage();
+  private final ParallelLinkage linkageCmd = new ParallelLinkage(paraLinkage, false);
   private final SpringAssemblyShooterSubsystem shooter = new SpringAssemblyShooterSubsystem(1);
   //private final SpringAssemblyShooterCommand shooterCommand = new SpringAssemblyShooterCommand(shooter);
   //private final ShooterLinkageMoverSubsystem linkage = new ShooterLinkageMoverSubsystem();
@@ -48,8 +50,8 @@ public class RobotContainer {
     // extension.setDefaultCommand(extensionCommand);
     //shooter.setDefaultCommand(shooterCommand);
     //linkage.setDefaultCommand(linkageCommand);
-    //configureBindings();
-    paraLinkage.setDefaultCommand(new ParallelLinkage(paraLinkage));
+    configureBindings();
+    //paraLinkage.setDefaultCommand(new ParallelLinkage(paraLinkage));
   }
 
   /**
@@ -67,9 +69,11 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-   // driverController.a().onTrue(linkageCommand);
-    //driverController.y().getAsBoolean();
-    
+    driverController.x().onTrue(new ParallelLinkage(paraLinkage, true));
+    driverController.y().onTrue(new ParallelLinkage(paraLinkage, false));
+
+    // for our old shooter we used .onTrue()
+
   }
 
   /**

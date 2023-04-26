@@ -11,27 +11,39 @@ import frc.robot.subsystems.TestingSubsystemforParallelLinkage;
 public class ParallelLinkage extends CommandBase {
   /** Creates a new ParallelLinkage. */
   double time;
+  boolean up;
   Timer t = new Timer();
   TestingSubsystemforParallelLinkage test;
-  public ParallelLinkage(TestingSubsystemforParallelLinkage test) {
+  public ParallelLinkage(TestingSubsystemforParallelLinkage test, boolean up) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.test = test;
+    this.up = up;
+
     addRequirements(test);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {time = System.currentTimeMillis(); t.reset();t.restart();}
+  public void initialize() {
+    test.g.start();
+    test.g.reset();
+    test.resetPosition();
+    test.setErrorValue(15);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
+  
   @Override
   public void execute() {
-    if(/*System.currentTimeMillis() - time*/t.get() < 0.3){
-      test.run(0.1);
-
+    //test.runWithTime(0.1);
+    if (!up) {
+      test.runWithPD(15);
     } else {
-      test.run(0);
+      test.runWithPD(-15);
     }
+    //test.runWithPD(0);
+    System.out.println(test.getPosition());
+   
   }
 
   // Called once the command ends or is interrupted.

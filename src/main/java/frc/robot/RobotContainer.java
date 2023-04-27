@@ -6,7 +6,7 @@ package frc.robot;
 
 
 
-import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,28 +26,27 @@ import frc.robot.subsystems.SwerveTest;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
-
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController;
+  private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
   //private final SwerveTest swerve;
   //private final DefaultDrive defaultDrive;
-  private final DriveTrain driveTrain;
+  
+  private final DriveTrain driveTrain = new DriveTrain();
+  private final DefaultDrive driveCommand = new DefaultDrive(driveTrain, driverController);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    driverController =  new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-    //swerve = new SwerveTest();
-    driveTrain = new DriveTrain();
     
-    driveTrain.setDefaultCommand(new DefaultDrive(driveTrain, driverController));
+    //swerve = new SwerveTest();
+    
+    
+    driveTrain.setDefaultCommand(driveCommand);
     
   }
   
-
-  /**
+/* 
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
@@ -55,7 +54,8 @@ public class RobotContainer {
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
-   */
+   
+  */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     /*

@@ -24,8 +24,8 @@ public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {
     // motor6.getEncoder().setPosition(0);
-    intakeLeft.getEncoder().setPosition(0);
-    intakeRight.getEncoder().setPosition(0);
+    //intakeLeft.getEncoder().setPosition(0);
+    //intakeRight.getEncoder().setPosition(0);
 
     //refillSolenoid.set(false);
   }
@@ -56,7 +56,7 @@ public class ExampleSubsystem extends SubsystemBase {
     return false;
   }
 
-  
+  /* 
   public static CANSparkMax motor6 = new CANSparkMax(1, MotorType.kBrushless);
   public static CANSparkMax motor4 = new CANSparkMax(2, MotorType.kBrushless);
 
@@ -110,7 +110,7 @@ public class ExampleSubsystem extends SubsystemBase {
   public static double velocity = 10;
   private static double time = 0;
   
-
+*/
   @Override
   public void periodic() {
     //1:18
@@ -119,7 +119,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
      //motorRunning();
 
-    intake(true, 0.4);
+    //intake(true, 0.4);
 
 
     //motor4.set(0.1);
@@ -162,7 +162,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
   }
 
-
+/*
   public void intake(boolean in, double power) {
     //System.out.println("Velocity Left: " + Math.round(intakeLeft.getEncoder().getVelocity()) + "  Velocity Right: " + Math.round(intakeLeft.getEncoder().getVelocity()));
     
@@ -247,9 +247,10 @@ public class ExampleSubsystem extends SubsystemBase {
     
     
   }
-
+*/
   public void pneumatics() {
     // 
+    /* 
     if(testingSolenoid_PH.get() == false){
       if(t.get() >= 1.0){
         testingSolenoid_PH.set(true);
@@ -261,6 +262,7 @@ public class ExampleSubsystem extends SubsystemBase {
         t.restart();
       }
     }
+    */
 
     // if compressor disabled, then pcmCompressor.enabled();
     // max pressure 60, min pressure 50
@@ -273,7 +275,8 @@ public class ExampleSubsystem extends SubsystemBase {
       refillSolenoid.set(false);
 
     }
-*/
+
+
 
     if(refillSolenoid.get() == false){
       if(l.get() >= 5.0){
@@ -289,7 +292,9 @@ public class ExampleSubsystem extends SubsystemBase {
     
     
     
-  }
+  
+   */
+}
 /* 
   public void motorRunning(double i) {
     System.out.println(motor6.getEncoder().getPosition());

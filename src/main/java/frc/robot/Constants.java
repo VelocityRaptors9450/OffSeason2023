@@ -19,8 +19,8 @@ public final class Constants {
       public static final int DRIVER_CONTROLLER_PORT = 0;
       public static final int FL_MOVE_MOTOR_ID = 16;
       public static final int FL_TURN_MOTOR_ID = 15;
-      public static final int BL_MOVE_MOTOR_ID = 3;
-      public static final int BL_TURN_MOTOR_ID = 17;
+      public static final int BL_MOVE_MOTOR_ID = 17;
+      public static final int BL_TURN_MOTOR_ID = 3;
       public static final int FR_MOVE_MOTOR_ID = 6;
       public static final int FR_TURN_MOTOR_ID = 8;
       public static final int BR_MOVE_MOTOR_ID = 14;

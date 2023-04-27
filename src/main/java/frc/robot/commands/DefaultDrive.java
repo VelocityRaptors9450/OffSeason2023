@@ -23,6 +23,7 @@ public class DefaultDrive extends CommandBase {
     
     cont = controller;
     driveTrain = drive;
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
@@ -32,16 +33,16 @@ public class DefaultDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double fwd = cont.getLeftY() * 0.5;
+    double fwd = cont.getLeftY() * 0.3;
     double strafe = cont.getLeftX();
-    double rot = cont.getRightX() * 0.5;
-    if(rot != 0){
+    double rot = cont.getRightX() * 0.3;
+    //if(rot != 0){
       driveTrain.driveRotate(rot);
-    }else if(fwd != 0){
+    //}else if(fwd != 0){
       driveTrain.driveForwBack(fwd);
-    }else{
+    //}else{
       //driveTrain.drive(fwd, strafe, rot);
-    }
+    //}
        
   }
 

@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -32,6 +33,7 @@ public class DriveTrain extends SubsystemBase {
   private CANCoder fr;
   private CANCoder bl;
   private CANCoder br;
+  PIDController cont = new PIDController(0.001, 0, 0);
 
   
   /* Creates a new DriveTrain. */
@@ -39,8 +41,8 @@ public class DriveTrain extends SubsystemBase {
     //TODO: Fix device Id/ numbers
     fl = new CANCoder(1);
     fr = new CANCoder(2);
-    bl = new CANCoder(3);
-    br = new CANCoder(4);
+    bl = new CANCoder(4);
+    br = new CANCoder(3);
   CANCoderConfiguration config = new CANCoderConfiguration();
   // set units of the CANCoder to radians, with velocity being radians per second
   config.sensorCoefficient = 2 * Math.PI / 4096.0;
@@ -62,50 +64,67 @@ public class DriveTrain extends SubsystemBase {
   CANCoderFaults faults = new CANCoderFaults();
   ErrorCode faultsError = cancoder.getFaults(faults); // fills faults with the current CANCoder faults; returns the last error generated
  */
-
+ 
     flMove.setInverted(true);
-    blMove.setInverted(true);
+    frMove.setInverted(true);
     flTurn.setInverted(true);
-    blTurn.setInverted(true);
+    brTurn.setInverted(true);
+    
+    fl.configMagnetOffset(180*1.758/Math.PI);
+    fr.configMagnetOffset(180*4.2031/Math.PI);
+    bl.configMagnetOffset(180*6.0259/Math.PI);
+    br.configMagnetOffset(180*0.7041/Math.PI);
   }
 
 
   @Override
   public void periodic() {
+    System.out.println("fl:" + fl.getAbsolutePosition()); //1.758
+    System.out.println("fr:" + fr.getAbsolutePosition()); //4.2031
+    System.out.println("bl:" + bl.getAbsolutePosition()); //6.025
+    System.out.println("br:" + br.getAbsolutePosition());// 0.7041
+    TurntoZero();
     // This method will be called once per scheduler run
   }
-  public void drive(double forward, double rotate, double strafe){ 
-    flMove.set(rotate);
-    frMove.set(rotate);
-    blMove.set(rotate);
-    brMove.set(rotate);        
+ 
+  public void flMotor(){
+
+  }
+  public void drive(){
+    
   }
   public void driveForwBack(double forward){
-    if(cancoder.getAbsolutePosition() != 0 || cancoder.getAbsolutePosition() != Math.PI){
-      flTurn.set(0.7);
-      frTurn.set(0.7);
-      blTurn.set(0.7);
-      brTurn.set(0.7);
-    }else{
+    System.out.print(fl.getAbsolutePosition());
+    //double power = cont.calculate(fl.getAbsolutePosition(), Math.PI/4);
+    //System.out.println(power);
+    //if(power > 0.3){
+      //power = 0.3;
+    //}
+    //if(fl.getAbsolutePosition() != 0 || fl.getAbsolutePosition() != Math.PI){
+    //   flTurn.set(power);
+    //   frTurn.set(power);
+    //   blTurn.set(power);
+    //   brTurn.set(power);
+    // }else{
       flMove.set(forward);
       frMove.set(forward);
       blMove.set(forward);
       brMove.set(forward);
-    }
+    //}
     
   } 
   public void driveRotate(double rotate){
-    if(cancoder.getAbsolutePosition() != Math.PI / 4 || cancoder.getAbsolutePosition() != Math.PI * 5 / 4){
-      flTurn.set(0.7);
-      frTurn.set(0.7);
-      blTurn.set(0.7);
-      brTurn.set(0.7);
-    }else{
-      flMove.set(rotate);
-      frMove.set(rotate);
-      blMove.set(rotate);
-      brMove.set(rotate);
-    }
+    //if(fl.getAbsolutePosition() != Math.PI / 4 || fl.getAbsolutePosition() != Math.PI * 5 / 4){
+      flTurn.set(rotate);
+      frTurn.set(rotate);
+      blTurn.set(rotate);
+      brTurn.set(rotate);
+   // }else{
+    //   flMove.set(rotate);
+    //   frMove.set(rotate);
+    //   blMove.set(rotate);
+    //   brMove.set(rotate);
+    // }
     
   }
 
@@ -116,19 +135,79 @@ public class DriveTrain extends SubsystemBase {
   public CANCoder getBr(){return br;}
 
 
-  private double closestAngle(double a, double b){
+  private double closestAngles(double current, double target){
         // get direction
-        double dir = modulo(b, 360.0) - modulo(a, 360.0);
+        double dir = modulo(current, 180.0) - modulo(target, 180.0);
 
         // convert from -360 to 360 to -180 to 180
         if (Math.abs(dir) > 180.0)
         {
-                dir = -(Math.signum(dir) * 360.0) + dir;
+                dir = (Math.signum(dir) * 360.0) - dir;
+        }else{
+          dir *= -1;
         }
         return dir;
+        //If negative turn right, if positive turn left
+
   }
+  private double closestAngle(double current, double target){
+    // get direction
+    double dir = modulo(current, 360.0) - modulo(target, 360.0);
+
+    // convert from -360 to 360 to -180 to 180
+    if (Math.abs(dir) > 180.0)
+    {
+            dir = -1* (Math.signum(dir) * 360.0) + dir;
+    }
+    return dir;
+    //If negative turn right, if positive turn left
+
+}
   private double modulo(double val, double divideBy){
     return val % divideBy;
+  }
+  double turnToZero = 0;
+  public void TurntoZero(){
+    if(fl.getAbsolutePosition() != 0){
+      turn(fl.getAbsolutePosition(), 0);
+    }
+  }
+  public void setPower(double fl, double fr, double bl, double br){
+    flTurn.set(fl);
+    frTurn.set(fr);
+    blTurn.set(bl);
+    brTurn.set(br);
+  }
+  public void turn(double current, double target){
+    if(current != target){
+      if(closestAngle(current, target) < 0){
+        //turn right
+        flTurn.set(0.2);
+        frTurn.set(0.2);
+        blTurn.set(0.2);
+        brTurn.set(0.2);
+      }else{
+        //turn left
+        flTurn.set(-0.2);
+        frTurn.set(-0.2);
+        blTurn.set(-0.2);
+        brTurn.set(-0.2);
+      }
+    }
+  }
+  double flPriorError, frPriorError, blPriorError, brPriorError;
+  double currentTime, priorTime;
+  public void drivePID(double P, double I, double D, double flerror, double frerror, double blerror, double brerror){
+    priorTime = System.currentTimeMillis();
+    currentTime = System.currentTimeMillis();
+
+    flPriorError = 0;
+    frPriorError = 0;
+    blPriorError = 0;
+    brPriorError = 0;
+
+  
+    
   }
 
 }

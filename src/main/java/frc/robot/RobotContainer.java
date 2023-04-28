@@ -71,6 +71,7 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     driverController.x().onTrue(new ParallelLinkage(paraLinkage, true));
     driverController.y().onTrue(new ParallelLinkage(paraLinkage, false));
+    driverController.a().onTrue(new ParallelLinkage(paraLinkage));
 
     // for our old shooter we used .onTrue()
 

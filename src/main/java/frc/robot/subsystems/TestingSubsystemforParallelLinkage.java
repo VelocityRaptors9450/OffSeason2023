@@ -9,8 +9,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class TestingSubsystemforParallelLinkage extends SubsystemBase {
   /** Creates a new TestingSubsystemforParallelLinkage. */
@@ -73,15 +73,60 @@ public class TestingSubsystemforParallelLinkage extends SubsystemBase {
     this.error = target;
   }
   public void runWithPD(double rotations) {
-    if (error == 0) {
-      wrist.set(PDWriting(rotations));
-    } else if (Math.abs(error) > 0.2) {
-      wrist.set(PDWriting(rotations));
-    } else {
-      wrist.stopMotor();
+    // if (error == 0) {
+    //   wrist.set(PDWriting(rotations));
+    // } else if (Math.abs(error) > 0.2) {
+    //   wrist.set(PDWriting(rotations));
+    // } else {
+    //   wrist.stopMotor();
+    // }
+    wrist.set(PDWriting(rotations));
+
+  }
+
+  public void testRunWithPD(double rotations) {
+    if (rotations > 0 && getPosition() < Constants.maxWrist) {
+      wrist.set(TestPDWriting(rotations));
     }
   }
 
+
+  /*
+     -14.619056701660156 -54  --> 3.6938 degrees/revolution
+      14.92857551574707 -53  --> 3.550238 degrees/revolution
+      avg is 3.63537 degrees/revolution
+   */
+  
+
+   
+  public double TestPDWriting(double target) {
+    if (restartTimer) {
+      g.reset();
+      restartTimer = false;
+    }
+    
+    error = target - wrist.getEncoder().getPosition();
+    changeInTime = g.get() - oldTime;
+    pdPower = error * proportion + 
+    ((error - priorError) / (changeInTime)) * derivative;
+    
+    oldTime = g.get();
+    
+    if (pdPower > 0.05) {
+      pdPower = 0.05;
+    } else if (pdPower < -0.05) {
+      pdPower = -0.05;
+    } 
+  
+  
+    System.out.println("POWER: " + pdPower + "Proportion: " + error * proportion + "  dv/dt: " + ((error - priorError) / (changeInTime)) * derivative);
+    priorError = error;
+
+    
+    return pdPower; 
+  }
+  
+  
   double changeInTime = 0.0;
   public double PDWriting(double target) {
     if (restartTimer) {

@@ -15,6 +15,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  // wrist values
+  public static final double maxWrist = 25.9 - 5; //subtracted to make sure it doesn't go to max
+  public static final double minWrist = -26.6 + 5; //added to make sure it doesn't go to max
+  
+  
   public static class OperatorConstants{
       public static final int DRIVER_CONTROLLER_PORT = 0;
       public static final int FL_MOVE_MOTOR_ID = 1;

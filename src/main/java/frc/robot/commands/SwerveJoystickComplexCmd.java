@@ -69,9 +69,12 @@ public class SwerveJoystickComplexCmd extends CommandBase{
                 turning = false;
             }
             
-        }else if(Math.abs(realTimeTurnPowerX) > 0.05 || Math.abs(realTimeTurnPowerY) > 0.05){
+        }else if(Math.abs(realTimeTurnPowerX) > 0.05 && Math.abs(realTimeTurnPowerY) > 0.05){
 
-            double angle = Math.atan2(realTimeTurnPowerY, realTimeTurnPowerX) - (Math.PI / 2);
+            double angle = swerve.wrapAngle(Math.atan2(realTimeTurnPowerY, realTimeTurnPowerX) + (Math.PI / 2));
+            //System.out.println("AngleRads: " + angle);
+            //System.out.println("AngleDegs: " + angle * 180 / Math.PI);
+
 
             swerve.pid(angle, angle, angle, angle, 0.4);
 

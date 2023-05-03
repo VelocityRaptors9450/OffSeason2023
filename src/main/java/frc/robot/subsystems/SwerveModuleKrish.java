@@ -69,7 +69,7 @@ public class SwerveModuleKrish {
     // }
 
     public double getAbsoluteEncoderRad(){
-        return wrapAngle(absolute.getAbsolutePosition() * Math.PI / 180);
+        return absolute.getAbsolutePosition();
     }
 
 

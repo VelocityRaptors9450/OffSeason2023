@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.RotationSubsystem;
 // import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystemKrish;
@@ -43,8 +44,8 @@ public class Robot extends TimedRobot {
   //private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
   //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
 
-
   //private Joystick joy1 = new Joystick(0);
+
 
 
   private Command m_autonomousCommand;
@@ -137,6 +138,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+
+
     // ExampleSubsystem.t.restart();
     // ExampleSubsystem.l.restart();
     // // ExampleSubsystem.motor6.getEncoder().setPosition(0);
@@ -161,6 +165,7 @@ public class Robot extends TimedRobot {
   
   @Override
   public void teleopPeriodic() {
+
 
     // System.out.println(cancoder.getPosition());
     // System.out.println(cancoder.getAbsolutePosition());

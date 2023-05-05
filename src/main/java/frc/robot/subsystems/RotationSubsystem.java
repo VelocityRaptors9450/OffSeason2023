@@ -9,7 +9,7 @@ public class RotationSubsystem extends SubsystemBase{
 
 
     private CANSparkMax motor1 = new CANSparkMax(5,MotorType.kBrushless);
-    private double currentPIDTime, previousPIDTime, previousRotationError, p = 0.175, i = 0, d = 0;
+    private double currentPIDTime, previousPIDTime, previousRotationError, p = 0.175, i = 0, d = 0, f = 0, highPosition = 0;
 
 
 
@@ -42,7 +42,7 @@ public class RotationSubsystem extends SubsystemBase{
         double rotationDerivative = (rotationError - previousRotationError)/(currentPIDTime - previousPIDTime);
         
 
-        double rotationPower = ((p * rotationError) + (i * rotationIntegral) + (d * rotationDerivative));
+        double rotationPower = ((p * rotationError) + (i * rotationIntegral) + (d * rotationDerivative) + (f * (1/(highPosition - getEncoderTics()))));
         
 
         //Limiting max power

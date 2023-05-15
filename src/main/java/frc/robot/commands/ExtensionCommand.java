@@ -21,15 +21,13 @@ public class ExtensionCommand extends CommandBase {
   @Override
   public void initialize() {
     System.out.println("Extension started");
-    extension.t.restart();
-    extension.t.start();
     extension.extensionMovement.getEncoder().setPosition(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    extension.rotateHalfSecond();
+
   }
 
   // Called once the command ends or is interrupted.

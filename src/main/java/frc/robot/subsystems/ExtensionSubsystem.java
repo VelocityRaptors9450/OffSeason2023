@@ -17,14 +17,7 @@ public class ExtensionSubsystem extends SubsystemBase {
   public CANSparkMax extensionMovement = new CANSparkMax(18, MotorType.kBrushless);
   public Timer t = new Timer();
 
-    private static double error = 0.0;
-  private static double priorError = 0.0;
-  private static double proportion = 0.09;
-  private static double derivative = 0.000012;
-  private static double pdPower = 0.0;  
-  private static double timeChange = 0.02;
-  public static double velocity = 10;
-  private static double time = 0;
+  
   
   
   @Override
@@ -32,18 +25,15 @@ public class ExtensionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   public void moveExtension(double distance) {
-    extensionMovement.set(PDPowering(distance));
+    //extensionMovement.set(PDPowering(distance));
   } 
-
-  public void rotateHalfSecond() {
-    if (t.get() < 0.25) {
-      extensionMovement.set(0.2);
-   } else {
-    extensionMovement.set(0);
-   }
-
-    
-
+  private double currentTime, priorTime, priorError, currentError, proportion = 0.1, integral = 0, derivative = 0;
+  public void goToPosition(double position){
+    currentTime = 0;
+    priorTime = 0;
+    priorError = 0;
+    currentError = 0;
+    extensionMovement.set(proportion * (currentError) + derivative * ((currentError-priorError)/(currentTime - priorTime)));
   }
 
   public void move(double power) {
@@ -59,7 +49,7 @@ public class ExtensionSubsystem extends SubsystemBase {
   public void testMovement() {
     extensionMovement.set(0.2);
   }
-
+/* 
   public double PDPowering(double target) {
     timeChange = t.get();
     error = target - extensionMovement.getEncoder().getPosition();
@@ -80,6 +70,6 @@ public class ExtensionSubsystem extends SubsystemBase {
     t.restart();
     return pdPower; 
 }
-  
+  */
 
 }

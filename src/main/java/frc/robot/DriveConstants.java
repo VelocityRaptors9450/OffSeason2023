@@ -14,8 +14,7 @@ import edu.wpi.first.math.util.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
-  public static class OperatorConstants{
+public final class DriveConstants {
       public static final int DRIVER_CONTROLLER_PORT = 0;
       public static final int FL_MOVE_MOTOR_ID = 16;
       public static final int FL_TURN_MOTOR_ID = 15;
@@ -25,25 +24,10 @@ public final class Constants {
       public static final int FR_TURN_MOTOR_ID = 8;
       public static final int BR_MOVE_MOTOR_ID = 14;
       public static final int BR_TURN_MOTOR_ID = 9;
-      
-
-  }
-
-  public static class ModuleConversion {
-    //TOO BE UPDATEEDDDDD
-    public static final double WheelDiameter = Units.inchesToMeters(4);
-    public static final double DriveMotorGearRatio = 1 / 6;
-    public static final double TurnMotorGearRatio = 1 / 6;
-    public static final double DriveEncoderRot2Meter = DriveMotorGearRatio * Math.PI * WheelDiameter;
-    public static final double TurnEncoderRot2Rad = TurnMotorGearRatio * 2 * Math.PI;
-    public static final double DriveEncoderRPM2MeterPerSec = DriveEncoderRot2Meter / 60;
-    public static final double TurnEncoderRPM2RadPerSec = TurnEncoderRot2Rad / 60;
-    //ticks * 1 rotations/4096 ticks  *  gear ratio  * 6pi inches/1 rotation  * 1 ft / 12 inches
-    public static final double drivetcks2ftfactor = 1.0 / 4096 * 6 * Math.PI / 12;
-
-  }
-  public static class Positions{
-
-  }
-
+      public static final int FL_ABSOLUTE_ENCODER = 1;
+      public static final int FR_ABSOLUTE_ENCODER = 2;
+      public static final int BL_ABSOLUTE_ENCODER = 4;
+      public static final int BR_ABSOLUTE_ENCODER = 3;
+      public static final double PhysicalMaxMetersPerSecond = 0;
+  
 }

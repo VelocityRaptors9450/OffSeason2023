@@ -17,17 +17,18 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.DriveConstants;
+
 
 public class DriveTrain extends SubsystemBase {
-  private CANSparkMax flMove = new CANSparkMax(Constants.OperatorConstants.FL_MOVE_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax flTurn = new CANSparkMax(Constants.OperatorConstants.FL_TURN_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax blMove = new CANSparkMax(Constants.OperatorConstants.BL_MOVE_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax blTurn = new CANSparkMax(Constants.OperatorConstants.BL_TURN_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax frMove = new CANSparkMax(Constants.OperatorConstants.FR_MOVE_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax frTurn = new CANSparkMax(Constants.OperatorConstants.FR_TURN_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax brMove = new CANSparkMax(Constants.OperatorConstants.BR_MOVE_MOTOR_ID, MotorType.kBrushless);
-  private CANSparkMax brTurn = new CANSparkMax(Constants.OperatorConstants.BR_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax flMove = new CANSparkMax(DriveConstants.FL_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax flTurn = new CANSparkMax(DriveConstants.FL_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax blMove = new CANSparkMax(DriveConstants.BL_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax blTurn = new CANSparkMax(DriveConstants.BL_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax frMove = new CANSparkMax(DriveConstants.FR_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax frTurn = new CANSparkMax(DriveConstants.FR_TURN_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax brMove = new CANSparkMax(DriveConstants.BR_MOVE_MOTOR_ID, MotorType.kBrushless);
+  private CANSparkMax brTurn = new CANSparkMax(DriveConstants.BR_TURN_MOTOR_ID, MotorType.kBrushless);
   private CANCoder cancoder;
   private CANCoder fl;
   private CANCoder fr;

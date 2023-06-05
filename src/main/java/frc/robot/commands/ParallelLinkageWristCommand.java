@@ -7,20 +7,24 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.TestingSubsystemforParallelLinkage;
+import frc.robot.subsystems.ParallelLinkageWristSubsystem;
 
-public class ParallelLinkage extends CommandBase {
+public class ParallelLinkageWristCommand extends CommandBase {
   /** Creates a new ParallelLinkage. */
   double time;
   boolean up;
-  double amountPos = 0;
-  double amountNeg = 0;
+  boolean resetPos = true;
 
+  double target = 0;
   boolean returnToZero = false;
   Timer t = new Timer();
-  TestingSubsystemforParallelLinkage test;
-  public ParallelLinkage(TestingSubsystemforParallelLinkage test, boolean up) {
+  private static ParallelLinkageWristSubsystem test;
+ 
+  public ParallelLinkageWristCommand(ParallelLinkageWristSubsystem test, boolean up) {
     // Use addRequirements() here to declare subsystem dependencies.
+    test.wrist.getEncoder().setPosition(0);
+
+  
     this.test = test;
     this.up = up;
     returnToZero = false;
@@ -28,7 +32,9 @@ public class ParallelLinkage extends CommandBase {
     addRequirements(test);
   }
 
-  public ParallelLinkage(TestingSubsystemforParallelLinkage test) {
+
+
+  public ParallelLinkageWristCommand(ParallelLinkageWristSubsystem test) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.test = test;
     this.up = true;
@@ -37,15 +43,17 @@ public class ParallelLinkage extends CommandBase {
     addRequirements(test);
   }
 
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     test.g.start();
     test.g.reset();
     //test.resetPosition();
-    test.setErrorValue(15);
-    amountPos = test.getPosition() + 5;
-    amountNeg = test.getPosition() - 5;
+    // assigns starting error value for more accurate PID start
+    test.setErrorValue(8);
+    target = 8;
+    
 
   }
 
@@ -63,16 +71,17 @@ public class ParallelLinkage extends CommandBase {
 
     
     if (!up) {
-      if (amountPos < Constants.maxWrist)
-        test.testRunWithPD(amountPos);
+      // moves to target (on press of y button)
+      test.testRunWithPD(-target);
     } else if (returnToZero) {
+      // moves to position 0
       test.testRunWithPD(0);
     } else {
-      if (amountNeg > Constants.minWrist)
-        test.testRunWithPD(amountNeg);
+      // moves to target (on press of x button)
+      test.testRunWithPD(target);
     } 
     //test.runWithPD(0);
-    System.out.println(test.getPosition());
+    //System.out.println(test.getPosition());
    
   }
 

@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -12,7 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class TestingSubsystemforParallelLinkage extends SubsystemBase {
+public class ParallelLinkageWristSubsystem extends SubsystemBase {
   /** Creates a new TestingSubsystemforParallelLinkage. */
   public final CANSparkMax wrist;
   public final Timer g = new Timer();
@@ -27,8 +30,10 @@ public class TestingSubsystemforParallelLinkage extends SubsystemBase {
   private static double time = 0;
   private boolean restartTimer = true;
 
-  public TestingSubsystemforParallelLinkage() {
-    wrist = new CANSparkMax(4, MotorType.kBrushless);
+
+  public ParallelLinkageWristSubsystem() {
+    wrist = new CANSparkMax(5, MotorType.kBrushless); // id was 4
+    wrist.setIdleMode(IdleMode.kBrake);
   }
 
   public void run(double power){
@@ -41,7 +46,7 @@ public class TestingSubsystemforParallelLinkage extends SubsystemBase {
   // .getEncoder().getPosition(); value returns the number
   // of revolutions/rotations experienced by the the faster 
   // turning side; the one that requires less torque to spin
-  public double getPosition() {
+  public double getPosition() {    
     return wrist.getEncoder().getPosition();
   }
   public void resetPosition() {
@@ -84,12 +89,39 @@ public class TestingSubsystemforParallelLinkage extends SubsystemBase {
 
   }
 
-  public void testRunWithPD(double rotations) {
-    if (rotations > 0 && getPosition() < Constants.maxWrist) {
-      wrist.set(TestPDWriting(rotations));
+  // sets power to motor
+  public void testRunWithPD(double target) {
+    // if this works the way it should, delete this and the line below and uncomment below
+    
+    /* 
+    wrist.set(TestPDWriting(target)); 
+    */
+
+    double currentPos = getPosition();
+    System.out.println("CURRENT POSITION: " + currentPos);
+    
+
+    
+
+    // stops motor if the position of the wrist gets out of the domain of -4 and 4
+    if (currentPos < 4 && currentPos > -4) {
+      wrist.set(TestPDWriting(target));
+      System.out.println("SeCoNd POSITION:" + currentPos);
+    } else {
+      System.out.println("STOPPED");
+      wrist.stopMotor();
     }
+    
+    
+
   }
 
+  public void stopMotor() {
+    wrist.stopMotor();
+  }
+
+  
+ 
 
   /*
      -14.619056701660156 -54  --> 3.6938 degrees/revolution
@@ -98,7 +130,7 @@ public class TestingSubsystemforParallelLinkage extends SubsystemBase {
    */
   
 
-   
+  // test PID, change powers and condition in if statement to limit power
   public double TestPDWriting(double target) {
     if (restartTimer) {
       g.reset();
@@ -112,14 +144,14 @@ public class TestingSubsystemforParallelLinkage extends SubsystemBase {
     
     oldTime = g.get();
     
-    if (pdPower > 0.05) {
-      pdPower = 0.05;
-    } else if (pdPower < -0.05) {
-      pdPower = -0.05;
+    if (pdPower > 0.3) {
+      pdPower = 0.3;
+    } else if (pdPower < -0.3) {
+      pdPower = -0.3;
     } 
   
   
-    System.out.println("POWER: " + pdPower + "Proportion: " + error * proportion + "  dv/dt: " + ((error - priorError) / (changeInTime)) * derivative);
+    //System.out.println("POWER: " + pdPower + "Proportion: " + error * proportion + "  dv/dt: " + ((error - priorError) / (changeInTime)) * derivative);
     priorError = error;
 
     

@@ -7,20 +7,20 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExtensionCommand;
-import frc.robot.commands.ParallelLinkage;
+import frc.robot.commands.ParallelLinkageWristCommand;
 // import frc.robot.commands.ShooterLinkageMoverCommand;
 import frc.robot.commands.SpringAssemblyShooterCommand;
 import frc.robot.subsystems.ExtensionSubsystem;
 // import frc.robot.subsystems.ShooterLinkageMoverSubsystem;
 import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
-import frc.robot.subsystems.TestingSubsystemforParallelLinkage;
+import frc.robot.subsystems.ParallelLinkageWristSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import java.util.function.*;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -31,8 +31,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   //private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final TestingSubsystemforParallelLinkage paraLinkage = new TestingSubsystemforParallelLinkage();
-  private final ParallelLinkage linkageCmd = new ParallelLinkage(paraLinkage, false);
+  private final ParallelLinkageWristSubsystem paraLinkage = new ParallelLinkageWristSubsystem();
+  private final ParallelLinkageWristCommand linkageCmd = new ParallelLinkageWristCommand(paraLinkage, false);
   private final SpringAssemblyShooterSubsystem shooter = new SpringAssemblyShooterSubsystem(1);
   //private final SpringAssemblyShooterCommand shooterCommand = new SpringAssemblyShooterCommand(shooter);
   //private final ShooterLinkageMoverSubsystem linkage = new ShooterLinkageMoverSubsystem();
@@ -69,9 +69,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    driverController.x().onTrue(new ParallelLinkage(paraLinkage, true));
-    driverController.y().onTrue(new ParallelLinkage(paraLinkage, false));
-    driverController.a().onTrue(new ParallelLinkage(paraLinkage));
+    driverController.x().onTrue(new ParallelLinkageWristCommand(paraLinkage, true));
+    driverController.y().onTrue(new ParallelLinkageWristCommand(paraLinkage, false));
+    driverController.a().onTrue(new ParallelLinkageWristCommand(paraLinkage));
 
     // for our old shooter we used .onTrue()
 

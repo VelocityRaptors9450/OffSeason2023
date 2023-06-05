@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
 
 
   }
-  private CANSparkMax test = new CANSparkMax(5, MotorType.kBrushless);
+  //private CANSparkMax test = new CANSparkMax(5, MotorType.kBrushless);
   private Joystick stick = new Joystick(0);
   @Override
   public void teleopInit() {

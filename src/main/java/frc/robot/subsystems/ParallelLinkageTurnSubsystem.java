@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ParallelLinkageWristSubsystem extends SubsystemBase {
+public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   /** Creates a new TestingSubsystemforParallelLinkage. */
-  public final CANSparkMax wrist;
+  public final CANSparkMax linkageTurn;
   public final Timer g = new Timer();
   
   private double error = 0.0;
@@ -32,15 +32,15 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
   private double rotLowerBound;
   private double rotUpperBound;
 
-  public ParallelLinkageWristSubsystem(int deviceId, double rotLowerBound, double rotUpperBound) {
+  public ParallelLinkageTurnSubsystem(int deviceId, double rotLowerBound, double rotUpperBound) {
     this.rotLowerBound = rotLowerBound;
     this.rotUpperBound = rotUpperBound;
-    wrist = new CANSparkMax(deviceId, MotorType.kBrushless); // id was 4
-    wrist.setIdleMode(IdleMode.kBrake);
+    linkageTurn = new CANSparkMax(deviceId, MotorType.kBrushless); // id was 4
+    linkageTurn.setIdleMode(IdleMode.kBrake);
   }
 
   public void run(double power){
-    wrist.set(power);
+    linkageTurn.set(power);
   }
 
   PIDController d = new PIDController(oldTime, error, derivative);
@@ -50,18 +50,18 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
   // of revolutions/rotations experienced by the the faster 
   // turning side; the one that requires less torque to spin
   public double getPosition() {    
-    return wrist.getEncoder().getPosition();
+    return linkageTurn.getEncoder().getPosition();
   }
   public void resetPosition() {
-    wrist.getEncoder().setPosition(0);
+    linkageTurn.getEncoder().setPosition(0);
   }
 
   //works with setDefaultCommand, but will need updating for w/ button press
   public void runWithTime(double power) {
     if (g.get() < 0.1) {
-      wrist.set(power);
+      linkageTurn.set(power);
     } else {
-      wrist.set(0);
+      linkageTurn.set(0);
     }
 
   }
@@ -71,9 +71,9 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
   //basic runToPosition method
   public void basicRunToPosition(double position, double power) {
     if (Math.abs(position - getPosition()) > 0) {
-      wrist.set(power);
+      linkageTurn.set(power);
     } else {
-      wrist.stopMotor();
+      linkageTurn.stopMotor();
     }
   }
   
@@ -82,13 +82,13 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
   }
   public void runWithPD(double rotations) {
     // if (error == 0) {
-    //   wrist.set(PDWriting(rotations));
+    //   linkageTurn.set(PDWriting(rotations));
     // } else if (Math.abs(error) > 0.2) {
-    //   wrist.set(PDWriting(rotations));
+    //   linkageTurn.set(PDWriting(rotations));
     // } else {
-    //   wrist.stopMotor();
+    //   linkageTurn.stopMotor();
     // }
-    wrist.set(PDWriting(rotations));
+    linkageTurn.set(PDWriting(rotations));
 
   }
 
@@ -97,7 +97,7 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
     // if this works the way it should, delete this and the line below and uncomment below
     
     /* 
-    wrist.set(TestPDWriting(target)); 
+    linkageTurn.set(TestPDWriting(target)); 
     */
 
     double currentPos = getPosition();
@@ -106,13 +106,13 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
 
     
 
-    // stops motor if the position of the wrist gets out of the domain of -4 and 4
+    // stops motor if the position of the linkageTurn gets out of the domain of -4 and 4
     if (currentPos < rotUpperBound && currentPos > rotLowerBound) {
-      wrist.set(TestPDWriting(target));
+      linkageTurn.set(TestPDWriting(target));
       System.out.println("SeCoNd POSITION:" + currentPos);
     } else {
       System.out.println("STOPPED");
-      wrist.stopMotor();
+      linkageTurn.stopMotor();
     }
     
     
@@ -120,7 +120,7 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
-    wrist.stopMotor();
+    linkageTurn.stopMotor();
   }
 
   
@@ -140,7 +140,7 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
       restartTimer = false;
     }
     
-    error = target - wrist.getEncoder().getPosition();
+    error = target - linkageTurn.getEncoder().getPosition();
     changeInTime = g.get() - oldTime;
     pdPower = error * proportion + 
     ((error - priorError) / (changeInTime)) * derivative;
@@ -169,7 +169,7 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
       restartTimer = false;
     }
     
-    error = target - wrist.getEncoder().getPosition();
+    error = target - linkageTurn.getEncoder().getPosition();
     changeInTime = g.get() - oldTime;
     pdPower = error * proportion + 
     ((error - priorError) / (changeInTime)) * derivative;

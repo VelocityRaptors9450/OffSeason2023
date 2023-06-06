@@ -7,10 +7,14 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExtensionCommand;
+import frc.robot.commands.ParallelLinkageTurnCommand;
+import frc.robot.commands.ParallelLinkageTurningCommand;
 import frc.robot.commands.ParallelLinkageWristCommand;
 // import frc.robot.commands.ShooterLinkageMoverCommand;
 import frc.robot.commands.SpringAssemblyShooterCommand;
 import frc.robot.subsystems.ExtensionSubsystem;
+import frc.robot.subsystems.ParallelLinkageTurnSubsystem;
+import frc.robot.subsystems.ParallelLinkageTurningSubsystem;
 // import frc.robot.subsystems.ShooterLinkageMoverSubsystem;
 import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
 import frc.robot.subsystems.ParallelLinkageWristSubsystem;
@@ -31,9 +35,17 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   //private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final ParallelLinkageWristSubsystem paraLinkage = new ParallelLinkageWristSubsystem();
+  private final ParallelLinkageWristSubsystem paraLinkage = new ParallelLinkageWristSubsystem(5, -4, 4);
   private final ParallelLinkageWristCommand linkageCmd = new ParallelLinkageWristCommand(paraLinkage, false);
+  //private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(5, -1, 1);
+  //private final ParallelLinkageTurnCommand turnCmnd = new ParallelLinkageTurnCommand(turnSubsystem);
   private final SpringAssemblyShooterSubsystem shooter = new SpringAssemblyShooterSubsystem(1);
+  
+  /*
+   * Testing other idea for turning rotationg for parallel Linkage
+   */
+  private final ParallelLinkageWristSubsystem testTurnSub = new ParallelLinkageWristSubsystem(5, -1, 1);
+  private final ParallelLinkageWristCommand testTurnCmd = new ParallelLinkageWristCommand(testTurnSub);
   //private final SpringAssemblyShooterCommand shooterCommand = new SpringAssemblyShooterCommand(shooter);
   //private final ShooterLinkageMoverSubsystem linkage = new ShooterLinkageMoverSubsystem();
   //private final ShooterLinkageMoverCommand linkageCommand = new ShooterLinkageMoverCommand(linkage);  private final Joystick joystick1 = new Joystick(0);
@@ -72,6 +84,8 @@ public class RobotContainer {
     driverController.x().onTrue(new ParallelLinkageWristCommand(paraLinkage, true));
     driverController.y().onTrue(new ParallelLinkageWristCommand(paraLinkage, false));
     driverController.a().onTrue(new ParallelLinkageWristCommand(paraLinkage));
+    driverController.leftTrigger().onTrue(new ParallelLinkageWristCommand(testTurnSub, false));
+    driverController.rightTrigger().onTrue(new ParallelLinkageWristCommand(testTurnSub, false));
 
     // for our old shooter we used .onTrue()
 

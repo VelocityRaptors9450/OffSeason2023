@@ -22,8 +22,8 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   
   private double error = 0.0;
   private static double priorError = 0.0;
-  private static double proportion = 0.07;
-  private static double derivative = 0.00;
+  private static double proportion = 0.02;
+  private static double derivative = 0.018;
   private static double pdPower = 0.0;  
   private static double oldTime = 0.0;
   public static double velocity = 10;
@@ -147,17 +147,17 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
     
     oldTime = g.get();
     
-    if (pdPower > 0.3) {
-      pdPower = 0.3;
-    } else if (pdPower < -0.3) {
-      pdPower = -0.3;
+    if (pdPower > 0.2) {
+      pdPower = 0.2;
+    } else if (pdPower < -0.2) {
+      pdPower = -0.2;
     } 
   
   
     //System.out.println("POWER: " + pdPower + "Proportion: " + error * proportion + "  dv/dt: " + ((error - priorError) / (changeInTime)) * derivative);
     priorError = error;
 
-    
+    System.out.println("Power: "+ pdPower);
     return pdPower; 
   }
   

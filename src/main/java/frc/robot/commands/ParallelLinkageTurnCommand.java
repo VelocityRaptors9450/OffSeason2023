@@ -50,7 +50,7 @@ public class ParallelLinkageTurnCommand extends CommandBase {
   public void initialize() {
     test.g.start();
     test.g.reset();
-    //test.resetPosition();
+    test.resetPosition();
     // assigns starting error value for more accurate PID start
     test.setErrorValue(8);
     target = 8;

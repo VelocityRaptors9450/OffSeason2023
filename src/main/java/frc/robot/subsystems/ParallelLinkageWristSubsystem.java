@@ -147,17 +147,17 @@ public class ParallelLinkageWristSubsystem extends SubsystemBase {
     
     oldTime = g.get();
     
-    if (pdPower > 0.3) {
-      pdPower = 0.3;
-    } else if (pdPower < -0.3) {
-      pdPower = -0.3;
+    if (pdPower > 0.2) {
+      pdPower = 0.2;
+    } else if (pdPower < -0.2) {
+      pdPower = -0.2;
     } 
   
   
     //System.out.println("POWER: " + pdPower + "Proportion: " + error * proportion + "  dv/dt: " + ((error - priorError) / (changeInTime)) * derivative);
     priorError = error;
 
-    
+    System.out.println("Power: " + pdPower);
     return pdPower; 
   }
   

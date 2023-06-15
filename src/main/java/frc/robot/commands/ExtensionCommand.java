@@ -21,7 +21,7 @@ public class ExtensionCommand extends CommandBase {
   @Override
   public void initialize() {
     System.out.println("Extension started");
-    extension.extensionMovement.getEncoder().setPosition(0);
+   // extension.extensionMovement.getEncoder().setPosition(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

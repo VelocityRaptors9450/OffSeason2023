@@ -35,8 +35,17 @@ public class RobotContainer {
   //private final IntakeSubsystem intake = new IntakeSubsystem();
   //private final ParallelLinkageWristSubsystem paraLinkage = new ParallelLinkageWristSubsystem(5, -4, 4);
   //private final ParallelLinkageWristCommand linkageCmd = new ParallelLinkageWristCommand(paraLinkage, false);
-  private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(5, -1, 1);
+  private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(18, true, 5, false, -5, 5);
   private final ParallelLinkageTurnCommand turnCmnd = new ParallelLinkageTurnCommand(turnSubsystem, false);
+  /*Current ratios with P = 0.018 D = 0.015
+   * Desired: 0.2 Acheived: 0.76
+   * Desired: 0.5 Achieved: 1   * Desired: 0.5(used 0.2) Achieved 0.5
+   * Desired: 1 Acjieved: 1.357     * Desired: 1(used 0.5) Achieved 1
+   * Desired: 1.5 ACchieved: 1.714   * Desired: 1.5(used 1) Achieved 1.5 using D = 0.01
+   * Desired: 2 Achieved: -2.5    * Desired: 2(used 1.5) Achieved 1.976 using D = 0.01
+   *                              *  Desired: 4 Achieved:  4.23   Using D = 0.01
+   *                               * Desired: 5 achieved: 5. 143  using D = 0.01  Therefore about 5 rotations of Neo is aproximately 1/4 rotation of big boy
+   */                               
   //private final SpringAssemblyShooterSubsystem shooter = new SpringAssemblyShooterSubsystem(1);
   
   /*
@@ -101,3 +110,18 @@ public class RobotContainer {
 
   
 }
+
+/*Testing for momentum of arm
+ * 
+ * L = mvr = Iw
+ * cos(theta) * hypotenuse = length
+ * Find ratio of w : theta, theta : length, theta to momentum
+ * angualr accerleration = (2x - theta)/t^2
+ * Stall torque = 2.6 Nm = m * r * Vt^2 
+ * r = 26 in rn
+ *
+ * 
+ * 
+ * 
+ * 
+ */

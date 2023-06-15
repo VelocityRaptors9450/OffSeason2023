@@ -14,7 +14,7 @@ public class ExtensionSubsystem extends SubsystemBase {
   /** Creates a new ExtensionSubsystem. */
   public ExtensionSubsystem() {}
   
-  public CANSparkMax extensionMovement = new CANSparkMax(18, MotorType.kBrushless);
+  //public CANSparkMax extensionMovement = new CANSparkMax(18, MotorType.kBrushless);
   public Timer t = new Timer();
 
   
@@ -33,21 +33,21 @@ public class ExtensionSubsystem extends SubsystemBase {
     priorTime = 0;
     priorError = 0;
     currentError = 0;
-    extensionMovement.set(proportion * (currentError) + derivative * ((currentError-priorError)/(currentTime - priorTime)));
+    //extensionMovement.set(proportion * (currentError) + derivative * ((currentError-priorError)/(currentTime - priorTime)));
   }
 
   public void move(double power) {
     
-    extensionMovement.set(power > 1 ? 1 : power);
+    //extensionMovement.set(power > 1 ? 1 : power);
 
   }
 
   public void stop() {
-    extensionMovement.set(0);
+   // extensionMovement.set(0);
   }
 
   public void testMovement() {
-    extensionMovement.set(0.2);
+    //extensionMovement.set(0.2);
   }
 /* 
   public double PDPowering(double target) {

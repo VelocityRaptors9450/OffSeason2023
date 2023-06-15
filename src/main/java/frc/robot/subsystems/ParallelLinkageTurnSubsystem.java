@@ -17,13 +17,14 @@ import frc.robot.Constants;
 
 public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   /** Creates a new TestingSubsystemforParallelLinkage. */
-  public final CANSparkMax linkageTurn;
+  public final CANSparkMax linkageTurn1;
+  public final CANSparkMax linkageTurn2;
   public final Timer g = new Timer();
   
   private double error = 0.0;
   private static double priorError = 0.0;
-  private static double proportion = 0.02;
-  private static double derivative = 0.018;
+  private static double proportion = 0.018;//0.02 for 1 motor
+  private static double derivative = 0.01;//0.018  for 1 motor
   private static double pdPower = 0.0;  
   private static double oldTime = 0.0;
   public static double velocity = 10;
@@ -32,15 +33,22 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   private double rotLowerBound;
   private double rotUpperBound;
 
-  public ParallelLinkageTurnSubsystem(int deviceId, double rotLowerBound, double rotUpperBound) {
+  public ParallelLinkageTurnSubsystem(int deviceId1, boolean inverted1, int deviceId2, boolean inverted2, double rotLowerBound, double rotUpperBound) {
     this.rotLowerBound = rotLowerBound;
     this.rotUpperBound = rotUpperBound;
-    linkageTurn = new CANSparkMax(deviceId, MotorType.kBrushless); // id was 4
-    linkageTurn.setIdleMode(IdleMode.kBrake);
+    linkageTurn1 = new CANSparkMax(deviceId1, MotorType.kBrushless); // id was 4
+    linkageTurn2 = new CANSparkMax(deviceId2, MotorType.kBrushless);
+
+    linkageTurn1.setIdleMode(IdleMode.kBrake);
+    linkageTurn2.setIdleMode(IdleMode.kBrake);
+
+    linkageTurn1.setInverted(inverted1);
+    linkageTurn2.setInverted(inverted2);
   }
 
   public void run(double power){
-    linkageTurn.set(power);
+    linkageTurn1.set(power);
+    linkageTurn2.set(power);
   }
 
   PIDController d = new PIDController(oldTime, error, derivative);
@@ -50,18 +58,20 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   // of revolutions/rotations experienced by the the faster 
   // turning side; the one that requires less torque to spin
   public double getPosition() {    
-    return linkageTurn.getEncoder().getPosition();
+    return linkageTurn1.getEncoder().getPosition();
   }
   public void resetPosition() {
-    linkageTurn.getEncoder().setPosition(0);
+    linkageTurn1.getEncoder().setPosition(0);
   }
 
   //works with setDefaultCommand, but will need updating for w/ button press
   public void runWithTime(double power) {
     if (g.get() < 0.1) {
-      linkageTurn.set(power);
+      linkageTurn1.set(power);
+      linkageTurn2.set(power);
     } else {
-      linkageTurn.set(0);
+      linkageTurn1.set(0);
+      linkageTurn2.set(0);
     }
 
   }
@@ -71,9 +81,11 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   //basic runToPosition method
   public void basicRunToPosition(double position, double power) {
     if (Math.abs(position - getPosition()) > 0) {
-      linkageTurn.set(power);
+      linkageTurn1.set(power);
+      linkageTurn2.set(power);
     } else {
-      linkageTurn.stopMotor();
+      linkageTurn1.stopMotor();
+      linkageTurn2.stopMotor();
     }
   }
   
@@ -88,7 +100,9 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
     // } else {
     //   linkageTurn.stopMotor();
     // }
-    linkageTurn.set(PDWriting(rotations));
+    double pow = PDWriting(rotations);
+    linkageTurn1.set(pow);
+    linkageTurn2.set(pow);
 
   }
 
@@ -108,11 +122,16 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
 
     // stops motor if the position of the linkageTurn gets out of the domain of -4 and 4
     if (currentPos < rotUpperBound && currentPos > rotLowerBound) {
-      linkageTurn.set(TestPDWriting(target));
+      double pow = TestPDWriting(target) * Math.abs(Math.cos(0));
+      linkageTurn1.set(pow);
+      linkageTurn2.set(pow);
       System.out.println("SeCoNd POSITION:" + currentPos);
     } else {
       System.out.println("STOPPED");
-      linkageTurn.stopMotor();
+      linkageTurn1.stopMotor();
+      linkageTurn2.stopMotor();
+      //linkageTurn1.set(-0.03);
+      //linkageTurn2.set(-0.03);
     }
     
     
@@ -120,7 +139,8 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
   }
 
   public void stopMotor() {
-    linkageTurn.stopMotor();
+    linkageTurn1.stopMotor();
+    linkageTurn2.stopMotor();
   }
 
   
@@ -140,7 +160,7 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
       restartTimer = false;
     }
     
-    error = target - linkageTurn.getEncoder().getPosition();
+    error = target - linkageTurn1.getEncoder().getPosition();
     changeInTime = g.get() - oldTime;
     pdPower = error * proportion + 
     ((error - priorError) / (changeInTime)) * derivative;
@@ -169,7 +189,7 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
       restartTimer = false;
     }
     
-    error = target - linkageTurn.getEncoder().getPosition();
+    error = target - linkageTurn1.getEncoder().getPosition();
     changeInTime = g.get() - oldTime;
     pdPower = error * proportion + 
     ((error - priorError) / (changeInTime)) * derivative;

@@ -23,7 +23,9 @@ public class ParallelLinkageTurnCommand extends CommandBase {
  
   public ParallelLinkageTurnCommand(ParallelLinkageTurnSubsystem test, boolean up) {
     // Use addRequirements() here to declare subsystem dependencies.
-    test.linkageTurn.getEncoder().setPosition(0);
+    test.linkageTurn1.getEncoder().setPosition(0);
+    test.linkageTurn2.getEncoder().setPosition(0);
+
 
   
     this.test = test;

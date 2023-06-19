@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -20,7 +22,7 @@ public class ParallelLinkageTurnCommand extends CommandBase {
   boolean returnToZero = false;
   Timer t = new Timer();
   private static ParallelLinkageTurnSubsystem test;
-  double power;
+  Supplier<Double> power;
   public ParallelLinkageTurnCommand(ParallelLinkageTurnSubsystem test, boolean up) {
     // Use addRequirements() here to declare subsystem dependencies.
     test.linkageTurn1.getEncoder().setPosition(0);
@@ -46,7 +48,7 @@ public class ParallelLinkageTurnCommand extends CommandBase {
     addRequirements(test);
   }
 
-  public ParallelLinkageTurnCommand(ParallelLinkageTurnSubsystem test, double power){
+  public ParallelLinkageTurnCommand(ParallelLinkageTurnSubsystem test, Supplier<Double> power){
     this.power = power;
     this.test = test;
     addRequirements(test);
@@ -70,9 +72,8 @@ public class ParallelLinkageTurnCommand extends CommandBase {
   
   @Override
   public void execute() {
-    test.setPower(power);
-
-    //test.runWithTime(0.1);
+    test.setPower(power.get());
+   //test.runWithTime(0.1);
     
       /*
      -14.619056701660156 -54  --> 3.6938 degrees/revolution

@@ -41,8 +41,6 @@ public class RobotContainer {
   private final ParallelLinkageTurnCommand turnCmnd = new ParallelLinkageTurnCommand(turnSubsystem, false);
   */
   private final ParallelLinkageTurnSubsystem turnSubManual = new ParallelLinkageTurnSubsystem(5);
-  //private final ParallelLinkageTurnCommand turnCmdManual;
-  private double power;
   /*Current ratios with P = 0.018 D = 0.015
    * Desired: 0.2 Acheived: 0.76
    * Desired: 0.5 Achieved: 1   * Desired: 0.5(used 0.2) Achieved 0.5
@@ -102,8 +100,8 @@ public class RobotContainer {
 
     */
     
-    driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, 0));
-    driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, 0));
+    driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, -driverController.getLeftTriggerAxis()));
+    driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, driverController.getRightTriggerAxis()));
     // for our old shooter we used .onTrue()
 
   }

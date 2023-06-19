@@ -11,13 +11,17 @@ public class ExtensionCommand extends CommandBase{
 
     ExtensionSubsystem extension;
     Supplier<Double> inPower, outPower;
+    Supplier<Boolean> aPressed, yPressed;
+    double startingPosition, target;
     
 
 
-    public ExtensionCommand(ExtensionSubsystem extension, Supplier<Double> outPower, Supplier<Double> inPower){
+    public ExtensionCommand(ExtensionSubsystem extension, Supplier<Double> outPower, Supplier<Double> inPower, Supplier<Boolean> aPressed, Supplier<Boolean> yPressed){
         this.extension = extension;
         this.inPower = inPower;
         this.outPower = outPower;
+        this.aPressed = aPressed;
+        this.yPressed = yPressed;
 
         addRequirements(extension);
     }
@@ -25,6 +29,8 @@ public class ExtensionCommand extends CommandBase{
 //Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startingPosition = extension.position();
+    target = startingPosition;
     
   }
 
@@ -34,12 +40,24 @@ public class ExtensionCommand extends CommandBase{
     double inPowerAmt = -2 * inPower.get() / 3;
     double outPowerAmt =2 *  outPower.get() / 3;
     double totalPowerAmt = inPowerAmt + outPowerAmt;
+    boolean a = aPressed.get();
+    boolean y = yPressed.get();
+
+    if(a){
+      target = startingPosition;
+    }else if(y){
+      target = startingPosition + 47;
+    }
 
     if(Math.abs(totalPowerAmt) > 0.05){
-      extension.setPower(totalPowerAmt);
+      //extension.setPower(totalPowerAmt);
+      //target = extension.position();
     }else{
-      extension.setPower(0);
+      extension.pid(target);
     }
+
+    //System.out.println("Start: " + startingPosition);
+    //System.out.println("Position: " + extension.position());
 
    
     

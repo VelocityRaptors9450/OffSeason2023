@@ -11,21 +11,27 @@ public class RotationCmd extends CommandBase{
 
     
     private final Supplier<Boolean> isAPressed, isBPressed, isXPressed, isYPressed;
+    private final Supplier<Double> rightTrigger, leftTrigger;
     
     
 
     private final RotationSubsystem rotation;
-    double target = -7.0952;
+    double target;
+    double starting, bottom, low, mid, high;
 
-    public RotationCmd(Supplier<Boolean> isAPressed, Supplier<Boolean> isBPressed, Supplier<Boolean> isXPressed, Supplier<Boolean> isYPressed, RotationSubsystem rotation){
+    public RotationCmd(Supplier<Double> rightTrigger, Supplier<Double> leftTrigger,Supplier<Boolean> isAPressed, Supplier<Boolean> isBPressed, Supplier<Boolean> isXPressed, Supplier<Boolean> isYPressed, RotationSubsystem rotation){
         
         this.isAPressed = isAPressed;
         this.isBPressed = isBPressed;
         this.isXPressed = isXPressed;
         this.isYPressed = isYPressed;
+        this.rightTrigger = rightTrigger;
+        this.leftTrigger = leftTrigger;
 
 
         this.rotation = rotation;
+
+        
         
         addRequirements(rotation);
     }
@@ -34,12 +40,31 @@ public class RotationCmd extends CommandBase{
 
     @Override
     public void initialize(){
+        starting = rotation.getStartPosition();
+        bottom = starting + 8.5;
+        low = bottom - 0.8809;
+        mid = bottom - 3.5208;
+        high = bottom - 5.2856;
+        rotation.setEncoderTics(0);
+
+        target = bottom;
        
 
     }
 
     @Override
     public void execute(){
+
+        // double inPowerAmt = -1 * leftTrigger.get() / 3;
+        // double outPowerAmt = 1 *  rightTrigger.get() / 3;
+        // double totalPowerAmt = inPowerAmt + outPowerAmt;
+
+        // if(Math.abs(totalPowerAmt) > 0.05){
+        //     rotation.setPower(totalPowerAmt);
+        // }else{
+        //     rotation.setPower(0);
+        // }
+
         
         boolean aButton = isAPressed.get();
         boolean bButton = isBPressed.get();
@@ -47,26 +72,26 @@ public class RotationCmd extends CommandBase{
         boolean yButton = isYPressed.get();
 
         if(aButton){
-            target = -7.0952;
+            target = bottom;
 
         }
 
         if(bButton){
-            target = -5.5476;
+            target = low;
 
         }
 
         if(xButton){
-            target = -4.0714;
+            target = mid;
 
         }
 
         if(yButton){
-            target = -2.5714;
+            target = high;
 
         }
         
-        rotation.pid(target, 0.3);
+        rotation.pid(target);
 
         System.out.println("Target: " + target);
         System.out.println("Current: " + rotation.getEncoderTics());

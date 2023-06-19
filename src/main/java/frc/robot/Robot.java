@@ -3,29 +3,19 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotController;
+
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.RotationSubsystem;
-// import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.SwerveSubsystemKrish;
+
+
+
 
 
 
@@ -36,6 +26,8 @@ import frc.robot.subsystems.SwerveSubsystemKrish;
  * project.
  */
 public class Robot extends TimedRobot {
+
+  NetworkTableEntry tx, ty, ta, tv, test;
 
   
   //private ShooterSubsystem shooter = new ShooterSubsystem();
@@ -115,13 +107,16 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      //m_autonomousCommand.schedule();
     }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    //System.out.println("Here");
+    
+
 
     
 
@@ -219,12 +214,98 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    //CommandScheduler.getInstance().cancelAll();
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    tx = table.getEntry("tx");
+    ty = table.getEntry("ty");
+    ta = table.getEntry("ta");
+    tv = table.getEntry("tv");
+    test = table.getEntry("targetpose_cameraspace");
+
+
+    
+
+
+    table.getEntry("ledMode").setNumber(3);
+    time.start();
+    time.reset();
+
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    double x = tx.getDouble(0);
+    double y = ty.getDouble(0);
+    double area = ta.getDouble(0);
+    double haveTarget = tv.getDouble(0);
+    double target = 0;
+    
+    //System.out.println("LimelightX: " + x);
+    //System.out.println("LimelightY: "+ y);
+    
+    //System.out.println("LimelightHasTarget: " + haveTarget);
+    // System.out.println("Testing Pose 0: " + pose[0]);
+    // System.out.println("Testing Pose 1: " + pose[1]);
+    // System.out.println("Testing Pose 2: " + pose[2]);
+    // System.out.println("Testing Pose 3: " + pose[3]);
+    // System.out.println("Testing Pose 4: " + pose[4]);
+    // System.out.println("Testing Pose 5: " + pose[5]);
+
+
+
+
+    if(area < 1.65 && haveTarget != 0){
+      m_robotContainer.swerve.setDrivePower(0.1);
+     
+      
+
+      
+    }else if(area > 1.9 && haveTarget != 0){
+      m_robotContainer.swerve.setDrivePower(-0.1);
+      
+
+      
+    }else if(area < 1.9 && area > 1.65 && haveTarget != 0){
+      if(x < -3){
+        x = 90;
+        m_robotContainer.swerve.setDrivePower(0.1);
+
+
+      }else if(x > 3){
+        x = 90;
+        m_robotContainer.swerve.setDrivePower(-0.1);
+
+      }
+
+    }else{
+      m_robotContainer.swerve.setDrivePower(0);
+      
+    }
+
+    
+
+    System.out.println("LimelightAngle: " + (-x));
+
+    m_robotContainer.swerve.pid(Math.toRadians(-x), Math.toRadians(-x), Math.toRadians(-x), Math.toRadians(-x), 0.3);
+
+
+    // if(time.get() < 1){
+    //   motor.set(0.9);
+    //   System.out.println("Out");
+    // }else if(time.get() < 1){
+    //   motor.set(-0.3);
+    //   System.out.println("In");
+    // }else{
+    //   motor.set(0);
+    //   System.out.println("Done");
+    // }
+
+
+
+
+
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

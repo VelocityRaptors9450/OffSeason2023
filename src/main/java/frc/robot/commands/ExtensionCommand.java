@@ -1,44 +1,82 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.AddressableLED;
+import java.util.function.Supplier;
+
+import org.ejml.equation.ManagerFunctions.Input1;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ExtensionSubsystem;
 
-public class ExtensionCommand extends CommandBase {
-  /** Creates a new ExtensionCommand. */
-  private final ExtensionSubsystem extension;
-  public ExtensionCommand(ExtensionSubsystem extension) {
-    this.extension = extension;
-    addRequirements(extension);
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+public class ExtensionCommand extends CommandBase{
 
-  // Called when the command is initially scheduled.
+    ExtensionSubsystem extension;
+    Supplier<Double> inPower, outPower;
+    Supplier<Boolean> aPressed, yPressed;
+    double startingPosition, target;
+    
+
+
+    public ExtensionCommand(ExtensionSubsystem extension, Supplier<Double> outPower, Supplier<Double> inPower, Supplier<Boolean> aPressed, Supplier<Boolean> yPressed){
+        this.extension = extension;
+        this.inPower = inPower;
+        this.outPower = outPower;
+        this.aPressed = aPressed;
+        this.yPressed = yPressed;
+
+        addRequirements(extension);
+    }
+
+//Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Extension started");
-   // extension.extensionMovement.getEncoder().setPosition(0);
+    startingPosition = extension.position();
+    target = startingPosition;
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // double inPowerAmt = -2 * inPower.get() / 3;
+    // double outPowerAmt =2 *  outPower.get() / 3;
+    double inPowerAmt = -0.8 * inPower.get();
+    double outPowerAmt = 0.8 *  outPower.get();
+    double totalPowerAmt = inPowerAmt + outPowerAmt;
+    boolean a = aPressed.get();
+    boolean y = yPressed.get();
 
+    if(a){
+      target = startingPosition;
+    }else if(y){
+      target = startingPosition + 47;
+    }
+
+    if(Math.abs(totalPowerAmt) > 0.05){
+      extension.setPower(totalPowerAmt);
+      target = extension.position();
+    }else{
+      extension.pid(target);
+    }
+
+    //System.out.println("Start: " + startingPosition);
+    //System.out.println("Position: " + extension.position());
+
+   
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+
+    return false;
   }
+
 }

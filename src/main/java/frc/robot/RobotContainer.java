@@ -37,6 +37,8 @@ public class RobotContainer {
   //private final ParallelLinkageWristCommand linkageCmd = new ParallelLinkageWristCommand(paraLinkage, false);
   private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(18, true, 5, false, -5, 5);
   private final ParallelLinkageTurnCommand turnCmnd = new ParallelLinkageTurnCommand(turnSubsystem, false);
+  private final ExtensionSubsystem extendSub = new ExtensionSubsystem();
+  private final ExtensionCommand extendCmd = new ExtensionCommand(extendSub, null, null, null, null);
   /*Current ratios with P = 0.018 D = 0.015
    * Desired: 0.2 Acheived: 0.76
    * Desired: 0.5 Achieved: 1   * Desired: 0.5(used 0.2) Achieved 0.5

@@ -35,10 +35,14 @@ public class RobotContainer {
   //private final IntakeSubsystem intake = new IntakeSubsystem();
   //private final ParallelLinkageWristSubsystem paraLinkage = new ParallelLinkageWristSubsystem(5, -4, 4);
   //private final ParallelLinkageWristCommand linkageCmd = new ParallelLinkageWristCommand(paraLinkage, false);
-  private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(18, true, 5, false, -5, 5);
+
+  /*
+  private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(5, true, 18, false, -4, 4);
   private final ParallelLinkageTurnCommand turnCmnd = new ParallelLinkageTurnCommand(turnSubsystem, false);
-  private final ExtensionSubsystem extendSub = new ExtensionSubsystem();
-  private final ExtensionCommand extendCmd = new ExtensionCommand(extendSub, null, null, null, null);
+  */
+  private final ParallelLinkageTurnSubsystem turnSubManual = new ParallelLinkageTurnSubsystem(5);
+  //private final ParallelLinkageTurnCommand turnCmdManual;
+  private double power;
   /*Current ratios with P = 0.018 D = 0.015
    * Desired: 0.2 Acheived: 0.76
    * Desired: 0.5 Achieved: 1   * Desired: 0.5(used 0.2) Achieved 0.5
@@ -91,8 +95,15 @@ public class RobotContainer {
     //driverController.x().onTrue(new ParallelLinkageWristCommand(paraLinkage, true));
     //driverController.y().onTrue(new ParallelLinkageWristCommand(paraLinkage, false));
     //driverController.a().onTrue(new ParallelLinkageWristCommand(paraLinkage));
+    /*
+
     driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubsystem, true));
     driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubsystem, false));
+
+    */
+    
+    driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, 0));
+    driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, 0));
     // for our old shooter we used .onTrue()
 
   }

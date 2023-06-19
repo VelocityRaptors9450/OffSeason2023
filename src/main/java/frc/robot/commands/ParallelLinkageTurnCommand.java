@@ -20,11 +20,11 @@ public class ParallelLinkageTurnCommand extends CommandBase {
   boolean returnToZero = false;
   Timer t = new Timer();
   private static ParallelLinkageTurnSubsystem test;
- 
+  double power;
   public ParallelLinkageTurnCommand(ParallelLinkageTurnSubsystem test, boolean up) {
     // Use addRequirements() here to declare subsystem dependencies.
     test.linkageTurn1.getEncoder().setPosition(0);
-    test.linkageTurn2.getEncoder().setPosition(0);
+    //test.linkageTurn2.getEncoder().setPosition(0);
 
 
   
@@ -46,6 +46,12 @@ public class ParallelLinkageTurnCommand extends CommandBase {
     addRequirements(test);
   }
 
+  public ParallelLinkageTurnCommand(ParallelLinkageTurnSubsystem test, double power){
+    this.power = power;
+    this.test = test;
+    addRequirements(test);
+  }
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -64,6 +70,8 @@ public class ParallelLinkageTurnCommand extends CommandBase {
   
   @Override
   public void execute() {
+    test.setPower(power);
+
     //test.runWithTime(0.1);
     
       /*
@@ -72,7 +80,7 @@ public class ParallelLinkageTurnCommand extends CommandBase {
       avg is 3.63537 degrees/revolution for the PD
    */
 
-    
+    /* 
     if (!up) {
       // moves to target (on press of y button)
       test.testRunWithPD(-target);
@@ -83,6 +91,7 @@ public class ParallelLinkageTurnCommand extends CommandBase {
       // moves to target (on press of x button)
       test.testRunWithPD(target);
     } 
+    */
     //test.runWithPD(0);
     //System.out.println(test.getPosition());
    

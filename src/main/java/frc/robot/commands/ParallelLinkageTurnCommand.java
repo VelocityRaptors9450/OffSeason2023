@@ -72,7 +72,7 @@ public class ParallelLinkageTurnCommand extends CommandBase {
   
   @Override
   public void execute() {
-    test.setPower(power.get());
+    test.setPower(0.3 * power.get());
    //test.runWithTime(0.1);
     
       /*

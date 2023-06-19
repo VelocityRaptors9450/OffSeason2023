@@ -87,6 +87,7 @@ public class ParallelLinkageTurnSubsystem extends SubsystemBase {
     
 }
 public void setPower(double power){
+  System.out.println("Power: " + power);
   linkageTurn1.set(power);
 }
 public double position(){

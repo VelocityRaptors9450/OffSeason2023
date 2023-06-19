@@ -100,8 +100,8 @@ public class RobotContainer {
 
     */
     
-    driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, -driverController.getLeftTriggerAxis()));
-    driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, driverController.getRightTriggerAxis()));
+    driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, () -> -driverController.getLeftTriggerAxis()));
+    driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, () -> driverController.getRightTriggerAxis()));
     // for our old shooter we used .onTrue()
 
   }

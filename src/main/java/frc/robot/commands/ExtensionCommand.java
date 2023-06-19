@@ -37,8 +37,10 @@ public class ExtensionCommand extends CommandBase{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double inPowerAmt = -2 * inPower.get() / 3;
-    double outPowerAmt =2 *  outPower.get() / 3;
+    // double inPowerAmt = -2 * inPower.get() / 3;
+    // double outPowerAmt =2 *  outPower.get() / 3;
+    double inPowerAmt = -0.8 * inPower.get();
+    double outPowerAmt = 0.8 *  outPower.get();
     double totalPowerAmt = inPowerAmt + outPowerAmt;
     boolean a = aPressed.get();
     boolean y = yPressed.get();
@@ -50,8 +52,8 @@ public class ExtensionCommand extends CommandBase{
     }
 
     if(Math.abs(totalPowerAmt) > 0.05){
-      //extension.setPower(totalPowerAmt);
-      //target = extension.position();
+      extension.setPower(totalPowerAmt);
+      target = extension.position();
     }else{
       extension.pid(target);
     }

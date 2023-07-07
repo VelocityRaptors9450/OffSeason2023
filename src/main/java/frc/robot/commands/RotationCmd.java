@@ -6,12 +6,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RotationSubsystem;
 import frc.robot.subsystems.SwerveSubsystemKrish;
+import frc.robot.subsystems.RotationSubsystem.Height;
 
 public class RotationCmd extends CommandBase{
 
     
     private final Supplier<Boolean> isAPressed, isBPressed, isXPressed, isYPressed;
-    private final Supplier<Double> rightTrigger, leftTrigger;
+    //private final Supplier<Double> rightTrigger, leftTrigger;
     
     
 
@@ -25,8 +26,8 @@ public class RotationCmd extends CommandBase{
         this.isBPressed = isBPressed;
         this.isXPressed = isXPressed;
         this.isYPressed = isYPressed;
-        this.rightTrigger = rightTrigger;
-        this.leftTrigger = leftTrigger;
+        // this.rightTrigger = rightTrigger;
+        // this.leftTrigger = leftTrigger;
 
 
         this.rotation = rotation;
@@ -40,14 +41,11 @@ public class RotationCmd extends CommandBase{
 
     @Override
     public void initialize(){
-        starting = rotation.getStartPosition();
-        bottom = starting + 8.5;
-        low = bottom - 0.8809;
-        mid = bottom - 3.5208;
-        high = bottom - 5.2856;
-        rotation.setEncoderTics(0);
+        
+        rotation.initialSetEncoder();
+        rotation.initialSetWristEncoder();
 
-        target = bottom;
+        
        
 
     }
@@ -60,6 +58,11 @@ public class RotationCmd extends CommandBase{
         // double totalPowerAmt = inPowerAmt + outPowerAmt;
 
         // if(Math.abs(totalPowerAmt) > 0.05){
+        //     if(totalPowerAmt > 0.3){
+        //         totalPowerAmt = 0.3;
+        //     }else if(totalPowerAmt < -0.3){
+        //         totalPowerAmt = -0.3;
+        //     }
         //     rotation.setPower(totalPowerAmt);
         // }else{
         //     rotation.setPower(0);
@@ -72,29 +75,47 @@ public class RotationCmd extends CommandBase{
         boolean yButton = isYPressed.get();
 
         if(aButton){
-            target = bottom;
+            //target = bottom;
+            rotation.changeHeight(Height.GROUND);
 
         }
 
         if(bButton){
-            target = low;
+            //target = low;
+            rotation.changeHeight(Height.LOW);
+
 
         }
 
         if(xButton){
-            target = mid;
+            //target = mid;
+            rotation.changeHeight(Height.MID);
+
 
         }
 
         if(yButton){
-            target = high;
+            //target = high;
+            rotation.changeHeight(Height.HIGH);
+
 
         }
-        
-        rotation.pid(target);
 
-        System.out.println("Target: " + target);
-        System.out.println("Current: " + rotation.getEncoderTics());
+        System.out.println("Arm Target: " + rotation.convertHeightToTics());
+        System.out.println("Arm Tics: " + rotation.getEncoderTics());
+        System.out.println("Arm Angle: " + rotation.getArmAngle());
+        System.out.println("Arm Difference: " + rotation.getArmAngleDifference());
+        System.out.println();
+        System.out.println("Wrist Target: " + rotation.getWristTarget());
+        System.out.println("Wrist Tics: " + rotation.getWristEncoderTics());
+        System.out.println("Wrist Target Angle: " + rotation.getWristTargetAngle());
+        System.out.println("Wrist Angle: " + rotation.getWristAngle());
+        
+        //rotation.armPID();
+        //rotation.wristPID();
+
+        
+        //System.out.println("Current: " + rotation.getEncoderTics());
 
 
 

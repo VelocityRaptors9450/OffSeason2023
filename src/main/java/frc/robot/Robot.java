@@ -6,6 +6,9 @@ package frc.robot;
 
 
 
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -27,6 +30,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
 
+
+  WPI_PigeonIMU imu = new WPI_PigeonIMU(0);
   NetworkTableEntry tx, ty, ta, tv, test;
 
   
@@ -93,10 +98,18 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if(m_robotContainer.rotation.getEncoderTics() < 10){
+      m_robotContainer.rotation.setMode(IdleMode.kCoast);
+    }
+
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   
@@ -215,31 +228,35 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     //CommandScheduler.getInstance().cancelAll();
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    tx = table.getEntry("tx");
-    ty = table.getEntry("ty");
-    ta = table.getEntry("ta");
-    tv = table.getEntry("tv");
-    test = table.getEntry("targetpose_cameraspace");
+    // NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    // tx = table.getEntry("tx");
+    // ty = table.getEntry("ty");
+    // ta = table.getEntry("ta");
+    // tv = table.getEntry("tv");
+    // test = table.getEntry("targetpose_cameraspace");
 
 
     
 
 
-    table.getEntry("ledMode").setNumber(3);
-    time.start();
-    time.reset();
+    // table.getEntry("ledMode").setNumber(3);
+    // time.start();
+    // time.reset();
+    
 
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    double x = tx.getDouble(0);
-    double y = ty.getDouble(0);
-    double area = ta.getDouble(0);
-    double haveTarget = tv.getDouble(0);
-    double target = 0;
+
+    System.out.println("Angle: " + imu.getAngle());
+    System.out.println("Compass Heading: " + imu.getAbsoluteCompassHeading());
+    // double x = tx.getDouble(0);
+    // double y = ty.getDouble(0);
+    // double area = ta.getDouble(0);
+    // double haveTarget = tv.getDouble(0);
+    // double target = 0;
     
     //System.out.println("LimelightX: " + x);
     //System.out.println("LimelightY: "+ y);
@@ -255,39 +272,39 @@ public class Robot extends TimedRobot {
 
 
 
-    if(area < 1.65 && haveTarget != 0){
-      m_robotContainer.swerve.setDrivePower(0.1);
+    // if(area < 1.65 && haveTarget != 0){
+    //   m_robotContainer.swerve.setDrivePower(0.1);
      
       
 
       
-    }else if(area > 1.9 && haveTarget != 0){
-      m_robotContainer.swerve.setDrivePower(-0.1);
+    // }else if(area > 1.9 && haveTarget != 0){
+    //   m_robotContainer.swerve.setDrivePower(-0.1);
       
 
       
-    }else if(area < 1.9 && area > 1.65 && haveTarget != 0){
-      if(x < -3){
-        x = 90;
-        m_robotContainer.swerve.setDrivePower(0.1);
+    // }else if(area < 1.9 && area > 1.65 && haveTarget != 0){
+    //   if(x < -3){
+    //     x = 90;
+    //     m_robotContainer.swerve.setDrivePower(0.1);
 
 
-      }else if(x > 3){
-        x = 90;
-        m_robotContainer.swerve.setDrivePower(-0.1);
+    //   }else if(x > 3){
+    //     x = 90;
+    //     m_robotContainer.swerve.setDrivePower(-0.1);
 
-      }
+    //   }
 
-    }else{
-      m_robotContainer.swerve.setDrivePower(0);
+    // }else{
+    //   m_robotContainer.swerve.setDrivePower(0);
       
-    }
+    // }
 
     
 
-    System.out.println("LimelightAngle: " + (-x));
+    // System.out.println("LimelightAngle: " + (-x));
 
-    m_robotContainer.swerve.pid(Math.toRadians(-x), Math.toRadians(-x), Math.toRadians(-x), Math.toRadians(-x), 0.3);
+    // m_robotContainer.swerve.pid(Math.toRadians(-x), Math.toRadians(-x), Math.toRadians(-x), Math.toRadians(-x), 0.3);
 
 
     // if(time.get() < 1){

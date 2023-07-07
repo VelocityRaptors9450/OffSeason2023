@@ -11,17 +11,17 @@ public class ExtensionCommand extends CommandBase{
 
     ExtensionSubsystem extension;
     Supplier<Double> inPower, outPower;
-    Supplier<Boolean> aPressed, yPressed;
+    Supplier<Boolean> leftBumperPressed, rightBumperPressed;
     double startingPosition, target;
     
 
 
-    public ExtensionCommand(ExtensionSubsystem extension, Supplier<Double> outPower, Supplier<Double> inPower, Supplier<Boolean> aPressed, Supplier<Boolean> yPressed){
+    public ExtensionCommand(ExtensionSubsystem extension, Supplier<Double> outPower, Supplier<Double> inPower, Supplier<Boolean> leftBumperPressed, Supplier<Boolean> rightBumperPressed){
         this.extension = extension;
         this.inPower = inPower;
         this.outPower = outPower;
-        this.aPressed = aPressed;
-        this.yPressed = yPressed;
+        this.leftBumperPressed = leftBumperPressed;
+        this.rightBumperPressed = rightBumperPressed;
 
         addRequirements(extension);
     }
@@ -37,17 +37,15 @@ public class ExtensionCommand extends CommandBase{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // double inPowerAmt = -2 * inPower.get() / 3;
-    // double outPowerAmt =2 *  outPower.get() / 3;
-    double inPowerAmt = -0.8 * inPower.get();
-    double outPowerAmt = 0.8 *  outPower.get();
+    double inPowerAmt = -2 * inPower.get() / 3;
+    double outPowerAmt =2 *  outPower.get() / 3;
     double totalPowerAmt = inPowerAmt + outPowerAmt;
-    boolean a = aPressed.get();
-    boolean y = yPressed.get();
+    boolean leftBumper = leftBumperPressed.get();
+    boolean rightBumper = rightBumperPressed.get();
 
-    if(a){
+    if(leftBumper){
       target = startingPosition;
-    }else if(y){
+    }else if(rightBumper){
       target = startingPosition + 47;
     }
 
@@ -55,11 +53,12 @@ public class ExtensionCommand extends CommandBase{
       extension.setPower(totalPowerAmt);
       target = extension.position();
     }else{
-      extension.pid(target);
+      //extension.pid(target);
+      extension.setPower(0);
     }
 
-    //System.out.println("Start: " + startingPosition);
-    //System.out.println("Position: " + extension.position());
+    System.out.println("Start: " + startingPosition);
+    System.out.println("Position: " + extension.position());
 
    
     

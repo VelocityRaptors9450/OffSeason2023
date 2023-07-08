@@ -74,7 +74,7 @@ public class RotationSubsystem extends SubsystemBase{
     
 
     public void armPID(){
-
+        
 
         double target = convertHeightToTics();
 
@@ -125,12 +125,59 @@ public class RotationSubsystem extends SubsystemBase{
 
     }
 
+
+    public void bothPID(){
+        
+
+        double target = convertHeightToTics();
+        double wristTargetTics = (90 + getArmAngle()) * ticsPerWristRevolution / 360;
+        //startWrist = 90 + 37.4 + 75 = 127.4
+
+        
+        double wristPower = 0;
+        double armPower = 0;
+
+        if(target - getEncoderTics() > 0){
+            armPower = pid.calculate(getEncoderTics(), target);
+        }else{
+            armPower = downPID.calculate(getEncoderTics(), target);
+        }
+
+        if(Math.abs(armPower) > 0.3){
+            if(armPower < 0){
+                armPower = -0.3;
+            }else{
+                armPower = 0.3;
+            }
+        }
+
+       
+
+        if(wristTargetTics - getEncoderTics() < 0){
+            wristPower = wristPID.calculate(getEncoderTics(), wristTargetTics);
+        }else{
+            wristPower = downWristPID.calculate(getEncoderTics(), wristTargetTics);
+        }
+
+
+        if(Math.abs(wristPower) > 0.3){
+            if(wristPower < 0){
+                wristPower = -0.3;
+            }else{
+                wristPower = 0.3;
+            }
+        }
+
+        //setPower(armPower);
+        //wristSetPower(wristPower);
+    }
+
     public void wristSetPower(double power){
         wristMotor.set(power);
     }
 
     public double getWristTarget(){
-        return (((90/360) * ticsPerWristRevolution) - (getArmAngleDifference() / 360 * ticsPerWristRevolution));
+        return ((90 + getArmAngle()) * ticsPerWristRevolution / 360);
     }
 
     public double getWristTargetAngle(){
@@ -146,7 +193,7 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public void initialSetWristEncoder(){
-        setEncoderTics((90/360) * ticsPerWristRevolution);
+        setEncoderTics((202.4/360) * ticsPerWristRevolution);
     }
 
     public double getWristAngle(){
@@ -158,7 +205,7 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public double getArmAngleDifference(){
-        return (getArmAngle() - (groundTics * 360 / ticsPerArmRevolution));
+        return (getArmAngle() - (37.4));
     }
 
     public double getEncoderTics(){

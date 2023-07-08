@@ -104,7 +104,6 @@ public class RotationCmd extends CommandBase{
         System.out.println("Arm Target: " + rotation.convertHeightToTics());
         System.out.println("Arm Tics: " + rotation.getEncoderTics());
         System.out.println("Arm Angle: " + rotation.getArmAngle());
-        System.out.println("Arm Difference: " + rotation.getArmAngleDifference());
         System.out.println();
         System.out.println("Wrist Target: " + rotation.getWristTarget());
         System.out.println("Wrist Tics: " + rotation.getWristEncoderTics());
@@ -113,6 +112,7 @@ public class RotationCmd extends CommandBase{
         
         //rotation.armPID();
         //rotation.wristPID();
+        //rotation.bothPID();
 
         
         //System.out.println("Current: " + rotation.getEncoderTics());

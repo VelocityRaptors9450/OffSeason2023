@@ -16,7 +16,7 @@ public class ParallelLinkageWristCommand extends CommandBase {
   boolean resetPos = true;
 
   double target = 0;
-  boolean returnToZero = false;
+  boolean returnToZero = false; 
   Timer t = new Timer();
   private static ParallelLinkageWristSubsystem test;
  

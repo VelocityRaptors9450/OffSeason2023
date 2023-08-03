@@ -39,7 +39,7 @@ public final class Constants {
     public static final double DriveMotorGearRatio = 1 / 6;
     public static final double TurnMotorGearRatio = 1 / 6;
     public static final double DriveEncoderRot2Meter = DriveMotorGearRatio * Math.PI * WheelDiameter;
-    //gear ratio 10:60:16:64
+    //gear ratio 10:60    :    16:64
     public static final double ParallelLinkageTurnRation = 64 / 60 * 10;
     public static final double TurnEncoderRot2Rad = TurnMotorGearRatio * 2 * Math.PI;
     public static final double DriveEncoderRPM2MeterPerSec = DriveEncoderRot2Meter / 60;

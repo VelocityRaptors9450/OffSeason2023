@@ -37,7 +37,7 @@ public class RobotContainer {
   private final ExtensionSubsystem extension = new ExtensionSubsystem();
   public final RotationSubsystem rotation = new RotationSubsystem();
   //private final Joystick joystick1 = new Joystick(0);
-  
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController driverController2 = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT2);
@@ -51,9 +51,11 @@ public class RobotContainer {
     () -> driverController.getHID().getAButtonPressed(), () -> driverController.getHID().getBButtonPressed(), () -> driverController.getHID().getXButtonPressed(),
      () -> driverController.getHID().getYButtonPressed(),() -> driverController.getHID().getLeftBumperPressed(), () -> driverController.getHID().getRightBumperPressed(),
       () -> driverController2.getHID().getLeftBumperPressed(), () -> driverController2.getHID().getRightBumperPressed(), () -> driverController2.getHID().getAButtonPressed(),
-       () -> driverController2.getHID().getYButtonPressed(), () -> driverController2.getHID().getXButtonPressed(), rotation));
+       () -> driverController2.getHID().getYButtonPressed(),() -> driverController2.getHID().getAButtonReleased(),
+       () -> driverController2.getHID().getYButtonReleased(), () -> driverController2.getHID().getXButtonPressed(),driverController.getHID(), driverController2.getHID(), 
+        rotation));
     //shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
-    
+
    
     // Configure the trigger bindings
     configureBindings();

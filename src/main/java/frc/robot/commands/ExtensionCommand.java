@@ -37,6 +37,7 @@ public class ExtensionCommand extends CommandBase{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     double inPowerAmt = -2 * inPower.get() / 3;
     double outPowerAmt =2 *  outPower.get() / 3;
     double totalPowerAmt = inPowerAmt + outPowerAmt;

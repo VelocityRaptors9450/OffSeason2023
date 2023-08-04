@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShooterSubsystem extends SubsystemBase{
 
 
-    CANSparkMax motor1 = new CANSparkMax(13,MotorType.kBrushless);
-    CANSparkMax motor2 = new CANSparkMax(7,MotorType.kBrushless);
+    CANSparkMax motor1 = new CANSparkMax(27,MotorType.kBrushless);
+    CANSparkMax motor2 = new CANSparkMax(26,MotorType.kBrushless);
 
 
     CANSparkMax linkage;

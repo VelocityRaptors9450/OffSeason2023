@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -18,7 +19,10 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-    
+    public static CANSparkMax intakeRight = new CANSparkMax(7, MotorType.kBrushless);
+  public static CANSparkMax intakeLeft = new CANSparkMax(13, MotorType.kBrushless);
+
+
     private CANSparkMax motor1 = new CANSparkMax(5,MotorType.kBrushless);
     private CANSparkMax motor2 = new CANSparkMax(18, MotorType.kBrushless);
     private Height currentHeight = Height.GROUND;
@@ -26,6 +30,7 @@ public class RotationSubsystem extends SubsystemBase{
 
     //TODO: figure out these values
     private CANSparkMax wristMotor = new CANSparkMax(4,MotorType.kBrushless);
+    private CANSparkMax extensionMotor = new CANSparkMax(25,MotorType.kBrushless);
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     
@@ -34,13 +39,17 @@ public class RotationSubsystem extends SubsystemBase{
     
 
     public RotationSubsystem(){
-        //motor1.setIdleMode(IdleMode.kBrake);
-        wristMotor.setIdleMode(IdleMode.kBrake);
-        
-        
-    }
+        motor1.setIdleMode(IdleMode.kBrake);
+        motor2.setIdleMode(IdleMode.kBrake);
+        wristMotor.setIdleMode(IdleMode.kBrake);  
+        motor2.setInverted(true);  
+        extensionMotor.setIdleMode(IdleMode.kBrake);
+        intakeLeft.setInverted(true);
+        intakeLeft.setIdleMode(IdleMode.kBrake);
+        intakeRight.setIdleMode(IdleMode.kBrake);
 
-    
+
+    }
 
     
 
@@ -50,7 +59,9 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-
+    public void extPow(double power){
+        extensionMotor.set(power);
+    }
     public void setPower(double power){
         motor1.set(power);
         motor2.set(power);
@@ -91,11 +102,11 @@ public class RotationSubsystem extends SubsystemBase{
             power = downPID.calculate(getEncoderTics(), target);
         }
 
-        if(Math.abs(power) > 0.3){
+        if(Math.abs(power) > 0.2){
             if(power < 0){
-                power = -0.3;
+                power = -0.2;
             }else{
-                power = 0.3;
+                power = 0.2;
             }
         }
 

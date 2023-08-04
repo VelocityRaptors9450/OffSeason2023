@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SpringAssemblyShooterSubsystem extends SubsystemBase {
   /** Creates a new SpringAssemblyShooter. */
-  public CANSparkMax outputRight = new CANSparkMax(7, MotorType.kBrushless);
-  public CANSparkMax outputLeft = new CANSparkMax(13, MotorType.kBrushless);
+  public CANSparkMax outputRight = new CANSparkMax(26, MotorType.kBrushless);
+  public CANSparkMax outputLeft = new CANSparkMax(27, MotorType.kBrushless);
   
   private double power = 0.0;
   public SpringAssemblyShooterSubsystem(double power) {

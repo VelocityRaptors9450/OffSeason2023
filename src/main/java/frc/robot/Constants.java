@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class OperatorConstants{
       public static final int DRIVER_CONTROLLER_PORT = 0;
+      public static final int DRIVER_CONTROLLER_PORT2 = 1;
       public static final int FL_MOVE_MOTOR_ID = 1;
       public static final int FL_TURN_MOTOR_ID = 2;
       public static final int BL_MOVE_MOTOR_ID = 3;

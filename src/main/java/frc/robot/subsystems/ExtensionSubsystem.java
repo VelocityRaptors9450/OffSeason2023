@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ExtensionSubsystem extends SubsystemBase{
 
     PIDController pid = new PIDController(0.025, 0, 0);
-    CANSparkMax motor1 = new CANSparkMax(18,MotorType.kBrushless);
+    CANSparkMax motor1 = new CANSparkMax(19,MotorType.kBrushless);
     RelativeEncoder encoder = motor1.getEncoder();
 
     public ExtensionSubsystem(){

@@ -40,7 +40,6 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  private final CommandXboxController driverController2 = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -49,11 +48,7 @@ public class RobotContainer {
     //extension.setDefaultCommand(new ExtensionCommand(extension, () -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), () -> driverController.getHID().getLeftBumper(), () -> driverController.getHID().getRightBumper()));
     rotation.setDefaultCommand(new RotationCmd(() -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), 
     () -> driverController.getHID().getAButtonPressed(), () -> driverController.getHID().getBButtonPressed(), () -> driverController.getHID().getXButtonPressed(),
-     () -> driverController.getHID().getYButtonPressed(),() -> driverController.getHID().getLeftBumperPressed(), () -> driverController.getHID().getRightBumperPressed(),
-      () -> driverController2.getHID().getLeftBumperPressed(), () -> driverController2.getHID().getRightBumperPressed(), () -> driverController2.getHID().getAButtonPressed(),
-       () -> driverController2.getHID().getYButtonPressed(),() -> driverController2.getHID().getAButtonReleased(),
-       () -> driverController2.getHID().getYButtonReleased(), () -> driverController2.getHID().getXButtonPressed(),driverController.getHID(), driverController2.getHID(), 
-        rotation));
+     () -> driverController.getHID().getYButtonPressed(), rotation));
     //shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
 
    

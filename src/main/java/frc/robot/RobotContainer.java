@@ -44,11 +44,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    //swerve.setDefaultCommand(new SwerveJoystickComplexCmd(() -> driverController.getLeftY(),() -> driverController.getRightY(), () -> driverController.getRightX(), () -> driverController.getHID().getAButtonPressed(), swerve));
+    swerve.setDefaultCommand(new SwerveJoystickComplexCmd(() -> driverController.getLeftY(),() -> driverController.getRightY(), () -> driverController.getRightX(), () -> driverController.getHID().getAButtonPressed(), swerve));
     //extension.setDefaultCommand(new ExtensionCommand(extension, () -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), () -> driverController.getHID().getLeftBumper(), () -> driverController.getHID().getRightBumper()));
-    rotation.setDefaultCommand(new RotationCmd(() -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), 
-    () -> driverController.getHID().getAButtonPressed(), () -> driverController.getHID().getBButtonPressed(), () -> driverController.getHID().getXButtonPressed(),
-     () -> driverController.getHID().getYButtonPressed(), rotation));
+    //rotation.setDefaultCommand(new RotationCmd(() -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), 
+    //() -> driverController.getHID().getAButtonPressed(), () -> driverController.getHID().getBButtonPressed(), () -> driverController.getHID().getXButtonPressed(),
+    // () -> driverController.getHID().getYButtonPressed(), rotation));
     //shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
 
    

@@ -6,6 +6,7 @@ package frc.robot;
 
 
 
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -33,6 +34,9 @@ public class Robot extends TimedRobot {
 
   WPI_PigeonIMU imu = new WPI_PigeonIMU(0);
   NetworkTableEntry tx, ty, ta, tv, test;
+
+  Pigeon2 pigeon = new Pigeon2(0, "rio");
+    
 
   
   //private ShooterSubsystem shooter = new ShooterSubsystem();
@@ -104,9 +108,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    if(m_robotContainer.rotation.getEncoderTics() < 10){
-      m_robotContainer.rotation.setMode(IdleMode.kCoast);
-    }
+    
 
 
   }
@@ -170,10 +172,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
 
   
-  
+  int _loopCount = 0;
   @Override
   public void teleopPeriodic() {
-
+    if(_loopCount++ > 10)
+        {
+            _loopCount = 0;
+            double yaw = pigeon.getYaw();
+            System.out.println("Pigeon Yaw is: " + yaw);
+        }
 
     // System.out.println(cancoder.getPosition());
     // System.out.println(cancoder.getAbsolutePosition());

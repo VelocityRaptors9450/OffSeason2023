@@ -4,18 +4,8 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.LinkageSlowCommand;
-import frc.robot.commands.RotationCmd;
-import frc.robot.commands.ShootingCommand;
 
-import frc.robot.commands.ExtensionCommand;
-import frc.robot.commands.SwerveJoystickComplexCmd;
-import frc.robot.commands.SwerveTurningOrientationCmd;
-import frc.robot.subsystems.ExtensionSubsystem;
-import frc.robot.subsystems.RotationSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystemKrish;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -32,24 +22,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final SwerveSubsystemKrish swerve = new SwerveSubsystemKrish();
-  private final ShooterSubsystem shooter = new ShooterSubsystem();
-  private final ExtensionSubsystem extension = new ExtensionSubsystem();
-  public final RotationSubsystem rotation = new RotationSubsystem();
   //private final Joystick joystick1 = new Joystick(0);
-
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController driverController = new CommandXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    swerve.setDefaultCommand(new SwerveJoystickComplexCmd(() -> driverController.getLeftY(),() -> driverController.getRightY(), () -> driverController.getRightX(), () -> driverController.getHID().getAButtonPressed(), swerve));
-    //extension.setDefaultCommand(new ExtensionCommand(extension, () -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), () -> driverController.getHID().getLeftBumper(), () -> driverController.getHID().getRightBumper()));
-    //rotation.setDefaultCommand(new RotationCmd(() -> driverController.getRightTriggerAxis(), () -> driverController.getLeftTriggerAxis(), 
-    //() -> driverController.getHID().getAButtonPressed(), () -> driverController.getHID().getBButtonPressed(), () -> driverController.getHID().getXButtonPressed(),
-    // () -> driverController.getHID().getYButtonPressed(), rotation));
-    //shooter.setDefaultCommand(new ShootingCommand(shooter, () -> driverController.getRightTriggerAxis()));
 
    
     // Configure the trigger bindings

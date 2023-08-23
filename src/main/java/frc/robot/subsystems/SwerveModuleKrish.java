@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -52,7 +55,8 @@ public class SwerveModuleKrish {
         turningMotor.setIdleMode(mode);
     }
 
-    public double getDrivePosition() {
+    // returns the current position of the swerve module; both 
+   public double getDrivePosition() {
         return driveEncoder.getPosition();
     }
 
@@ -100,5 +104,27 @@ public class SwerveModuleKrish {
     public void setDrivePower(double power) {
         driveMotor.set(power);
     }
+
+    public void setDesiredState(SwerveModuleState desiredState) {
+        // Optimize the reference state to avoid spinning further than 90 degrees
+        SwerveModuleState state =
+            SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningEncoder.getDistance()));
+    
+        // Calculate the drive output from the drive PID controller.
+        final double driveOutput =
+            m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
+    
+        final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
+    
+        // Calculate the turning motor output from the turning PID controller.
+        final double turnOutput =
+            m_turningPIDController.calculate(m_turningEncoder.getDistance(), state.angle.getRadians());
+    
+        final double turnFeedforward =
+            m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
+    
+        m_driveMotor.setVoltage(driveOutput + driveFeedforward);
+        m_turningMotor.setVoltage(turnOutput + turnFeedforward);
+      }
 
 }

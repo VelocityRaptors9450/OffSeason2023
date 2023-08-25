@@ -10,17 +10,17 @@ import frc.robot.Constants;
 
 public class SwerveSubsystemKrish extends SubsystemBase{
 
-    private SwerveModuleKrish fl, fr, bl, br;
+    private SwerveModule fl, fr, bl, br;
     private double currentPIDTime, previousPIDTime, previousPIDErrorFL, previousPIDErrorFR, previousPIDErrorBL, previousPIDErrorBR, p = 0.1, i = 0, d = 0;
     private boolean flReverse, frReverse, blReverse, brReverse;
 
     
 
     public SwerveSubsystemKrish(){
-        fl = new SwerveModuleKrish(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
-        fr = new SwerveModuleKrish(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
-        bl = new SwerveModuleKrish(Constants.blDriveId, Constants.blTurnId, false, false, 4, 0, false);
-        br = new SwerveModuleKrish(Constants.brDriveId, Constants.brTurnId, false, false, 3, 0, false);
+        fl = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
+        fr = new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
+        bl = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, 4, 0, false);
+        br = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, 3, 0, false);
 
         setMode(IdleMode.kBrake);
     

@@ -30,8 +30,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-
-
   WPI_PigeonIMU imu = new WPI_PigeonIMU(0);
   NetworkTableEntry tx, ty, ta, tv, test;
 

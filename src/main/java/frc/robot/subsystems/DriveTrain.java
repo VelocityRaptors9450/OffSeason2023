@@ -11,7 +11,8 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,18 +25,18 @@ import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
 
-  public static final double kMaxSpeed = 3.0; // 3 meters per second
-  public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
+  public static final double kMaxSpeed = Constants.Speeds.MaxSpeed; // 3 meters per second
+  public static final double kMaxAngularSpeed = Constants.Speeds.MaxAngularSpeed; // 1/2 rotation per second (Math.PI)
 
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
 
-  private final SwerveModuleKrish m_frontLeft = new SwerveModuleKrish(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
-  private final SwerveModuleKrish m_frontRight = new SwerveModuleKrish(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
-  private final SwerveModuleKrish m_backLeft = new SwerveModuleKrish(Constants.blDriveId, Constants.blTurnId, false, false, 4, 0, false);
-  private final SwerveModuleKrish m_backRight = new SwerveModuleKrish(Constants.brDriveId, Constants.brTurnId, false, false, 3, 0, false);
+  private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
+  private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
+  private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, 4, 0, false);
+  private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, 3, 0, false);
 
   private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(0, "rio");
 
@@ -55,7 +56,7 @@ public class DriveTrain extends SubsystemBase {
             m_backRight.getPosition()
           });
 
-  public Drivetrain() {
+  public DriveTrain() {
     pigeon.reset();
   }
 
@@ -71,7 +72,7 @@ public class DriveTrain extends SubsystemBase {
     double xSpeed, double ySpeed, double rot, boolean fieldRelative, double periodSeconds) {
     SwerveModuleState[] swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromDiscreteSpeeds(
+            fromDiscreteSpeeds(
                 fieldRelative
                     ? ChassisSpeeds.fromFieldRelativeSpeeds(
                         xSpeed, ySpeed, rot, pigeon.getRotation2d())
@@ -95,4 +96,30 @@ public class DriveTrain extends SubsystemBase {
           m_backRight.getPosition()
         });
   }
+  
+      
+    
+  // https://github.com/wpilibsuite/allwpilib/blob/a0c029a35b75e6327c2acb48002db021d9479ed7/wpimath/src/main/java/edu/wpi/first/math/kinematics/ChassisSpeeds.java#L61
+  public static ChassisSpeeds fromDiscreteSpeeds(ChassisSpeeds discreteSpeeds, double dtSeconds) {
+    return fromDiscreteSpeeds(
+        discreteSpeeds.vxMetersPerSecond,
+        discreteSpeeds.vyMetersPerSecond,
+        discreteSpeeds.omegaRadiansPerSecond,
+        dtSeconds);
+  }
+
+  public static ChassisSpeeds fromDiscreteSpeeds(
+      double vxMetersPerSecond,
+      double vyMetersPerSecond,
+      double omegaRadiansPerSecond,
+      double dtSeconds) {
+    var desiredDeltaPose =
+        new Pose2d(
+            vxMetersPerSecond * dtSeconds,
+            vyMetersPerSecond * dtSeconds,
+            new Rotation2d(omegaRadiansPerSecond * dtSeconds));
+    var twist = new Pose2d().log(desiredDeltaPose);
+    return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
+  }
+
 }

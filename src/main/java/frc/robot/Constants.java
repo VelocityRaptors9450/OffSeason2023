@@ -28,25 +28,35 @@ public final class Constants {
     //ticks * 1 rotations/4096 ticks  *  gear ratio  * 6pi inches/1 rotation  * 1 ft / 12 inches
     public static final double drivetcks2ftfactor = 1.0 / 4096 * 6 * Math.PI / 12;
 
+    public static final double WheelRadius = 0.0508;
+    public static final int EncoderResolution = 4096; // tics per revolution
+    public static final double DRIVE_MOTOR_CONVERSION = 2 * Math.PI * WheelRadius; // distance 
+    public static final double TURNING_MOTOR_CONVERSION = 2 * Math.PI; // distance 
+    public static final double VELOCITY_CONVERSION_FACTOR = Math.PI * WheelRadius / 30; //Distance per second
+  }
+
+  public static class Speeds{
+    public static final double MaxSpeed = 1;
+    public static final double MaxAngularSpeed = Math.PI;
   }
   
-  public static final int flDriveId = 16; //8
-  public static final int flTurnId = 15; //16
+  public static final int flDriveId = 17; //8
+  public static final int flTurnId = 3; //16
   public static final int flAbsoluteId = 0;
 
 
   public static final int frDriveId = 6; //9
-  public static final int frTurnId = 8; //3
+  public static final int frTurnId = 9; //3
   public static final int frAbsoluteId = 0;
 
 
-  public static final int blDriveId = 17; //6
-  public static final int blTurnId = 3; //17
+  public static final int blDriveId = 18; //6
+  public static final int blTurnId = 14; //17
   public static final int blAbsoluteId = 0;
 
 
-  public static final int brDriveId = 14; //14
-  public static final int brTurnId = 9; //18
+  public static final int brDriveId = 16; //14
+  public static final int brTurnId = 8; //18
   public static final int brAbsoluteId = 0;
 
 

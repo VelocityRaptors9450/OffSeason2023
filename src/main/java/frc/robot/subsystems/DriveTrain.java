@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -28,10 +29,10 @@ public class DriveTrain extends SubsystemBase {
   public static final double kMaxSpeed = Constants.Speeds.MaxSpeed; // 3 meters per second
   public static final double kMaxAngularSpeed = Constants.Speeds.MaxAngularSpeed; // 1/2 rotation per second (Math.PI)
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private final Translation2d m_frontLeftLocation = new Translation2d(-Constants.baseWidth / 2, Constants.baseLength / 2);
+  private final Translation2d m_frontRightLocation = new Translation2d(Constants.baseWidth / 2, Constants.baseLength / 2);
+  private final Translation2d m_backLeftLocation = new Translation2d(-Constants.baseWidth / 2, -Constants.baseLength / 2);
+  private final Translation2d m_backRightLocation = new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2);
 
   private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
   private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
@@ -120,6 +121,13 @@ public class DriveTrain extends SubsystemBase {
             new Rotation2d(omegaRadiansPerSecond * dtSeconds));
     var twist = new Pose2d().log(desiredDeltaPose);
     return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
+  }
+  @Override
+  public void periodic() {
+      SmartDashboard.putNumber("Front Right Position:", m_frontRight.getAbsoluteEncoderRad());
+      SmartDashboard.putNumber("Front Left Position:", m_frontLeft.getAbsoluteEncoderRad());
+      SmartDashboard.putNumber("Back Right Position:", m_backRight.getAbsoluteEncoderRad());
+      SmartDashboard.putNumber("Back Left Position:", m_backLeft.getAbsoluteEncoderRad());
   }
 
 }

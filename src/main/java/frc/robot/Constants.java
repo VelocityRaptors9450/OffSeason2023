@@ -59,6 +59,9 @@ public final class Constants {
   public static final int brTurnId = 8; //18
   public static final int brAbsoluteId = 0;
 
+  public static final double baseWidth = 0.4953;
+  public static final double baseLength = 0.6477;
 
-
+  //Width:  19.5in 0.4953m
+  //Length: 25.5in 0.6477m
 }

@@ -48,7 +48,8 @@ public class SwerveModule {
         this.absoluteEncoderOffset = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         //absoluteEncoder = new AnalogInput(absoluteEncoderId);
-        absolute = new CANCoder(absoluteEncoderId);           
+        absolute = new CANCoder(absoluteEncoderId);   
+        absolute.configMagnetOffset(absoluteEncoderOffset);        
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
 

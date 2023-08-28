@@ -39,7 +39,7 @@ public class DriveTrain extends SubsystemBase {
   private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, Constants.blAbsoluteId, Constants.blAbsoluteEncoderOffset, false);
   private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
 
-  private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(0, "rio");
+  private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(Constants.gyroId, "rio");
 
  // can you access the other files
   private final SwerveDriveKinematics m_kinematics =

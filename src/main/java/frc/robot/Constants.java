@@ -40,24 +40,35 @@ public final class Constants {
     public static final double MaxAngularSpeed = Math.PI;
   }
   
-  public static final int flDriveId = 17; //8
-  public static final int flTurnId = 3; //16
-  public static final int flAbsoluteId = 0;
+  public static final int flDriveId = 1; //8
+  public static final int flTurnId = 2; //16
+  public static final int flAbsoluteId = 3;
 
 
-  public static final int frDriveId = 6; //9
-  public static final int frTurnId = 9; //3 
-  public static final int frAbsoluteId = 2;
+  public static final int frDriveId = 4; //9
+  public static final int frTurnId = 5; //3 
+  public static final int frAbsoluteId = 6;
 
 
-  public static final int blDriveId = 22; //6
-  public static final int blTurnId = 14; //17
-  public static final int blAbsoluteId = 4;
+  public static final int blDriveId = 7; //6
+  public static final int blTurnId = 8; //17
+  public static final int blAbsoluteId = 9;
 
 
-  public static final int brDriveId = 16; //14
-  public static final int brTurnId = 8; //18
-  public static final int brAbsoluteId = 3;
+  public static final int brDriveId = 10; //14
+  public static final int brTurnId = 11; //18
+  public static final int brAbsoluteId = 12;
+
+  public static final int gyroId = 13;
+
+  public static final int rotationLeftId = 14;
+  public static final int rotationRightId = 15;
+  public static final int extensionId = 16;
+
+  public static final int wristId = 17;
+
+  public static final int intakeLeftId = 18;
+  public static final int intakeRightId = 19;
 
   public static final double baseWidth = 0.4953;
   public static final double baseLength = 0.6477;

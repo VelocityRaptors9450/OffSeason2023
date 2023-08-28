@@ -46,21 +46,37 @@ public final class Constants {
 
 
   public static final int frDriveId = 6; //9
-  public static final int frTurnId = 9; //3
-  public static final int frAbsoluteId = 0;
+  public static final int frTurnId = 9; //3 
+  public static final int frAbsoluteId = 2;
 
 
-  public static final int blDriveId = 18; //6
+  public static final int blDriveId = 22; //6
   public static final int blTurnId = 14; //17
-  public static final int blAbsoluteId = 0;
+  public static final int blAbsoluteId = 4;
 
 
   public static final int brDriveId = 16; //14
   public static final int brTurnId = 8; //18
-  public static final int brAbsoluteId = 0;
+  public static final int brAbsoluteId = 3;
 
   public static final double baseWidth = 0.4953;
   public static final double baseLength = 0.6477;
+
+  public static final double flAbsoluteEncoderOffset = -0.056757174432278;
+  public static final double frAbsoluteEncoderOffset = -3.103236861526966;
+  public static final double blAbsoluteEncoderOffset = 3.120110616087914;
+  public static final double brAbsoluteEncoderOffset = 3.107838794589043;
+
+  // PID
+  public static final double turnKp = 4.0027;
+  public static final double turnKd = 0.10234;
+  // feed-forward
+  public static final double turnKs = 0.2246;
+  public static final double turnKv = 0.069612;
+  public static final double turnKa = 0.0022882;
+
+
+  
 
   //Width:  19.5in 0.4953m
   //Length: 25.5in 0.6477m

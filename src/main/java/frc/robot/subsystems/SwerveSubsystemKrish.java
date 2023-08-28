@@ -26,9 +26,7 @@ public class SwerveSubsystemKrish extends SubsystemBase{
     
     }
 
-    public double getTurningEncoderFL(){
-        return fl.getTurningPosition();
-    }
+ 
 
     public void setMode(IdleMode mode){
         fl.setMode(mode);
@@ -233,14 +231,14 @@ public class SwerveSubsystemKrish extends SubsystemBase{
 
 
 
-        double flError = closestAngle(fl.getAbsoluteEncoderRad(), flTarget);
-        double frError = closestAngle(fr.getAbsoluteEncoderRad(), frTarget);
-        double blError = closestAngle(bl.getAbsoluteEncoderRad(), blTarget);
-        double brError = closestAngle(br.getAbsoluteEncoderRad(), brTarget);
+        double flError = closestAngle(fl.getAbsRad(), flTarget);
+        double frError = closestAngle(fr.getAbsRad(), frTarget);
+        double blError = closestAngle(bl.getAbsRad(), blTarget);
+        double brError = closestAngle(br.getAbsRad(), brTarget);
 
         //System.out.println("flError: " + flError);
         //System.out.println(flTarget);
-        System.out.println(fl.getAbsoluteEncoderRad());
+        System.out.println(fl.getAbsRad());
 
 
         //System.out.println("frError: " + frError);

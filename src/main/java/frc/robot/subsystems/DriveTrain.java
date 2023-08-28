@@ -34,10 +34,10 @@ public class DriveTrain extends SubsystemBase {
   private final Translation2d m_backLeftLocation = new Translation2d(-Constants.baseWidth / 2, -Constants.baseLength / 2);
   private final Translation2d m_backRightLocation = new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, 1, 0, false);
-  private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, 2, 0, false);
-  private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, 4, 0, false);
-  private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, 3, 0, false);
+  private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, Constants.flAbsoluteId, Constants.flAbsoluteEncoderOffset, false);
+  private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
+  private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, Constants.blAbsoluteId, Constants.blAbsoluteEncoderOffset, false);
+  private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
 
   private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(0, "rio");
 
@@ -124,10 +124,10 @@ public class DriveTrain extends SubsystemBase {
   }
   @Override
   public void periodic() {
-      SmartDashboard.putNumber("Front Right Position:", m_frontRight.getAbsoluteEncoderRad());
-      SmartDashboard.putNumber("Front Left Position:", m_frontLeft.getAbsoluteEncoderRad());
-      SmartDashboard.putNumber("Back Right Position:", m_backRight.getAbsoluteEncoderRad());
-      SmartDashboard.putNumber("Back Left Position:", m_backLeft.getAbsoluteEncoderRad());
+      SmartDashboard.putNumber("Front Right Position:", m_frontRight.getAbsRad());
+      SmartDashboard.putNumber("Front Left Position:", m_frontLeft.getAbsRad());
+      SmartDashboard.putNumber("Back Right Position:", m_backRight.getAbsRad());
+      SmartDashboard.putNumber("Back Left Position:", m_backLeft.getAbsRad());
   }
 
 }

@@ -128,6 +128,7 @@ public class DriveTrain extends SubsystemBase {
       SmartDashboard.putNumber("Front Left Position:", m_frontLeft.getAbsRad());
       SmartDashboard.putNumber("Back Right Position:", m_backRight.getAbsRad());
       SmartDashboard.putNumber("Back Left Position:", m_backLeft.getAbsRad());
+      SmartDashboard.putNumber("Pigeon", pigeon.getYaw());
   }
 
 }

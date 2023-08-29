@@ -73,10 +73,10 @@ public final class Constants {
   public static final double baseWidth = 0.4953;
   public static final double baseLength = 0.6477;
 
-  public static final double flAbsoluteEncoderOffset = -0.056757174432278;
-  public static final double frAbsoluteEncoderOffset = -3.103236861526966;
-  public static final double blAbsoluteEncoderOffset = 3.120110616087914;
-  public static final double brAbsoluteEncoderOffset = 3.107838794589043;
+  public static final double flAbsoluteEncoderOffset = 4.893388822674751;
+  public static final double frAbsoluteEncoderOffset = 4.186225108802319;
+  public static final double blAbsoluteEncoderOffset = 2.932965338230133;
+  public static final double brAbsoluteEncoderOffset = 3.834944218397141;
 
   // PID
   public static final double turnKp = 4.0027;

@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.sensors.CANCoder;
@@ -19,8 +20,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SwerveModule {
 
-    private final CANSparkMax driveMotor, turningMotor;
-    private final RelativeEncoder driveEncoder;
+    private final CANSparkMax turningMotor; // driveMotor,
+    // private final RelativeEncoder driveEncoder;
     private final CANCoder absolute;
     //private final AnalogInput absoluteEncoder;
     private final boolean absoluteEncoderReversed;
@@ -38,27 +39,28 @@ public class SwerveModule {
     private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1, 3);
     private final SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(Constants.turnKs, Constants.turnKv);
 
-
+    int id;
     // In case when installed, the forward on the encoder isnt the actual forward
     private final double absoluteEncoderOffset;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed,
             boolean turningMotorReversed, int absoluteEncoderId, double absoluteEncoderOffset,
             boolean absoluteEncoderReversed) {
+                id = driveMotorId;
         this.absoluteEncoderOffset = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         //absoluteEncoder = new AnalogInput(absoluteEncoderId);
         absolute = new CANCoder(absoluteEncoderId);   
         absolute.configMagnetOffset(absoluteEncoderOffset);        
-        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
+     //   driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
 
-        driveMotor.setInverted(driveMotorReversed);
+        // driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
 
-        driveEncoder = driveMotor.getEncoder();
+        // driveEncoder = driveMotor.getEncoder();
        
-        driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
+        // driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
        /* 
         
         // Set the distance per pulse for the drive encoder. We can simply use the
@@ -86,13 +88,14 @@ public class SwerveModule {
     }
 
     public void setMode(IdleMode mode){
-        driveMotor.setIdleMode(mode);
+        // driveMotor.setIdleMode(mode);
         turningMotor.setIdleMode(mode);
     }
 
     // returns the current position of the swerve module; both 
    public double getDrivePosition() {
-        return driveEncoder.getPosition();
+    return 0;
+        // return driveEncoder.getPosition();
     }
 
    
@@ -132,7 +135,7 @@ public class SwerveModule {
     }
 
     public void resetEncoders() {
-        driveEncoder.setPosition(0);
+        // driveEncoder.setPosition(0);
     }
 
     public void setTurningPower(double power) {
@@ -140,7 +143,7 @@ public class SwerveModule {
     }
 
     public void setDrivePower(double power) {
-        driveMotor.set(power);
+        // driveMotor.set(power);
     }
 
     public void setDesiredState(SwerveModuleState desiredState) {
@@ -150,7 +153,7 @@ public class SwerveModule {
     
         // Calculate the drive output from the drive PID controller.
         final double driveOutput =
-            drivePIDController.calculate(driveEncoder.getVelocity(), state.speedMetersPerSecond); // first param is the rate (speed) of the encoder in distance per second (needs scaling to get that)
+            drivePIDController.calculate(0,0);//driveEncoder.getVelocity(), state.speedMetersPerSecond); // first param is the rate (speed) of the encoder in distance per second (needs scaling to get that)
     
         final double drvFeedforward = driveFeedforward.calculate(state.speedMetersPerSecond);
     
@@ -161,8 +164,9 @@ public class SwerveModule {
         final double trnFeedforward =
             turnFeedforward.calculate(turningPIDController.getSetpoint().velocity);
     
-        driveMotor.setVoltage(driveOutput + drvFeedforward);
-        turningMotor.setVoltage(turnOutput + trnFeedforward);
+        // driveMotor.setVoltage(driveOutput + drvFeedforward);
+        turningMotor.setVoltage(-(turnOutput + trnFeedforward));
+        SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
       }
 
 }

@@ -18,16 +18,16 @@ public class DriveCommand extends CommandBase {
   private final DriveTrain swerve;
   private final CommandXboxController controller;
 
-  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(1);
   
   public Timer t = new Timer();
   double time = 0.02;
   boolean ranOnce = false;
 
-  public boolean isJoystickControlled = true; // true for tele, false for auto
+  public boolean isJoystickControlled = false; // true for tele, false for auto
   /** Creates a new DriveCommand. */
   public DriveCommand(DriveTrain swerve, CommandXboxController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -52,12 +52,12 @@ public class DriveCommand extends CommandBase {
     }
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    final var xSpeed = -xSpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.02)) * swerve.kMaxSpeed;
+    final var xSpeed = -xSpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.02)) * swerve.kMaxSpeed;
 
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    final var ySpeed = -ySpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.02)) * swerve.kMaxSpeed;
+    final var ySpeed = -ySpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.02)) * swerve.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in

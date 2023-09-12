@@ -72,11 +72,12 @@ public final class Constants {
 
   public static final double baseWidth = 0.4953;
   public static final double baseLength = 0.6477;
-
-  public static final double flAbsoluteEncoderOffset = 4.893388822674751;
-  public static final double frAbsoluteEncoderOffset = 4.186225108802319;
+  
+  //Offset turn wheel so that gears are all pointed to the right
+  public static final double flAbsoluteEncoderOffset = 4.956281907856464;
+  public static final double frAbsoluteEncoderOffset = 4.262923993170261;
   public static final double blAbsoluteEncoderOffset = 2.932965338230133;
-  public static final double brAbsoluteEncoderOffset = 3.834944218397141;
+  public static final double brAbsoluteEncoderOffset = 3.850283995270729;
 
   // PID
   public static final double turnKp = 4.0027;

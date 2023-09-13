@@ -74,18 +74,28 @@ public final class Constants {
   public static final double baseLength = 0.6477;
   
   //Offset turn wheel so that gears are all pointed to the right
-  public static final double flAbsoluteEncoderOffset = 4.956281907856464;
-  public static final double frAbsoluteEncoderOffset = 4.262923993170261;
+  public static final double flAbsoluteEncoderOffset = 4.950145997107029-Math.PI/2;//4.956281907856464;
+  public static final double frAbsoluteEncoderOffset = 4.315079234540462-Math.PI/2; //4.262923993170261;
   public static final double blAbsoluteEncoderOffset = 2.932965338230133;
-  public static final double brAbsoluteEncoderOffset = 3.850283995270729;
+  public static final double brAbsoluteEncoderOffset = 3.847216039896011-Math.PI/2;//3.850283995270729;
 
   // PID
-  public static final double turnKp = 4.0027;
+  public static final double turnKp = 4.0027;//4.0027
   public static final double turnKd = 0.10234;
+
+  public static final double driveKp = 0.034037;
+  public static final double driveKd = 0.0;
+
+
+
   // feed-forward
-  public static final double turnKs = 0.2246;
+  public static final double turnKs = 0.2246;//0.2246
   public static final double turnKv = 0.069612;
   public static final double turnKa = 0.0022882;
+
+  public static final double driveKs = 0.084807;
+  public static final double driveKv = 0.12996;
+  public static final double driveKa = 0.0086263;
 
 
   

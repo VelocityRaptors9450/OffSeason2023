@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -53,7 +54,7 @@ public class DriveCommand extends CommandBase {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
     //final var xSpeed = -xSpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.02)) * swerve.kMaxSpeed;
-    final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
+    final double xSpeed = controller.getLeftX() * swerve.kMaxSpeed;
 
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
@@ -66,7 +67,10 @@ public class DriveCommand extends CommandBase {
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
     //final var rot = -rotLimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.02)) * swerve.kMaxAngularSpeed;
-    final double rot = -controller.getRightX() * swerve.kMaxAngularSpeed;
+    final double rot = controller.getRightX() * swerve.kMaxAngularSpeed;
+    SmartDashboard.putNumber("xSpeed", xSpeed);
+    SmartDashboard.putNumber("ySpeed", ySpeed);
+
     swerve.drive(xSpeed, ySpeed, rot, isJoystickControlled, time);
     
     t.restart();

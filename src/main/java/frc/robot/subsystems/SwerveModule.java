@@ -155,6 +155,8 @@ public class SwerveModule {
         driveMotor.setVoltage(driveOutput + drvFeedforward);
         turningMotor.setVoltage(-(turnOutput + trnFeedforward));
         SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
+        SmartDashboard.putNumber("DriveVoltage",driveOutput + drvFeedforward);
+        SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
       }
 
 }

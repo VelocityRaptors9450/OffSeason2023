@@ -60,8 +60,8 @@ public class SwerveModule {
 
         driveEncoder = driveMotor.getEncoder();
        
-        //][\
-        driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
+        
+       // driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
        /* 
         
         // Set the distance per pulse for the drive encoder. We can simply use the

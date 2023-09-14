@@ -36,8 +36,8 @@ public final class Constants {
   }
 
   public static class Speeds{
-    public static final double MaxSpeed = 10;
-    public static final double MaxAngularSpeed = 5*Math.PI;
+    public static final double MaxSpeed = 1;
+    public static final double MaxAngularSpeed = Math.PI;
   }
   
   public static final int flDriveId = 1; //8
@@ -80,7 +80,7 @@ public final class Constants {
   public static final double brAbsoluteEncoderOffset = 3.847216039896011+Math.PI/2;//3.850283995270729;
 
   // PID
-  public static final double turnKp = 5.0027;//4.0027
+  public static final double turnKp = 4.0027;//4.0027
   public static final double turnKd = 0.10234;
 
   public static final double driveKp = 0.034037;

@@ -6,8 +6,10 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.TestsCommand;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.SwerveSubsystemKrish;
+import frc.robot.subsystems.TestsSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,15 +25,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //private final Joystick joystick1 = new Joystick(0);
-  private DriveTrain driveTrain = new DriveTrain();
+  //private DriveTrain driveTrain = new DriveTrain();
+  private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController));
+    //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController));
+    motorTest.setDefaultCommand(new TestsCommand(motorTest, driverController));
     // Configure the trigger bindings
     configureBindings();
   }

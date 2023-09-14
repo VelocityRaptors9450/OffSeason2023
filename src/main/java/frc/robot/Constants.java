@@ -40,23 +40,23 @@ public final class Constants {
     public static final double MaxAngularSpeed = Math.PI;
   }
   
-  public static final int flDriveId = 20; //1
-  public static final int flTurnId = 21; //2
+  public static final int flDriveId = 1; //1
+  public static final int flTurnId = 2; //2
   public static final int flAbsoluteId = 3;
 
 
-  public static final int frDriveId = 4; //9
-  public static final int frTurnId = 5; //3 
+  public static final int frDriveId = 4; //4
+  public static final int frTurnId = 5; //5 
   public static final int frAbsoluteId = 6;
 
 
-  public static final int blDriveId = 7; //6
-  public static final int blTurnId = 8; //17
+  public static final int blDriveId = 7; //7
+  public static final int blTurnId = 8; //8
   public static final int blAbsoluteId = 9;
 
 
-  public static final int brDriveId = 10; //14
-  public static final int brTurnId = 11; //18
+  public static final int brDriveId = 10; //10
+  public static final int brTurnId = 11; //11
   public static final int brAbsoluteId = 12;
 
   public static final int gyroId = 13;

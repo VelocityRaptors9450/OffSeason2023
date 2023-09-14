@@ -14,7 +14,7 @@ public class TestsSubsystem extends SubsystemBase {
   private CANSparkMax speed = new CANSparkMax(1,MotorType.kBrushless);
   private CANSparkMax rotation = new CANSparkMax(2,MotorType.kBrushless);
 
-  public TestsSubsystem() {}
+  
   public void speedPower(double pow){
     speed.set(pow * 0.3);
   }

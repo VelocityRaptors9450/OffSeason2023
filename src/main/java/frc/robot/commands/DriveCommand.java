@@ -72,6 +72,9 @@ public class DriveCommand extends CommandBase {
     SmartDashboard.putNumber("ySpeed", ySpeed);
 
     swerve.drive(xSpeed, ySpeed, rot, isJoystickControlled, time);
+
+    
+
     
     t.restart();
   }

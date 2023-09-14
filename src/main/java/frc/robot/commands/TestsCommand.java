@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.TestsSubsystem;
@@ -28,9 +29,12 @@ public class TestsCommand extends CommandBase {
   public void execute() {
     double speed = controller.getLeftY();
     double rotation = controller.getRightY();
+    SmartDashboard.putNumber("rotation", controller.getRightY());
+    SmartDashboard.putNumber("drive", controller.getLeftY());
+
 
     motorTest.speedPower(speed);
-    motorTest.speedPower(rotation);
+    motorTest.rotPower(rotation);
   }
 
  

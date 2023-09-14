@@ -122,6 +122,22 @@ public class DriveTrain extends SubsystemBase {
     var twist = new Pose2d().log(desiredDeltaPose);
     return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
   }
+
+  public void setDrivePower(double power){
+    m_frontLeft.setDrivePower(power);
+    m_frontRight.setDrivePower(power);
+    m_backLeft.setDrivePower(power);
+    m_backRight.setDrivePower(power);
+
+  }
+
+  public void setTurnPower(double power){
+    m_frontLeft.setTurningPower(power);
+    m_frontRight.setTurningPower(power);
+    m_backLeft.setTurningPower(power);
+    m_backRight.setTurningPower(power);
+
+  }
   @Override
   public void periodic() {
       SmartDashboard.putNumber("Front Right Position:", m_frontRight.getAbsRad());

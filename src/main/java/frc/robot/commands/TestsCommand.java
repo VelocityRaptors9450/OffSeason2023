@@ -25,7 +25,13 @@ public class TestsCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double speed = controller.getLeftY();
+    double rotation = controller.getRightY();
+
+    motorTest.speedPower(speed);
+    motorTest.speedPower(rotation);
+  }
 
  
 }

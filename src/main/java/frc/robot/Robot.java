@@ -30,11 +30,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  WPI_PigeonIMU imu = new WPI_PigeonIMU(0);
-  NetworkTableEntry tx, ty, ta, tv, test;
-
-  Pigeon2 pigeon = new Pigeon2(0, "rio");
-    
+  
 
   
   //private ShooterSubsystem shooter = new ShooterSubsystem();
@@ -173,12 +169,7 @@ public class Robot extends TimedRobot {
   int _loopCount = 0;
   @Override
   public void teleopPeriodic() {
-    if(_loopCount++ > 10)
-        {
-            _loopCount = 0;
-            double yaw = pigeon.getYaw();
-            System.out.println("Pigeon Yaw is: " + yaw);
-        }
+    
 
     // System.out.println(cancoder.getPosition());
     // System.out.println(cancoder.getAbsolutePosition());
@@ -255,8 +246,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
 
-    System.out.println("Angle: " + imu.getAngle());
-    System.out.println("Compass Heading: " + imu.getAbsoluteCompassHeading());
+    
+    
     // double x = tx.getDouble(0);
     // double y = ty.getDouble(0);
     // double area = ta.getDouble(0);

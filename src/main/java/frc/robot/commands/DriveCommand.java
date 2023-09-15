@@ -18,14 +18,15 @@ import frc.robot.subsystems.DriveTrain;
 public class DriveCommand extends CommandBase {
   private final DriveTrain swerve;
   private final CommandXboxController controller;
-
+  
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
   // make bigger for sharper, make smaller for ramp/coast
-  // no decimals
+  // decimals are fine, they will make the ramp/coast slower
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
   
+ 
   public Timer t = new Timer();
   double time = 0.02;
   boolean ranOnce = false;
@@ -51,6 +52,13 @@ public class DriveCommand extends CommandBase {
       time = t.get();
     } else {
       ranOnce = true;
+    }
+
+    if(controller.getHID().getXButton()){
+      swerve.resetGyro();
+    }
+    if(controller.getHID().getBButton()){
+      swerve.fieldRelativeSwitch();
     }
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.

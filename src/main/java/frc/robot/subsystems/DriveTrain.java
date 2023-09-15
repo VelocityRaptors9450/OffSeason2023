@@ -28,7 +28,7 @@ public class DriveTrain extends SubsystemBase {
 
   public static final double kMaxSpeed = Constants.Speeds.MaxSpeed; // 3 meters per second
   public static final double kMaxAngularSpeed = Constants.Speeds.MaxAngularSpeed; // 1/2 rotation per second (Math.PI)
-  private final boolean fieldRelative = true; // true for tele, false for auto
+  private boolean fieldRelative = true; // true for tele, false for auto
 
 
   private final Translation2d m_frontLeftLocation = new Translation2d(-Constants.baseWidth / 2, Constants.baseLength / 2);
@@ -65,6 +65,17 @@ public class DriveTrain extends SubsystemBase {
 
   public DriveTrain() {
     pigeon.reset();
+  }
+  public void resetGyro(){
+    pigeon.reset();
+  }
+  public void fieldRelativeSwitch(){
+    if(fieldRelative){
+      fieldRelative = false;
+    }
+    if(!fieldRelative){
+      fieldRelative = true;
+    }
   }
 
   /**

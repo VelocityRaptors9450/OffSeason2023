@@ -22,9 +22,9 @@ public class DriveCommand extends CommandBase {
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
   // make bigger for sharper, make smaller for ramp/coast
   // decimals are fine, they will make the ramp/coast slower
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(4);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(4);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4);
   
  
   public Timer t = new Timer();
@@ -54,10 +54,10 @@ public class DriveCommand extends CommandBase {
       ranOnce = true;
     }
 
-    if(controller.getHID().getXButton()){
+    if(controller.getHID().getXButtonPressed()){
       swerve.resetGyro();
     }
-    if(controller.getHID().getBButton()){
+    if(controller.getHID().getBButtonPressed()){
       swerve.fieldRelativeSwitch();
     }
     // Get the x speed. We are inverting this because Xbox controllers return

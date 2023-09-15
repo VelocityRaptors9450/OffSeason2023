@@ -55,17 +55,17 @@ public class SwerveModule {
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
 
+        driveMotor.stopMotor();
+        turningMotor.stopMotor();
+
         driveMotor.restoreFactoryDefaults();
         turningMotor.restoreFactoryDefaults();
-        
 
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
-        
 
         driveEncoder = driveMotor.getEncoder();
-        turningMotor.stopMotor();
-        driveMotor.stopMotor();
+       
         
         driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
        /* 
@@ -91,7 +91,6 @@ public class SwerveModule {
         // to be continuous.
         turningPIDController.enableContinuousInput(0, 2 * Math.PI);
         resetEncoders();
-        
         setMode(IdleMode.kBrake);
 
     }
@@ -166,10 +165,6 @@ public class SwerveModule {
         SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
         SmartDashboard.putNumber("DriveVoltage",driveOutput + drvFeedforward);
         SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
-        SmartDashboard.putNumber("Drive Output Voltage", driveOutput);
-        SmartDashboard.putNumber("Drive Feed Forward", drvFeedforward);
-
-
       }
 
 }

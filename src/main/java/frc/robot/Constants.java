@@ -36,8 +36,8 @@ public final class Constants {
   }
 
   public static class Speeds{
-    public static final double MaxSpeed = 1;
-    public static final double MaxAngularSpeed = Math.PI;
+    public static final double MaxSpeed = 20;
+    public static final double MaxAngularSpeed = 22*Math.PI;
   }
   
   public static final int flDriveId = 1; //1
@@ -83,7 +83,7 @@ public final class Constants {
   public static final double turnKp = 4.0027;//4.0027
   public static final double turnKd = 0.10234;
 
-  public static final double driveKp = 0.034037;
+  public static final double driveKp = 0.034037; //0.034037
   public static final double driveKd = 0.0;
 
 

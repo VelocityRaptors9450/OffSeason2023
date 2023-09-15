@@ -59,14 +59,15 @@ public class SwerveModule {
         turningMotor.restoreFactoryDefaults();
         
 
-        // driveMotor.setInverted(driveMotorReversed);
+        driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
+        
 
         driveEncoder = driveMotor.getEncoder();
         turningMotor.stopMotor();
         driveMotor.stopMotor();
         
-       // driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
+        driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
        /* 
         
         // Set the distance per pulse for the drive encoder. We can simply use the
@@ -165,6 +166,10 @@ public class SwerveModule {
         SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
         SmartDashboard.putNumber("DriveVoltage",driveOutput + drvFeedforward);
         SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
+        SmartDashboard.putNumber("Drive Output Voltage", driveOutput);
+        SmartDashboard.putNumber("Drive Feed Forward", drvFeedforward);
+
+
       }
 
 }

@@ -28,6 +28,8 @@ public class DriveTrain extends SubsystemBase {
 
   public static final double kMaxSpeed = Constants.Speeds.MaxSpeed; // 3 meters per second
   public static final double kMaxAngularSpeed = Constants.Speeds.MaxAngularSpeed; // 1/2 rotation per second (Math.PI)
+  private final boolean fieldRelative = true; // true for tele, false for auto
+
 
   private final Translation2d m_frontLeftLocation = new Translation2d(-Constants.baseWidth / 2, Constants.baseLength / 2);
   private final Translation2d m_frontRightLocation = new Translation2d(Constants.baseWidth / 2, Constants.baseLength / 2);
@@ -35,11 +37,15 @@ public class DriveTrain extends SubsystemBase {
   private final Translation2d m_backRightLocation = new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2);
 
   private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, Constants.flAbsoluteId, Constants.flAbsoluteEncoderOffset, false);
-  private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
+  // private final SwerveModule m_frontRight = fieldRelative ? new SwerveModule(Constants.frDriveId, Constants.frTurnId, true, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false) : new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
+  private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, true, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
+
+  
   private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, Constants.blAbsoluteId, Constants.blAbsoluteEncoderOffset, false);
   private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
 
   private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(Constants.gyroId, "rio");
+
 
  // can you access the other files
   private final SwerveDriveKinematics m_kinematics =
@@ -70,7 +76,7 @@ public class DriveTrain extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the field.
    */
   public void drive(
-    double xSpeed, double ySpeed, double rot, boolean fieldRelative, double periodSeconds) {
+    double xSpeed, double ySpeed, double rot, double periodSeconds) {
     SwerveModuleState[] swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
             fromDiscreteSpeeds(

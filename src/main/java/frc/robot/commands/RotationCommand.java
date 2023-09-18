@@ -120,22 +120,22 @@ public class RotationCommand extends CommandBase{
         }
         
         // Intake out + in
-        if(controller.getRightBumperPressed()) {
-            rotation.intakeRight.set(0.2);
-            rotation.intakeLeft.set(0.2);
-        }
-        if (controller.getRightBumperReleased()) {
-            rotation.intakeRight.set(0);
-            rotation.intakeLeft.set(0);
-        }   
-        if(controller.getLeftBumperPressed()) {
-            rotation.intakeRight.set(-0.5);
-            rotation.intakeLeft.set(-0.5);
-        }
-        if (controller.getLeftBumperReleased()) {
-            rotation.intakeRight.set(0);
-            rotation.intakeLeft.set(0);
-        }
+        // if(controller.getRightBumperPressed()) {
+        //     rotation.intakeRight.set(0.2);
+        //     rotation.intakeLeft.set(0.2);
+        // }
+        // if (controller.getRightBumperReleased()) {
+        //     rotation.intakeRight.set(0);
+        //     rotation.intakeLeft.set(0);
+        // }   
+        // if(controller.getLeftBumperPressed()) {
+        //     rotation.intakeRight.set(-0.5);
+        //     rotation.intakeLeft.set(-0.5);
+        // }
+        // if (controller.getLeftBumperReleased()) {
+        //     rotation.intakeRight.set(0);
+        //     rotation.intakeLeft.set(0);
+        // }
         
         // wrist movement
         if(controllerTest.getTriangleButtonPressed()){

@@ -10,9 +10,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class RotationSubsystem extends SubsystemBase{
 
@@ -24,34 +23,35 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-    public CANSparkMax intakeRight = new CANSparkMax(7, MotorType.kBrushless);
-  public CANSparkMax intakeLeft = new CANSparkMax(13, MotorType.kBrushless);
+    public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
 
-
-    private CANSparkMax motor1 = new CANSparkMax(5,MotorType.kBrushless);
-    private CANSparkMax motor2 = new CANSparkMax(18, MotorType.kBrushless);
+    private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
+    private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
     private Height currentHeight = Height.GROUND;
     
 
+    
+    private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
+    private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
+
     //TODO: figure out these values
-    private CANSparkMax wristMotor = new CANSparkMax(4,MotorType.kBrushless);
-    private CANSparkMax extensionMotor = new CANSparkMax(25,MotorType.kBrushless);
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
-    
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
 
     
 
     public RotationSubsystem(){
-        motor1.setIdleMode(IdleMode.kBrake);
-        motor2.setIdleMode(IdleMode.kBrake);
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
-        motor2.setInverted(true);  
+        rightMotor.setInverted(true);  
         extensionMotor.setIdleMode(IdleMode.kBrake);
-        intakeLeft.setInverted(true);
-        intakeLeft.setIdleMode(IdleMode.kBrake);
-        intakeRight.setIdleMode(IdleMode.kBrake);
+        
+        //Might need this line
+        //intake.setInverted(true);
+        intake.setIdleMode(IdleMode.kBrake);
+        
 
 
     }
@@ -59,8 +59,8 @@ public class RotationSubsystem extends SubsystemBase{
     
 
     public void setMode(IdleMode mode){
-        motor1.setIdleMode(mode);
-        motor2.setIdleMode(mode);
+        rightMotor.setIdleMode(mode);
+        leftMotor.setIdleMode(mode);
     }
 
 
@@ -68,8 +68,8 @@ public class RotationSubsystem extends SubsystemBase{
         extensionMotor.set(power);
     }
     public void setPower(double power){
-        motor1.set(power);
-        motor2.set(power);
+        leftMotor.set(power);
+        rightMotor.set(power);
     }
 
 
@@ -230,12 +230,12 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public double getEncoderTics(){
-        return (motor1.getEncoder().getPosition() + motor2.getEncoder().getPosition()) / 2;
+      return (leftMotor.getEncoder().getPosition() + rightMotor.getEncoder().getPosition()) / 2;
     }
 
     public void setEncoderTics(double tics){
-        motor1.getEncoder().setPosition(tics);
-        motor2.getEncoder().setPosition(tics);
+        rightMotor.getEncoder().setPosition(tics);
+        leftMotor.getEncoder().setPosition(tics);
     }
 
     public void initialSetEncoder(){

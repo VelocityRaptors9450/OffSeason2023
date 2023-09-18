@@ -67,8 +67,8 @@ public final class Constants {
 
   public static final int wristId = 17;
 
-  public static final int intakeLeftId = 18;
-  public static final int intakeRightId = 19;
+  public static final int intakeId = 18;
+  
 
   public static final double baseWidth = 0.4953;
   public static final double baseLength = 0.6477;

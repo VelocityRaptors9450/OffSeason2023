@@ -5,43 +5,30 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.RotationSubsystem;
 import frc.robot.subsystems.RotationSubsystem.Height;
 
 public class RotationCommand extends CommandBase{
 
     
-    private final Supplier<Boolean> isAPressed2, isYPressed2,isAReleased2, isYReleased2, isXPressed2, leftBumper, rightBumper, leftBumper2, rightBumper2;
-    private final Supplier<Double> rightTrigger, leftTrigger;
-    private final XboxController controller;
-    private final XboxController controller2;
-    private final PS4Controller controllerTest;
-    private boolean left, right;
     
+    private final XboxController controller;
+    private final PS4Controller controllerTest;    
 
     private final RotationSubsystem rotation;
     double target;
     double starting, bottom, low, mid, high;
 
-    public RotationCommand(Supplier<Double> rightTrigger, Supplier<Double> leftTrigger,Supplier<Boolean> leftBumper,Supplier<Boolean> rightBumper,Supplier<Boolean> leftBumper2, Supplier<Boolean> rightBumper2, Supplier<Boolean> isAPressed2, Supplier<Boolean> isYPressed2, Supplier<Boolean> isAReleased2, Supplier<Boolean> isYReleased2, Supplier<Boolean> isXPressed2, XboxController controller, XboxController controller2, PS4Controller controllerTest, RotationSubsystem rotation){
+    public RotationCommand(RotationSubsystem rotation, XboxController controller, PS4Controller controllerTest){
         
         
-        this.rightTrigger = rightTrigger;
-        this.leftTrigger = leftTrigger;
-        this.leftBumper = leftBumper;
-        this.rightBumper = rightBumper;
-        this.leftBumper2 = leftBumper2;
-        this.rightBumper2 = rightBumper2;
-        this.rotation = rotation;
-        this.isAPressed2 = isAPressed2;
-        this.isYPressed2 = isYPressed2;
-        this.isXPressed2 = isXPressed2;
         this.controller = controller;
-        this.controller2 = controller2;
-        this.isAReleased2 = isAReleased2;
-        this.isYReleased2 = isYReleased2;
         this.controllerTest = controllerTest;
+        this.rotation = rotation;
         addRequirements(rotation);
     }
 
@@ -90,6 +77,12 @@ public class RotationCommand extends CommandBase{
 // of each method for the PS4Controller class and XboxController class i.e. any
 // println statements must be deleted for it to work
 
+
+
+
+/*
+
+
         // This controls linkage pushing in and out
         if(controllerTest.getSquareButtonPressed()){
             rotation.extPow(-0.2);
@@ -118,25 +111,7 @@ public class RotationCommand extends CommandBase{
                 rotation.setPower(0.02);
             }
         }
-        
-        // Intake out + in
-        // if(controller.getRightBumperPressed()) {
-        //     rotation.intakeRight.set(0.2);
-        //     rotation.intakeLeft.set(0.2);
-        // }
-        // if (controller.getRightBumperReleased()) {
-        //     rotation.intakeRight.set(0);
-        //     rotation.intakeLeft.set(0);
-        // }   
-        // if(controller.getLeftBumperPressed()) {
-        //     rotation.intakeRight.set(-0.5);
-        //     rotation.intakeLeft.set(-0.5);
-        // }
-        // if (controller.getLeftBumperReleased()) {
-        //     rotation.intakeRight.set(0);
-        //     rotation.intakeLeft.set(0);
-        // }
-        
+
         // wrist movement
         if(controllerTest.getTriangleButtonPressed()){
             rotation.wristSetPower(0.15);
@@ -147,7 +122,28 @@ public class RotationCommand extends CommandBase{
         if (controllerTest.getTriangleButtonReleased() || controllerTest.getCrossButtonReleased()){
             rotation.wristSetPower(0.02);
         }
+ */
+
+
+
+
+        SmartDashboard.putBoolean("right bumper", controller.getRightBumperPressed());
         
+        // Intake out + in
+        if(controller.getRightBumperPressed()) {
+            rotation.setIntakePower(0.2);
+        }
+        if (controller.getRightBumperReleased()) {
+            rotation.setIntakePower(0);
+        }   
+        if(controller.getLeftBumperPressed()) {
+            rotation.setIntakePower(-0.5);
+        }
+        if (controller.getLeftBumperReleased()) {
+            rotation.setIntakePower(0);
+        }
+
+
 
 
         

@@ -249,6 +249,10 @@ public class RotationSubsystem extends SubsystemBase{
     public Height getHeight(){
         return currentHeight;
     }
+
+    public void setIntakePower(double speed) {
+        intake.set(speed);
+    }
     
 
     @Override

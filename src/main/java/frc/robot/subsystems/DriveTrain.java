@@ -70,12 +70,7 @@ public class DriveTrain extends SubsystemBase {
     pigeon.reset();
   }
   public void fieldRelativeSwitch(){
-    if(fieldRelative){
-      fieldRelative = false;
-    }
-    if(!fieldRelative){
-      fieldRelative = true;
-    }
+    fieldRelative = !fieldRelative;
   }
 
   /**

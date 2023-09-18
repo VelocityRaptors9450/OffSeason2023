@@ -6,10 +6,14 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.RotationCommand;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.RotationSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,14 +27,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DriveTrain driveTrain = new DriveTrain();
+  private RotationSubsystem rotation = new RotationSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final XboxController driverController = new XboxController(0);
+  private final PS4Controller driverController2 = new PS4Controller(0);
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController));
+    rotation.setDefaultCommand(new RotationCommand(rotation, driverController, driverController2));
     //motorTest.setDefaultCommand(new TestsCommand(motorTest, driverController));
     // Configure the trigger bindings
     configureBindings();

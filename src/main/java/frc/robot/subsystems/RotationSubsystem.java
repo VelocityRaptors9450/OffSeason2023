@@ -9,7 +9,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -39,6 +43,15 @@ public class RotationSubsystem extends SubsystemBase{
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
+    
+    private int maxRotVel = 5; // maxiumum velocity
+    private int maxRotAccel = 10; // maximum acceleration
+    private double oldRotVel = 0;
+    private double oldTime = Timer.getFPGATimestamp();
+    private final ProfiledPIDController rotationPIDController =
+    new ProfiledPIDController(Constants.turnKp,0,Constants.turnKd,new TrapezoidProfile.Constraints(maxRotVel, maxRotAccel));
+    private SimpleMotorFeedforward rotationFeedforward = new SimpleMotorFeedforward(lowTics, highTics, groundTics);
+    private ArmFeedforward armRotationFeedforward = new ArmFeedforward(lowTics, highTics, groundTics);
 
 
 
@@ -76,16 +89,27 @@ public class RotationSubsystem extends SubsystemBase{
     
 
     public RotationSubsystem(){
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
+        leftMotor.setIdleMode(IdleMode.kCoast);
+        rightMotor.setIdleMode(IdleMode.kCoast);
         wristMotor.setIdleMode(IdleMode.kBrake);  
+        leftMotor.setInverted(true);  
         rightMotor.setInverted(true);  
+
         extensionMotor.setIdleMode(IdleMode.kBrake);
         
         //Might need this line
         //intake.setInverted(true);
         intake.setIdleMode(IdleMode.kBrake);
         
+        //leftMotor.getEncoder().setVelocityConversionFactor();
+        // 144 revolutions of motor to 1 rev of arm
+        // 360 / 144 = 2.5 revolutions per degree
+        
+        leftMotor.getEncoder().setPosition(0);
+        rightMotor.getEncoder().setPosition(0);
+        //leftMotor.getEncoder().setPositionConversionFactor(360 / 144);
+        rightMotor.getEncoder().setPositionConversionFactor(2.5);
+       
 
 
     }
@@ -301,6 +325,56 @@ public class RotationSubsystem extends SubsystemBase{
         // }
     }
 
+    public void armRotation(double goalPosition) {
+        double pidValue = rotationPIDController.calculate((getLeftRotPos()+getRightRotPos())/2, goalPosition);
+        double velSetpoint = rotationPIDController.getSetpoint().velocity;
+        double accel = (velSetpoint - oldRotVel) / (Timer.getFPGATimestamp() - oldTime); 
+        double feedForwardVal = rotationFeedforward.calculate(rotationPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
+        
+        runRotMotor(pidValue + feedForwardVal);
+        
+        // update vars for determining acceleration later
+        oldRotVel = rotationPIDController.getSetpoint().velocity;
+        oldTime = Timer.getFPGATimestamp(); 
+        
+    }
+
+    public void armRotationAngle(double goalAngle) {
+        double pidValue = rotationPIDController.calculate((getLeftRotPos()+getRightRotPos())/2, goalAngle);
+        double velSetpoint = rotationPIDController.getSetpoint().velocity;
+        double accel = (velSetpoint - oldRotVel) / (Timer.getFPGATimestamp() - oldTime); 
+        double feedForwardVal = rotationFeedforward.calculate(rotationPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
+        
+        runRotMotor(pidValue + feedForwardVal);
+        
+        // update vars for determining acceleration later
+        oldRotVel = rotationPIDController.getSetpoint().velocity;
+        oldTime = Timer.getFPGATimestamp(); 
+        
+    }
+
+    public void printVelocity() {
+        System.out.println("Left Velocity: " +  leftMotor.getEncoder().getVelocity());
+        System.out.println("Right Velocity: " +  rightMotor.getEncoder().getVelocity());
+
+    }
+    public void printPosition() {
+        System.out.println("Left Position: " +  leftMotor.getEncoder().getPosition());
+        System.out.println("Right Position: " +  rightMotor.getEncoder().getPosition() * 144 / 360);
+        System.out.println("Conversion factor: " + leftMotor.getEncoder().getPositionConversionFactor());
+
+    }
+    public double getLeftRotPos() {
+        return leftMotor.getEncoder().getPosition();
+    }
+    public double getRightRotPos() {
+        return rightMotor.getEncoder().getPosition();
+    }
+    public void runRotMotor(double voltage) {
+        leftMotor.setVoltage(voltage);
+        rightMotor.setVoltage(-voltage);
+    }
+
 
     public void resetIntakeVars() {
         temp = true;
@@ -344,7 +418,7 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public void initialSetWristEncoder(){
-        setEncoderTics((202.4/360) * ticsPerWristRevolution);
+        setWristEncoderTics((202.4/360) * ticsPerWristRevolution);
     }
 
     public double getWristAngle(){
@@ -363,13 +437,14 @@ public class RotationSubsystem extends SubsystemBase{
       return (leftMotor.getEncoder().getPosition() + rightMotor.getEncoder().getPosition()) / 2;
     }
 
+    // --------------------------------------------------------------
     public void setEncoderTics(double tics){
         rightMotor.getEncoder().setPosition(tics);
         leftMotor.getEncoder().setPosition(tics);
     }
 
     public void initialSetEncoder(){
-        setEncoderTics(groundTics);
+        //setEncoderTics(groundTics);
     }
 
     public void changeHeight(Height height){

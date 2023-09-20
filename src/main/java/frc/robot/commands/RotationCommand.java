@@ -38,8 +38,8 @@ public class RotationCommand extends CommandBase{
     @Override
     public void initialize(){
         
-        rotation.initialSetEncoder();
-        rotation.initialSetWristEncoder();
+        //rotation.initialSetEncoder();
+        //rotation.initialSetWristEncoder();
 
         
        
@@ -130,13 +130,36 @@ public class RotationCommand extends CommandBase{
 
         SmartDashboard.putBoolean("right bumper", controller.getHID().getRightBumperPressed());
         
+/* 
+        // This controls the rotation of the linkage up and down
+        if(controller.getHID().leftTrigger(bottom, null) > 0.05){
+            //Different states(farther out is slower) (closer in is faster)
+            rotation.setPower(-leftTrigger.get()*0.08);
+        }else if(rightTrigger.get() > 0.05){
+            rotation.setPower(rightTrigger.get()*0.25);
+        }else {
+            if (rotation.getEncoderTics() > 36) {
+                rotation.setPower(0.01);
+            } else {
+                rotation.setPower(0.02);
+            }
+        }
+*/
+        // rotation.printVelocity();
+        rotation.printPosition();
+
         // Intake out + in
+        
+        // this part not working
         if(controller.getHID().getRightBumperPressed()) {
             rotation.setIntakePower(0.2);
         }
         if (controller.getHID().getRightBumperReleased()) {
             rotation.setIntakePower(0);
         }   
+        
+        
+        // [working] pushing out cone
         if(controller.getHID().getLeftBumperPressed()) {
             rotation.setIntakePower(-0.5);
         }
@@ -146,18 +169,14 @@ public class RotationCommand extends CommandBase{
             toggle = false;
         }
 
-
+        // intakeing cone
         if(controller.getHID().getAButtonPressed()) {
             toggle = true;
-            
-
         }
         if(controller.getHID().getYButtonPressed()) {
             rotation.setIntakePower(0);
-            toggle = false;
-            
+            toggle = false; 
         }
-
         if (toggle) {
             rotation.intake(0.4);
         }

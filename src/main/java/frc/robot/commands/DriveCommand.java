@@ -18,7 +18,7 @@ import frc.robot.subsystems.DriveTrain;
 
 public class DriveCommand extends CommandBase {
   private final DriveTrain swerve;
-  private final XboxController controller;
+  private final CommandXboxController controller;
   
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
   // make bigger for sharper, make smaller for ramp/coast
@@ -33,7 +33,7 @@ public class DriveCommand extends CommandBase {
   boolean ranOnce = false;
 
   /** Creates a new DriveCommand. */
-  public DriveCommand(DriveTrain swerve, XboxController controller) {
+  public DriveCommand(DriveTrain swerve, CommandXboxController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     this.controller = controller;
@@ -55,10 +55,10 @@ public class DriveCommand extends CommandBase {
       ranOnce = true;
     }
 
-    if(controller.getXButtonPressed()){
+    if(controller.getHID().getXButtonPressed()){
       swerve.resetGyro();
     }
-    if(controller.getBButtonPressed()){
+    if(controller.getHID().getBButtonPressed()){
       swerve.fieldRelativeSwitch();
     }
     // Get the x speed. We are inverting this because Xbox controllers return

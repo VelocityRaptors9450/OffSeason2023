@@ -30,7 +30,7 @@ public class RobotContainer {
   private RotationSubsystem rotation = new RotationSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final XboxController driverController = new XboxController(0);
+  private final CommandXboxController driverController = new CommandXboxController(0);
   private final PS4Controller driverController2 = new PS4Controller(0);
   
 

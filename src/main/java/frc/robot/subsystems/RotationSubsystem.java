@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -39,6 +40,39 @@ public class RotationSubsystem extends SubsystemBase{
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
 
+
+
+      // private double startPos = motor6.getEncoder().getPosition();
+  public static Timer t = new Timer();
+  public static Timer l = new Timer();
+  public static Timer g = new Timer();
+  Timer quit = new Timer();
+
+
+  public static enum IntakeStep {
+    INITIAL_RAMP_UP,
+    INITIAL, // rampUpToggle boolean equivalent
+    SLOW_INTAKE,
+    IS_OUTPUTTING,
+    DONE_OUTPUTTING,
+  }
+
+  private IntakeStep intakeStep = IntakeStep.INITIAL;
+  
+  private static double error = 0.0;
+  private static double priorError = 0.0;
+  private static double proportion = 0.09;
+  private static double derivative = 0.000012;
+  private static double pdPower = 0.0;  
+  private static double timeChange = 0.02;
+  private static double oldpos = 0;
+  private static boolean temp = true;
+  private static boolean isOutput = false;
+  private static boolean initial = true;
+  private static boolean rampUPToggle = true;
+  public static double velocity = 10;
+  private static double time = 0;
+  
     
 
     public RotationSubsystem(){
@@ -191,6 +225,102 @@ public class RotationSubsystem extends SubsystemBase{
         //wristSetPower(wristPower);
     }
 
+    public void intake(double power) {
+        //System.out.println("Velocity Left: " + Math.round(intakeLeft.getEncoder().getVelocity()) + "  Velocity Right: " + Math.round(intakeLeft.getEncoder().getVelocity()));
+        
+        
+        // timeChange = g.get();
+        // g.reset();
+        double changeInPos = Math.abs(intake.getEncoder().getPosition()) - oldpos;
+        velocity = changeInPos / 0.02;
+        //System.out.println("Velocity: " + velocity);
+        oldpos = Math.abs(intake.getEncoder().getPosition());
+        //System.out.println("POWER: " + intake.get());
+        // approximately 19 revolutions / second
+        
+        if (velocity < 4500 && initial) {
+            if (rampUPToggle) {
+                // assigns current state
+                intakeStep = IntakeStep.INITIAL_RAMP_UP;
+                //System.out.println("super duper initial timer got reset");
+                t.restart();
+                rampUPToggle = false;
+            }
+            
+
+            if (rampUp(t.get(), 0.4) > 0.4) {
+                intake.set(power);
+            } else {
+                //System.out.println("------------------- \n RAMPING UP \n ---------------------------");
+                //System.out.println(t.get());
+                intake.set(rampUp(t.get(), 0.4));
+                
+            }
+            
+        } else if (!isOutput && velocity > 3) { // intake 
+            //System.out.println("MADE ITTTTTTTTTTTTTTTTTTTTTT");
+            intakeStep = IntakeStep.INITIAL;
+            initial = false;
+            intake.set(power);
+        } else if (!isOutput){
+            if (temp) {
+                g.reset(); 
+
+                temp = false;
+                //System.out.println("------------------- \n SLOW SPEED \n ---------------------------");
+                intakeStep = IntakeStep.SLOW_INTAKE;
+                intake.set(0.04);
+                
+            }
+            // if (g.get() >= 2.0) {
+            //     System.out.println("------------------- \n OUTPUTTING \n ---------------------------");
+            //     intakeStep = IntakeStep.IS_OUTPUTTING;
+            //     intake.set(-0.4);                
+                
+            // } 
+            // if (g.get() >= 3.5) {
+                
+            //     isOutput = true;
+            //     g.reset();
+            //     t.reset();
+            // }
+        }
+
+        // if (rampDown(t.get(), 0.4) > 0 && t.get() <= 1 && isOutput) {
+        //     intakeStep = IntakeStep.DONE_OUTPUTTING;
+        //     System.out.println("------------------- \n RAMPING DOWN, t = " + t.get() + "\n ---------------------------");
+        //     intake.set(rampDown(t.get(), 0.4));
+        // } else if (t.get() > 2 && g.get() > 2 && isOutput) {
+        //     intake.set(0);
+
+        //     temp = true;
+        //     isOutput = false;
+        //     initial = true;
+        //     rampUPToggle = true;
+        //     velocity = 0;
+        // }
+    }
+
+
+    public void resetIntakeVars() {
+        temp = true;
+        isOutput = false;
+        initial = true;
+        rampUPToggle = true;
+        velocity = 0;
+    }
+    public double rampUp(double time, double powerTo) {
+        return 2 * powerTo / (1 + Math.pow(Math.E, -9*(time))) - 0.4;
+
+    }
+    
+    public double rampDown(double time, double powerFrom) {
+        return -(2 * powerFrom / (1 + Math.pow(Math.E, -9*(time - 1))) - 0.4);
+
+    }
+
+
+
     
 
     public void wristSetPower(double power){
@@ -252,6 +382,10 @@ public class RotationSubsystem extends SubsystemBase{
 
     public void setIntakePower(double speed) {
         intake.set(speed);
+    }
+
+    public void stopIntakeMotor() {
+        intake.stopMotor();
     }
     
 

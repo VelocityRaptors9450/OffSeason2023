@@ -16,14 +16,15 @@ public class RotationCommand extends CommandBase{
 
     
     
-    private final XboxController controller;
+    private final CommandXboxController controller;
     private final PS4Controller controllerTest;    
 
     private final RotationSubsystem rotation;
     double target;
     double starting, bottom, low, mid, high;
+    boolean toggle = false;
 
-    public RotationCommand(RotationSubsystem rotation, XboxController controller, PS4Controller controllerTest){
+    public RotationCommand(RotationSubsystem rotation, CommandXboxController controller, PS4Controller controllerTest){
         
         
         this.controller = controller;
@@ -127,21 +128,43 @@ public class RotationCommand extends CommandBase{
 
 
 
-        SmartDashboard.putBoolean("right bumper", controller.getRightBumperPressed());
+        SmartDashboard.putBoolean("right bumper", controller.getHID().getRightBumperPressed());
         
         // Intake out + in
-        if(controller.getRightBumperPressed()) {
+        if(controller.getHID().getRightBumperPressed()) {
             rotation.setIntakePower(0.2);
         }
-        if (controller.getRightBumperReleased()) {
+        if (controller.getHID().getRightBumperReleased()) {
             rotation.setIntakePower(0);
         }   
-        if(controller.getLeftBumperPressed()) {
+        if(controller.getHID().getLeftBumperPressed()) {
             rotation.setIntakePower(-0.5);
         }
-        if (controller.getLeftBumperReleased()) {
+        if (controller.getHID().getLeftBumperReleased()) {
             rotation.setIntakePower(0);
+            rotation.resetIntakeVars();
+            toggle = false;
         }
+
+
+        if(controller.getHID().getAButtonPressed()) {
+            toggle = true;
+            
+
+        }
+        if(controller.getHID().getYButtonPressed()) {
+            rotation.setIntakePower(0);
+            toggle = false;
+            
+        }
+
+        if (toggle) {
+            rotation.intake(0.4);
+        }
+
+        
+
+        
 
 
 

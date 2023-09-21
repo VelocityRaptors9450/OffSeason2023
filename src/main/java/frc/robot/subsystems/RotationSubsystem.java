@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -93,7 +94,7 @@ public class RotationSubsystem extends SubsystemBase{
         rightMotor.setIdleMode(IdleMode.kCoast);
         wristMotor.setIdleMode(IdleMode.kBrake);  
         leftMotor.setInverted(true);  
-        rightMotor.setInverted(true);  
+        rightMotor.setInverted(false);  
 
         extensionMotor.setIdleMode(IdleMode.kBrake);
         
@@ -107,7 +108,8 @@ public class RotationSubsystem extends SubsystemBase{
         
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
-        //leftMotor.getEncoder().setPositionConversionFactor(360 / 144);
+        
+        leftMotor.getEncoder().setPositionConversionFactor(2.5);
         rightMotor.getEncoder().setPositionConversionFactor(2.5);
        
 
@@ -127,6 +129,14 @@ public class RotationSubsystem extends SubsystemBase{
     }
     public void setPower(double power){
         leftMotor.set(power);
+        rightMotor.set(power);
+    }
+
+    public void setLeftPower(double power){
+        leftMotor.set(power);
+    }
+
+    public void setRightPower(double power){
         rightMotor.set(power);
     }
 
@@ -359,13 +369,16 @@ public class RotationSubsystem extends SubsystemBase{
 
     }
     public void printPosition() {
-        System.out.println("Left Position: " +  leftMotor.getEncoder().getPosition());
-        System.out.println("Right Position: " +  rightMotor.getEncoder().getPosition() * 144 / 360);
-        System.out.println("Conversion factor: " + leftMotor.getEncoder().getPositionConversionFactor());
+        SmartDashboard.putNumber("RL Position", getLeftRotPos());
+        SmartDashboard.putNumber("RR Position", getRightRotPos());
+        SmartDashboard.putNumber("RL Conversion", leftMotor.getEncoder().getPositionConversionFactor());
+        SmartDashboard.putNumber("RR Conversion", rightMotor.getEncoder().getPositionConversionFactor());
+
+       
 
     }
     public double getLeftRotPos() {
-        return leftMotor.getEncoder().getPosition();
+        return leftMotor.getEncoder().getPosition() ;
     }
     public double getRightRotPos() {
         return rightMotor.getEncoder().getPosition();

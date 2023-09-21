@@ -37,6 +37,8 @@ public class RotationCommand extends CommandBase{
 
     @Override
     public void initialize(){
+
+        
         
         //rotation.initialSetEncoder();
         //rotation.initialSetWristEncoder();
@@ -180,15 +182,6 @@ public class RotationCommand extends CommandBase{
         if (toggle) {
             rotation.intake(0.4);
         }
-
-        
-
-        
-
-
-
-
-        
 /*        
         System.out.println("Right side: " + controllerTest.getL2Axis());
         System.out.println("Left side: " + controllerTest.getR2Axis());

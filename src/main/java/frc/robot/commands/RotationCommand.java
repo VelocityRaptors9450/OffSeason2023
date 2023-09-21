@@ -173,7 +173,11 @@ public class RotationCommand extends CommandBase{
 
         // intakeing cone
         if(controller.getHID().getAButtonPressed()) {
-            toggle = true;
+            //toggle = true;
+            rotation.armRotationAngle(1);
+        }
+        if(controller.getHID().getAButtonReleased()) {
+            
         }
         if(controller.getHID().getYButtonPressed()) {
             rotation.setIntakePower(0);

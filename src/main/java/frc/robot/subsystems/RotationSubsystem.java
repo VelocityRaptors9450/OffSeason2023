@@ -45,12 +45,12 @@ public class RotationSubsystem extends SubsystemBase{
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
     
-    private int maxRotVel = 5; // maxiumum velocity
-    private int maxRotAccel = 10; // maximum acceleration
+    private int maxRotVel = 1; // maxiumum velocity
+    private int maxRotAccel = 2; // maximum acceleration
     private double oldRotVel = 0;
     private double oldTime = Timer.getFPGATimestamp();
     private final ProfiledPIDController rotationPIDController =
-    new ProfiledPIDController(Constants.turnKp,0,Constants.turnKd,new TrapezoidProfile.Constraints(maxRotVel, maxRotAccel));
+    new ProfiledPIDController(0.1,0,0,new TrapezoidProfile.Constraints(maxRotVel, maxRotAccel));
     private SimpleMotorFeedforward rotationFeedforward = new SimpleMotorFeedforward(lowTics, highTics, groundTics);
     private ArmFeedforward armRotationFeedforward = new ArmFeedforward(lowTics, highTics, groundTics);
 
@@ -354,6 +354,9 @@ public class RotationSubsystem extends SubsystemBase{
         double velSetpoint = rotationPIDController.getSetpoint().velocity;
         double accel = (velSetpoint - oldRotVel) / (Timer.getFPGATimestamp() - oldTime); 
         double feedForwardVal = rotationFeedforward.calculate(rotationPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
+        SmartDashboard.putNumber("PID Value", pidValue);
+        SmartDashboard.putNumber("Feed Forward", feedForwardVal);
+        SmartDashboard.putNumber("Position error", rotationPIDController.getPositionError());
         
         runRotMotor(pidValue + feedForwardVal);
         

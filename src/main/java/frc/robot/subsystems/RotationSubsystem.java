@@ -44,15 +44,17 @@ public class RotationSubsystem extends SubsystemBase{
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
+    double kp = 0.001, ki = 0, kd = 0, ilimiter = 0, previousDegreeError = 0, currentTime = 0, previousTime = 0;
+    Timer timer = new Timer();
     
-    private int maxRotVel = 5; // maxiumum velocity
-    private int maxRotAccel = 10; // maximum acceleration
+    private int maxRotVel = 1; // maxiumum velocity
+    private int maxRotAccel = 1; // maximum acceleration
     private double oldRotVel = 0;
     private double oldTime = Timer.getFPGATimestamp();
     private final ProfiledPIDController rotationPIDController =
-    new ProfiledPIDController(Constants.turnKp,0,Constants.turnKd,new TrapezoidProfile.Constraints(maxRotVel, maxRotAccel));
-    private SimpleMotorFeedforward rotationFeedforward = new SimpleMotorFeedforward(lowTics, highTics, groundTics);
-    private ArmFeedforward armRotationFeedforward = new ArmFeedforward(lowTics, highTics, groundTics);
+    new ProfiledPIDController(0,0,0,new TrapezoidProfile.Constraints(maxRotVel, maxRotAccel));
+    private SimpleMotorFeedforward rotationFeedforward = new SimpleMotorFeedforward(0, 0,0);
+    private ArmFeedforward armRotationFeedforward = new ArmFeedforward(0, 0, 0);
 
 
 
@@ -86,15 +88,19 @@ public class RotationSubsystem extends SubsystemBase{
   private static boolean rampUPToggle = true;
   public static double velocity = 10;
   private static double time = 0;
+  boolean firstIteration = true;
   
     
 
     public RotationSubsystem(){
+
+        leftMotor.restoreFactoryDefaults();
+        rightMotor.restoreFactoryDefaults();
         leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
-        leftMotor.setInverted(true);  
-        rightMotor.setInverted(false);  
+        //leftMotor.setInverted(true);  
+        //rightMotor.setInverted(false);  
 
         extensionMotor.setIdleMode(IdleMode.kBrake);
         
@@ -105,12 +111,13 @@ public class RotationSubsystem extends SubsystemBase{
         //leftMotor.getEncoder().setVelocityConversionFactor();
         // 144 revolutions of motor to 1 rev of arm
         // 360 / 144 = 2.5 revolutions per degree
+
+        
         
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
         
-        leftMotor.getEncoder().setPositionConversionFactor(2.5);
-        rightMotor.getEncoder().setPositionConversionFactor(2.5);
+        
        
 
 
@@ -133,7 +140,7 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public void setLeftPower(double power){
-        leftMotor.set(power);
+        leftMotor.set(-power);
     }
 
     public void setRightPower(double power){
@@ -156,6 +163,49 @@ public class RotationSubsystem extends SubsystemBase{
 
         }
     }
+
+    public void rotationPID(double degreeTarget){
+        double timeDifference;
+
+        currentTime = timer.get();
+
+        if(firstIteration){
+            timer.restart();
+            timeDifference = 0.02;
+            firstIteration = false;
+        }else{
+            
+            timeDifference = currentTime - previousTime;
+        }
+
+        
+        
+        double degreeError = degreeTarget - getLeftRotPos();
+        SmartDashboard.putNumber("Krish Error", degreeError);
+        double p = kp * degreeError;
+
+        
+        double i = ki * 0.5 * (degreeError + previousDegreeError)*(timeDifference);
+
+        if(Math.abs(i) > ilimiter){
+            if(i < 0){
+                i = -ilimiter;
+            }else{
+                i = ilimiter;
+            }
+        }
+        double d = kd * (degreeError - previousDegreeError)/(timeDifference);
+
+
+        double outputtedPower = p + i + d;
+        SmartDashboard.putNumber("Krish Power", outputtedPower);
+
+
+        setLeftPower(outputtedPower);
+
+        previousTime = currentTime;
+        previousDegreeError = degreeError;
+    }   
 
 
     
@@ -353,8 +403,8 @@ public class RotationSubsystem extends SubsystemBase{
         double pidValue = rotationPIDController.calculate((getLeftRotPos()+getRightRotPos())/2, goalAngle);
         double velSetpoint = rotationPIDController.getSetpoint().velocity;
         double accel = (velSetpoint - oldRotVel) / (Timer.getFPGATimestamp() - oldTime); 
-        double feedForwardVal = rotationFeedforward.calculate(rotationPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
-        
+        //double feedForwardVal = rotationFeedforward.calculate(rotationPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
+        double feedForwardVal = armRotationFeedforward.calculate((getLeftRotPos()+getRightRotPos())/2, rotationPIDController.getSetpoint().velocity);
         runRotMotor(pidValue + feedForwardVal);
         
         // update vars for determining acceleration later
@@ -378,10 +428,10 @@ public class RotationSubsystem extends SubsystemBase{
 
     }
     public double getLeftRotPos() {
-        return leftMotor.getEncoder().getPosition() ;
+        return leftMotor.getEncoder().getPosition() * -2.5;
     }
     public double getRightRotPos() {
-        return rightMotor.getEncoder().getPosition();
+        return rightMotor.getEncoder().getPosition() * 2.5;
     }
     public void runRotMotor(double voltage) {
         leftMotor.setVoltage(voltage);

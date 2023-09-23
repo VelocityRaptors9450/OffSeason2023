@@ -23,7 +23,6 @@ public class RotationCommand extends CommandBase{
     double target;
     double starting, bottom, low, mid, high;
     boolean toggle = false;
-    boolean pid;
 
     public RotationCommand(RotationSubsystem rotation, CommandXboxController controller, PS4Controller controllerTest){
         
@@ -31,7 +30,6 @@ public class RotationCommand extends CommandBase{
         this.controller = controller;
         this.controllerTest = controllerTest;
         this.rotation = rotation;
-        
         addRequirements(rotation);
     }
 
@@ -39,8 +37,9 @@ public class RotationCommand extends CommandBase{
 
     @Override
     public void initialize(){
+
         
-        pid = false;
+        
         //rotation.initialSetEncoder();
         //rotation.initialSetWristEncoder();
 
@@ -175,22 +174,18 @@ public class RotationCommand extends CommandBase{
         // intakeing cone
         if(controller.getHID().getAButtonPressed()) {
             //toggle = true;
-            pid = true;
+            rotation.armRotationAngle(1);
+        }
+        if(controller.getHID().getAButtonReleased()) {
             
         }
         if(controller.getHID().getYButtonPressed()) {
-            //rotation.setIntakePower(0);
-            //toggle = false;
-            rotation.setLeftPower(0); 
-            pid = false;
+            rotation.setIntakePower(0);
+            toggle = false; 
         }
-
-        if(pid){
-            rotation.rotationPID(130);
+        if (toggle) {
+            rotation.intake(0.4);
         }
-        //if (toggle) {
-            //rotation.intake(0.4);
-        //}
 /*        
         System.out.println("Right side: " + controllerTest.getL2Axis());
         System.out.println("Left side: " + controllerTest.getR2Axis());

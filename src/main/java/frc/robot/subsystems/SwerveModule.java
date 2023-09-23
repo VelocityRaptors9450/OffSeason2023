@@ -98,6 +98,7 @@ public class SwerveModule {
     public void setMode(IdleMode mode){
         driveMotor.setIdleMode(mode);
         turningMotor.setIdleMode(mode);
+
     }
 
     // returns the current position of the swerve module; both 

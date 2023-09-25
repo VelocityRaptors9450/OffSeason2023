@@ -6,20 +6,22 @@ package frc.robot;
 
 
 
-import com.ctre.phoenix.sensors.Pigeon2;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.AutoRotateCommand;
+import frc.robot.subsystems.ArmSubsystem;
 
 
 
@@ -32,6 +34,23 @@ import frc.robot.commands.AutoRotateCommand;
  * project.
  */
 public class Robot extends TimedRobot {
+  
+
+  private static Robot instance = null;
+  //private final PowerDistribution PDP = new PowerDistribution(1, ModuleType.kRev);
+
+
+  public static Robot getInstance(){
+    if(instance == null) instance = new Robot();
+    return instance;
+  }
+
+  public double getVoltage(){
+    return /*PDP.getVoltage()*/ 12;
+  }
+
+  ArmSubsystem arm = new ArmSubsystem();
+  
   
 
   
@@ -151,6 +170,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    
 
 
     // ExampleSubsystem.t.restart();
@@ -177,6 +197,8 @@ public class Robot extends TimedRobot {
   int _loopCount = 0;
   @Override
   public void teleopPeriodic() {
+
+    
     
 
     // System.out.println(cancoder.getPosition());

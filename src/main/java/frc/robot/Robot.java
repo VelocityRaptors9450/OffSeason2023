@@ -137,8 +137,8 @@ public class Robot extends TimedRobot {
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
 
-    m_autonomousCommand = new AutoRotateCommand(m_robotContainer.driveTrain, () -> 20, () -> 5).withTimeout(10)
-    .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 340, () -> 5).withTimeout(10));
+    m_autonomousCommand = new AutoRotateCommand(m_robotContainer.driveTrain, () -> 40, () -> 5).withTimeout(10)
+    .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
 
 
     // schedule the autonomous command (example)

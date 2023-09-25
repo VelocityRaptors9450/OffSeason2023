@@ -90,8 +90,8 @@ public class RotationSubsystem extends SubsystemBase{
     
 
     public RotationSubsystem(){
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
         leftMotor.setInverted(true);  
         rightMotor.setInverted(false);  

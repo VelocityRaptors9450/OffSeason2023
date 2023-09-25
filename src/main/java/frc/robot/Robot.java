@@ -13,11 +13,13 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import frc.robot.commands.ManualDriveCommand;
+import frc.robot.commands.AutoRotateCommand;
 
 
 
@@ -112,11 +114,17 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     time.restart();
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
+    //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
+    //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
+
+    m_autonomousCommand = new AutoRotateCommand(m_robotContainer.driveTrain, () -> 20, () -> 5).withTimeout(10)
+    .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 340, () -> 5).withTimeout(10));
+
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
+        m_autonomousCommand.schedule();
     }
   }
 

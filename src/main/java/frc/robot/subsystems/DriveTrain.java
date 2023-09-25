@@ -109,6 +109,32 @@ public class DriveTrain extends SubsystemBase {
           m_backRight.getPosition()
         });
   }
+
+  // rotate to target degrees at specified power
+  public void rotateToHeading(double target, double power, double periodSeconds) {
+    // controls where bang bang controller shuts off
+    double buffer = 1;
+
+    // get the difference between the current and target position,
+    // wraping if necessary
+    double distance = (pigeon.getYaw() % 360) - target; // error
+    if (distance < -180) {
+      distance += 360;
+    } else if (distance > 180) {
+      distance -= 360;
+    }
+
+    SmartDashboard.putNumber("Rotate Distance:", distance);
+
+    // rotate towards the target until withing buffer
+    if (Math.abs(distance) < buffer) {
+      drive(0, 0, 0, periodSeconds);
+    } else if (distance > 0 ) {
+      drive(0, 0, power, periodSeconds);
+    } else if (distance < 0) {
+      drive(0, 0, -power, periodSeconds);
+    }
+  }
   
       
     

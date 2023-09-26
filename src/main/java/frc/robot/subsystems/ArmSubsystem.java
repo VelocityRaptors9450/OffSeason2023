@@ -275,6 +275,10 @@ public class ArmSubsystem extends SubsystemBase{
         return ((convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI));
     }
 
+    public double wristAngletoPosTarget(double angleRads) {
+        return angleRads * ticsPerWristRevolution / (2*Math.PI);
+    }
+
     public double getWristTargetAngle(){
         return getWristAngle() * 2*Math.PI / ticsPerWristRevolution;
     }
@@ -288,7 +292,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void initialSetWristEncoder(){
-        setWristEncoderTics((202.4/360) * ticsPerWristRevolution);
+        setWristEncoderTics((-90/360) * ticsPerWristRevolution); // intial position -90 degrees
     }
 
     public double getWristAngle(){

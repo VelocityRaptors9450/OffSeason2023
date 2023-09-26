@@ -125,6 +125,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("Rotate Distance:", distance);
+    SmartDashboard.putNumber("Rotation Target:", target);
+    SmartDashboard.putNumber("Theoretical Position:", (pigeon.getYaw() % 360));
 
     // rotate towards the target until withing buffer
     if (Math.abs(distance) < buffer) {

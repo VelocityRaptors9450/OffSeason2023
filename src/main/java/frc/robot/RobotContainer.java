@@ -6,9 +6,11 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.NewRotationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.ExtensionSubsystem;
 import frc.robot.subsystems.RotationSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -33,6 +35,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public DriveTrain driveTrain = new DriveTrain();
   private ArmSubsystem arm = new ArmSubsystem();
+  private ExtensionSubsystem ext = new ExtensionSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -45,10 +48,16 @@ public class RobotContainer {
   public RobotContainer() {
 
     //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
-    driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
-    driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
-    driverController.a().onTrue(new NewRotationCommand(arm, 0));
-
+    // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
+    // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
+    // driverController.a().onTrue(new NewRotationCommand(arm, 0));
+    
+    
+    /*Extension Code test */
+    driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
+    driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
+    driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
+    
     
     //rotation.setDefaultCommand(new RotationCommand(rotation, driverController::getHID));
     //motorTest.setDefaultCommand(new TestsCommand(motorTest, driverController));

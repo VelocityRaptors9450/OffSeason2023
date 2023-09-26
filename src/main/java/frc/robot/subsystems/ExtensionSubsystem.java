@@ -16,18 +16,20 @@ import frc.robot.Constants;
 public class ExtensionSubsystem extends SubsystemBase {
   /** Creates a new ExtensionSubsystem. */
   private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
-  private PIDController pid = new PIDController(0, 0, 0);
+  PIDController pid;
+
   public ExtensionSubsystem() {
     extensionMotor.setIdleMode(IdleMode.kBrake);
   }
   //gear ratio 13.5 rotations for 1 full metal rotation
-  public void ExtensionPID(){
-    setPower(pid.calculate(extensionMotor.getEncoder().getPosition(), 0));
+  public void ExtensionPID(double targetDistance, double targetProportion){
+    pid = new PIDController(targetProportion, 0,0);
+    setPower(pid.calculate(extensionMotor.getEncoder().getPosition(), targetDistance));
   }
   public void setPower(double power){
     extensionMotor.set(power);
   }
-  public double getDistance(){
+  public double currentPosition(){
     return extensionMotor.getEncoder().getPosition();
   }
   @Override

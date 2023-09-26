@@ -97,6 +97,9 @@ public final class Constants {
   public static final double driveKv = 0.12996;
   public static final double driveKa = 0.0086263;
 
+  // wrist stuff
+  public static final double upWristBound = 0;
+  public static final double lowWristBound = 0;
 
   
 

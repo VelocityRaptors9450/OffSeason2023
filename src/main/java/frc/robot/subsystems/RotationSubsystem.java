@@ -96,7 +96,6 @@ public class RotationSubsystem extends SubsystemBase{
         leftMotor.setInverted(true);  
         rightMotor.setInverted(false);  
 
-        extensionMotor.setIdleMode(IdleMode.kBrake);
         
         //Might need this line
         //intake.setInverted(true);
@@ -124,9 +123,7 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-    public void extPow(double power){
-        extensionMotor.set(power);
-    }
+   
     public void setPower(double power){
         leftMotor.set(power);
         rightMotor.set(power);
@@ -188,7 +185,7 @@ public class RotationSubsystem extends SubsystemBase{
 
     public void wristPID(){
 
-        double target = (((90/360) * ticsPerWristRevolution) - (getArmAngleDifference() / 360 * ticsPerWristRevolution));
+        double target = (((90/360) * ticsPerWristRevolution) - (getArmAngleDifference() / (2*Math.PI) * ticsPerWristRevolution));
 
         
 
@@ -208,16 +205,28 @@ public class RotationSubsystem extends SubsystemBase{
             }
         }
 
-        setPower(power);
+
+        // stops PID if gets out of proper bounds
+        if (getWristEncoderTics() > Constants.upWristBound || getWristEncoderTics() < Constants.lowWristBound) {
+            setPower(0);
+        } else {
+            setPower(power);
+        }
+       
 
     }
 
+    public void currentWristPos() {
+        SmartDashboard.putNumber("Wrist Position", getWristEncoderTics());
+    }
 
-    public void bothPID(){
+
+    public void bothPID(double rotationTarget){
         
 
         double target = convertHeightToTics();
-        double wristTargetTics = (90 + getArmAngle()) * ticsPerWristRevolution / 360;
+        double armAngleChange = (rotationTarget - getLeftRotPos()) * ticsPerArmRevolution * (2*Math.PI); // this is the angle arm change
+        double wristTargetTics = (convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI); //units checks out ;), but the +90???
         //startWrist = 90 + 37.4 + 75 = 127.4
 
         
@@ -418,11 +427,11 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public double getWristTarget(){
-        return ((90 + getArmAngle()) * ticsPerWristRevolution / 360);
+        return ((convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI));
     }
 
     public double getWristTargetAngle(){
-        return getWristAngle() * 360 / ticsPerWristRevolution;
+        return getWristAngle() * 2*Math.PI / ticsPerWristRevolution;
     }
 
     public double getWristEncoderTics(){
@@ -438,15 +447,18 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public double getWristAngle(){
-        return (360 * getWristEncoderTics())/ticsPerWristRevolution;
+        return (2*Math.PI * getWristEncoderTics())/ticsPerWristRevolution;
     }
 
     public double getArmAngle(){
-        return (360 * getEncoderTics())/ticsPerArmRevolution;
+        return (2*Math.PI * getEncoderTics())/ticsPerArmRevolution;
     }
 
     public double getArmAngleDifference(){
-        return (getArmAngle() - (37.4));
+        return (getArmAngle() - (convertToRads(37.4)));
+    }
+    public double convertToRads(double angle) {
+        return angle/360*2*Math.PI;
     }
 
     public double getEncoderTics(){

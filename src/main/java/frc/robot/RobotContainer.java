@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.NewRotationCommand;
-import frc.robot.commands.RotationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
@@ -33,11 +32,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public DriveTrain driveTrain = new DriveTrain();
-  //private ArmSubsystem arm = new ArmSubsystem();
+  private ArmSubsystem arm = new ArmSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController armControler = new CommandXboxController(1);
+  private final CommandXboxController armController = new CommandXboxController(1);
 
   //private final PS4Controller driverController2 = new PS4Controller(0);
   
@@ -45,8 +44,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
-    //driverController.a().onTrue(new InstantCommand(() -> //do stuff))
+    //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
+    driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
+    driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
+    driverController.a().onTrue(new NewRotationCommand(arm, 0));
+
     
     //rotation.setDefaultCommand(new RotationCommand(rotation, driverController::getHID));
     //motorTest.setDefaultCommand(new TestsCommand(motorTest, driverController));

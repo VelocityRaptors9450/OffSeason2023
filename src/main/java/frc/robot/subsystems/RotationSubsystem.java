@@ -29,16 +29,16 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-    public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
+    public CANSparkMax intake = new CANSparkMax(43, MotorType.kBrushless);
 
-    private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
-    private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
+    private CANSparkMax leftMotor = new CANSparkMax(44,MotorType.kBrushless);
+    private CANSparkMax rightMotor = new CANSparkMax(45, MotorType.kBrushless);
     private Height currentHeight = Height.GROUND;
     
 
     
-    private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
-    private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
+    private CANSparkMax wristMotor = new CANSparkMax(46,MotorType.kBrushless);
+    private CANSparkMax extensionMotor = new CANSparkMax(47,MotorType.kBrushless);
 
     //TODO: figure out these values
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;

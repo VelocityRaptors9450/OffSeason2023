@@ -36,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
     private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
 
-    private final ProfiledPIDController rotation = new ProfiledPIDController(0, 0, 0, new Constraints(1, 1));
+    private final ProfiledPIDController rotation = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0, 0);
     Timer timer = new Timer();
     
@@ -62,13 +62,15 @@ public class ArmSubsystem extends SubsystemBase{
         // 144 revolutions of motor to 1 rev of arm
         // 360 / 144 = 2.5 revolutions per degree
         
-        leftMotor.setInverted(false);
+        //leftMotor.setInverted(false);
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
 
 
-        timer.start();
+        //timer.start();
         rotation.reset(getLeftPosition());
+
+        setRotationGoal(0);
         
        
 
@@ -96,8 +98,10 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void updateRotationOutput(){
-        double percentOutput = MathUtil.clamp(calculateRotationPID() + calculateRotationFF(), 0.0, 1.0);
-        double voltage = convertToVolts(percentOutput);
+        double percentOutput = MathUtil.clamp(calculateRotationPID() + calculateRotationFF(), -1.0, 1.0);
+        double voltage = -convertToVolts(percentOutput);
+
+        SmartDashboard.putNumber("Voltage", voltage);
         leftMotor.setVoltage(voltage);
         //rightMotor
     }
@@ -114,8 +118,11 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        //updateRotationOutput();
-        //SmartDashboard.putNumber("LeftPosition", getLeftPosition());
+        updateRotationOutput();
+        SmartDashboard.putNumber("LeftPosition", getLeftPosition());
+        SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
+        SmartDashboard.putNumber("Position Error", rotation.getPositionError());
+
         
     }
     

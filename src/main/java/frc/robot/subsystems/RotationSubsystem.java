@@ -38,7 +38,6 @@ public class RotationSubsystem extends SubsystemBase{
 
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
-    private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
 
     //TODO: figure out these values
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
@@ -96,7 +95,6 @@ public class RotationSubsystem extends SubsystemBase{
         leftMotor.setInverted(true);  
         rightMotor.setInverted(false);  
 
-        extensionMotor.setIdleMode(IdleMode.kBrake);
         
         //Might need this line
         //intake.setInverted(true);
@@ -124,9 +122,7 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-    public void extPow(double power){
-        extensionMotor.set(power);
-    }
+   
     public void setPower(double power){
         leftMotor.set(power);
         rightMotor.set(power);

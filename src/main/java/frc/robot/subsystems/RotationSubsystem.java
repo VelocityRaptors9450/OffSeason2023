@@ -204,16 +204,28 @@ public class RotationSubsystem extends SubsystemBase{
             }
         }
 
-        setPower(power);
+
+        // stops PID if gets out of proper bounds
+        if (getWristEncoderTics() > Constants.upWristBound || getWristEncoderTics() < Constants.lowWristBound) {
+            setPower(0);
+        } else {
+            setPower(power);
+        }
+       
 
     }
 
+    public void currentWristPos() {
+        SmartDashboard.putNumber("Wrist Position", getWristEncoderTics());
+    }
 
-    public void bothPID(){
+
+    public void bothPID(double rotationTarget){
         
 
         double target = convertHeightToTics();
-        double wristTargetTics = (90 + getArmAngle()) * ticsPerWristRevolution / 360;
+        double armAngleChange = (rotationTarget - getLeftRotPos()) * ticsPerArmRevolution * 360; // this is the angle arm change
+        double wristTargetTics = (90 + getArmAngle()) * ticsPerWristRevolution / 360; //units checks out ;), but the +90???
         //startWrist = 90 + 37.4 + 75 = 127.4
 
         

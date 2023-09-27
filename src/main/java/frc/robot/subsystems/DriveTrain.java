@@ -11,6 +11,7 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -45,6 +46,7 @@ public class DriveTrain extends SubsystemBase {
   private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
 
   private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(Constants.gyroId, "rio");
+  private PIDController rotPID = new PIDController(0.05, 0, 0.02);
 
 
  // can you access the other files
@@ -137,6 +139,28 @@ public class DriveTrain extends SubsystemBase {
       drive(0, 0, -power, periodSeconds);
     }
   }
+
+  // rotate to target degrees at specified power
+  public void rotateToHeadingPID(double target, double periodSeconds) {
+    // get the difference between the current and target position,
+    // wraping if necessary
+    double distance = (pigeon.getYaw() % 360) - target; // error
+    if (distance < -180) {
+      distance += 360;
+    } else if (distance > 180) {
+      distance -= 360;
+    }
+
+    SmartDashboard.putNumber("Rotate Distance:", distance);
+    SmartDashboard.putNumber("Rotation Target:", target);
+    SmartDashboard.putNumber("Theoretical Position:", (pigeon.getYaw() % 360));
+
+    // rotate towards the target until withing buffer
+    double rotPower = rotPID.calculate(distance, target);
+    if (Math.abs(distance) > 2) {
+      drive(0, 0, rotPower, periodSeconds);
+    }
+  }
   
       
     
@@ -187,6 +211,14 @@ public class DriveTrain extends SubsystemBase {
       SmartDashboard.putNumber("Pigeon", pigeon.getYaw());
       SmartDashboard.putNumber("Pigeon Cosine", pigeon.getRotation2d().getCos());
       SmartDashboard.putNumber("Pigeon Sine", pigeon.getRotation2d().getSin());
+
+
+      updateOdometry();
+      Pose2d m_pose = m_odometry.getPoseMeters();
+      SmartDashboard.putNumber("Pose x:", m_pose.getX());
+      SmartDashboard.putNumber("Pose y:", m_pose.getY());
+      SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());
+
 
   }
 

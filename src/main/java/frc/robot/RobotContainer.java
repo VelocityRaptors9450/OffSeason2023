@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeStopAndResetCommand;
 import frc.robot.commands.NewRotationCommand;
@@ -44,29 +45,25 @@ public class RobotContainer {
 
     //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
 
-    //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
-    // armController.y().onTrue(new NewRotationCommand(arm, 1.5));
-    // armController.x().onTrue(new NewRotationCommand(arm, 0.75));
-    // armController.a().onTrue(new NewRotationCommand(arm, 0));
-    armController.y().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.5)));
-    armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
-    armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
-    // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
-    // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
-    // driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    
+    //Might not want to be creating a new inst ance of the command every time its called since its not "finishing any of the commands"
+
+    // armController.y().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.5)));
+    // armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+    // armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
+      
     
     /*Extension Code test */
-    //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
-    //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
-    //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
-    
+    driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
+    driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
+    driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
+    driverController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+
     
 
     //Need to turn off intake 
-    armController.leftBumper().onTrue(new InstantCommand(() -> intake.setIntakePower(-0.5)));
-    armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
-    armController.leftTrigger().onTrue(intakeCommand);
+    // armController.leftBumper().onTrue(new InstantCommand(() -> intake.setIntakePower(-0.5)));
+    // armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
+    // armController.leftTrigger().onTrue(intakeCommand);
     
 
     configureBindings();

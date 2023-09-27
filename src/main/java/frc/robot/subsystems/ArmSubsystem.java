@@ -41,7 +41,6 @@ public class ArmSubsystem extends SubsystemBase{
 
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
-    //private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
 
     private final ProfiledPIDController rotation = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0, 0);

@@ -45,9 +45,12 @@ public class RobotContainer {
     //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
-    armController.y().onTrue(new NewRotationCommand(arm, 1.5));
-    armController.x().onTrue(new NewRotationCommand(arm, 0.75));
-    armController.a().onTrue(new NewRotationCommand(arm, 0));
+    // armController.y().onTrue(new NewRotationCommand(arm, 1.5));
+    // armController.x().onTrue(new NewRotationCommand(arm, 0.75));
+    // armController.a().onTrue(new NewRotationCommand(arm, 0));
+    armController.y().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.5)));
+    armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+    armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
     // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
     // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
     // driverController.a().onTrue(new NewRotationCommand(arm, 0));

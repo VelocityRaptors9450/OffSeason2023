@@ -153,35 +153,35 @@ public class RotationCommand extends CommandBase{
         // Intake out + in
         
         // this part not working
-        if(controller.getHID().getRightBumperPressed()) {
-            rotation.setIntakePower(0.2);
-        }
-        if (controller.getHID().getRightBumperReleased()) {
-            rotation.setIntakePower(0);
-        }   
+        // if(controller.getHID().getRightBumperPressed()) {
+        //     rotation.setIntakePower(0.2);
+        // }
+        // if (controller.getHID().getRightBumperReleased()) {
+        //     rotation.setIntakePower(0);
+        // }   
         
         
         // [working] pushing out cone
-        if(controller.getHID().getLeftBumperPressed()) {
-            rotation.setIntakePower(-0.5);
-        }
-        if (controller.getHID().getLeftBumperReleased()) {
-            rotation.setIntakePower(0);
-            rotation.resetIntakeVars();
-            toggle = false;
-        }
+        // if(controller.getHID().getLeftBumperPressed()) {
+        //     rotation.setIntakePower(-0.5);
+        // }
+        // if (controller.getHID().getLeftBumperReleased()) {
+        //     rotation.setIntakePower(0);
+        //     rotation.resetIntakeVars();
+        //     toggle = false;
+        // }
 
-        // intakeing cone
-        if(controller.getHID().getAButtonPressed()) {
-            toggle = true;
-        }
-        if(controller.getHID().getYButtonPressed()) {
-            rotation.setIntakePower(0);
-            toggle = false; 
-        }
-        if (toggle) {
-            rotation.intake(0.4);
-        }
+        // // intakeing cone
+        // if(controller.getHID().getAButtonPressed()) {
+        //     toggle = true;
+        // }
+        // if(controller.getHID().getYButtonPressed()) {
+        //     rotation.setIntakePower(0);
+        //     toggle = false; 
+        // }
+        // if (toggle) {
+        //     rotation.intake(0.4);
+        // }
 /*        
         System.out.println("Right side: " + controllerTest.getL2Axis());
         System.out.println("Left side: " + controllerTest.getR2Axis());

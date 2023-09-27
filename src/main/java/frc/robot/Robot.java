@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
     return /*PDP.getVoltage()*/ 12;
   }
 
-  ArmSubsystem arm = new ArmSubsystem();
+  
   
   
 

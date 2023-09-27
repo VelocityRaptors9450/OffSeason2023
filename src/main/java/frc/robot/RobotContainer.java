@@ -4,10 +4,10 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.DriveCommand;
+
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeStopAndResetCommand;
 import frc.robot.commands.NewRotationCommand;
-import frc.robot.commands.RotationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
@@ -30,8 +30,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import frc.robot.subsystems.ExtensionSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -43,26 +46,48 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public DriveTrain driveTrain = new DriveTrain();
-  //private ArmSubsystem arm = new ArmSubsystem();
+  private ArmSubsystem arm = new ArmSubsystem();
+  private IntakeSubsystem intake = new IntakeSubsystem();
+  
+  private ExtensionSubsystem ext = new ExtensionSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController armControler = new CommandXboxController(1);
+  private final CommandXboxController driverController = new CommandXboxController(1);
+  private final CommandXboxController armController = new CommandXboxController(0);
+  private IntakeCommand intakeCommand = new IntakeCommand(intake);
 
-  //private final PS4Controller driverController2 = new PS4Controller(0);
+
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
-    //driverController.a().onTrue(new InstantCommand(() -> //do stuff))
+    //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
+
+    //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
+    // armController.y().onTrue(new NewRotationCommand(arm, 1.5));
+    // armController.x().onTrue(new NewRotationCommand(arm, 0.75));
+    // armController.a().onTrue(new NewRotationCommand(arm, 0));
+    armController.y().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.5)));
+    armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+    armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
+    // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
+    // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
+    // driverController.a().onTrue(new NewRotationCommand(arm, 0));
     
-    //rotation.setDefaultCommand(new RotationCommand(rotation, driverController::getHID));
-    //motorTest.setDefaultCommand(new TestsCommand(motorTest, driverController));
-    // Configure the trigger bindings
-    //driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    //driverController.y().onTrue(new NewRotationCommand(arm, 0));
+    
+    /*Extension Code test */
+    //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
+    //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
+    //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
+    
+    
+
+    //Need to turn off intake 
+    armController.leftBumper().onTrue(new InstantCommand(() -> intake.setIntakePower(-0.5)));
+    armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
+    armController.leftTrigger().onTrue(intakeCommand);
+    
 
     configureBindings();
   }
@@ -90,16 +115,7 @@ public class RobotContainer {
     //driverController.x().onTrue(new LinkageSlowCommand(shooter, 0.9, 5));
     //driverController.y().onTrue(new LinkageSlowCommand(shooter, 0, 4));
     //driverController.a().onTrue(new LinkageSlowCommand(shooter, 0.3, 3));
-
-
-
-    
-
-    
-
-
-   
-    
+ 
   }
 
   /**

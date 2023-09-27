@@ -29,15 +29,16 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
 
-    public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
+    public CANSparkMax intake = new CANSparkMax(43, MotorType.kBrushless);
 
-    private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
-    private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
+    private CANSparkMax leftMotor = new CANSparkMax(44,MotorType.kBrushless);
+    private CANSparkMax rightMotor = new CANSparkMax(45, MotorType.kBrushless);
     private Height currentHeight = Height.GROUND;
     
 
     
-    private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
+    private CANSparkMax wristMotor = new CANSparkMax(46,MotorType.kBrushless);
+    private CANSparkMax extensionMotor = new CANSparkMax(47,MotorType.kBrushless);
 
     //TODO: figure out these values
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
@@ -184,7 +185,7 @@ public class RotationSubsystem extends SubsystemBase{
 
     public void wristPID(){
 
-        double target = (((90/360) * ticsPerWristRevolution) - (getArmAngleDifference() / 360 * ticsPerWristRevolution));
+        double target = (((90/360) * ticsPerWristRevolution) - (getArmAngleDifference() / (2*Math.PI) * ticsPerWristRevolution));
 
         
 
@@ -224,8 +225,8 @@ public class RotationSubsystem extends SubsystemBase{
         
 
         double target = convertHeightToTics();
-        double armAngleChange = (rotationTarget - getLeftRotPos()) * ticsPerArmRevolution * 360; // this is the angle arm change
-        double wristTargetTics = (90 + getArmAngle()) * ticsPerWristRevolution / 360; //units checks out ;), but the +90???
+        double armAngleChange = (rotationTarget - getLeftRotPos()) * ticsPerArmRevolution * (2*Math.PI); // this is the angle arm change
+        double wristTargetTics = (convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI); //units checks out ;), but the +90???
         //startWrist = 90 + 37.4 + 75 = 127.4
 
         
@@ -267,82 +268,7 @@ public class RotationSubsystem extends SubsystemBase{
         //wristSetPower(wristPower);
     }
 
-    public void intake(double power) {
-        //System.out.println("Velocity Left: " + Math.round(intakeLeft.getEncoder().getVelocity()) + "  Velocity Right: " + Math.round(intakeLeft.getEncoder().getVelocity()));
-        
-        
-        // timeChange = g.get();
-        // g.reset();
-        double changeInPos = Math.abs(intake.getEncoder().getPosition()) - oldpos;
-        velocity = changeInPos / 0.02;
-        //System.out.println("Velocity: " + velocity);
-        oldpos = Math.abs(intake.getEncoder().getPosition());
-        //System.out.println("POWER: " + intake.get());
-        // approximately 19 revolutions / second
-        
-        if (velocity < 4500 && initial) {
-            if (rampUPToggle) {
-                // assigns current state
-                intakeStep = IntakeStep.INITIAL_RAMP_UP;
-                //System.out.println("super duper initial timer got reset");
-                t.restart();
-                rampUPToggle = false;
-            }
-            
-
-            if (rampUp(t.get(), 0.4) > 0.4) {
-                intake.set(power);
-            } else {
-                //System.out.println("------------------- \n RAMPING UP \n ---------------------------");
-                //System.out.println(t.get());
-                intake.set(rampUp(t.get(), 0.4));
-                
-            }
-            
-        } else if (!isOutput && velocity > 3) { // intake 
-            //System.out.println("MADE ITTTTTTTTTTTTTTTTTTTTTT");
-            intakeStep = IntakeStep.INITIAL;
-            initial = false;
-            intake.set(power);
-        } else if (!isOutput){
-            if (temp) {
-                g.reset(); 
-
-                temp = false;
-                //System.out.println("------------------- \n SLOW SPEED \n ---------------------------");
-                intakeStep = IntakeStep.SLOW_INTAKE;
-                intake.set(0.04);
-                
-            }
-            // if (g.get() >= 2.0) {
-            //     System.out.println("------------------- \n OUTPUTTING \n ---------------------------");
-            //     intakeStep = IntakeStep.IS_OUTPUTTING;
-            //     intake.set(-0.4);                
-                
-            // } 
-            // if (g.get() >= 3.5) {
-                
-            //     isOutput = true;
-            //     g.reset();
-            //     t.reset();
-            // }
-        }
-
-        // if (rampDown(t.get(), 0.4) > 0 && t.get() <= 1 && isOutput) {
-        //     intakeStep = IntakeStep.DONE_OUTPUTTING;
-        //     System.out.println("------------------- \n RAMPING DOWN, t = " + t.get() + "\n ---------------------------");
-        //     intake.set(rampDown(t.get(), 0.4));
-        // } else if (t.get() > 2 && g.get() > 2 && isOutput) {
-        //     intake.set(0);
-
-        //     temp = true;
-        //     isOutput = false;
-        //     initial = true;
-        //     rampUPToggle = true;
-        //     velocity = 0;
-        // }
-    }
-
+    
     public void armRotation(double goalPosition) {
         double pidValue = rotationPIDController.calculate((getLeftRotPos()+getRightRotPos())/2, goalPosition);
         double velSetpoint = rotationPIDController.getSetpoint().velocity;
@@ -426,11 +352,11 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public double getWristTarget(){
-        return ((90 + getArmAngle()) * ticsPerWristRevolution / 360);
+        return ((convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI));
     }
 
     public double getWristTargetAngle(){
-        return getWristAngle() * 360 / ticsPerWristRevolution;
+        return getWristAngle() * 2*Math.PI / ticsPerWristRevolution;
     }
 
     public double getWristEncoderTics(){
@@ -446,15 +372,18 @@ public class RotationSubsystem extends SubsystemBase{
     }
 
     public double getWristAngle(){
-        return (360 * getWristEncoderTics())/ticsPerWristRevolution;
+        return (2*Math.PI * getWristEncoderTics())/ticsPerWristRevolution;
     }
 
     public double getArmAngle(){
-        return (360 * getEncoderTics())/ticsPerArmRevolution;
+        return (2*Math.PI * getEncoderTics())/ticsPerArmRevolution;
     }
 
     public double getArmAngleDifference(){
-        return (getArmAngle() - (37.4));
+        return (getArmAngle() - (convertToRads(37.4)));
+    }
+    public double convertToRads(double angle) {
+        return angle/360*2*Math.PI;
     }
 
     public double getEncoderTics(){
@@ -479,18 +408,11 @@ public class RotationSubsystem extends SubsystemBase{
         return currentHeight;
     }
 
-    public void setIntakePower(double speed) {
-        intake.set(speed);
-    }
-
-    public void stopIntakeMotor() {
-        intake.stopMotor();
-    }
-    
+   
 
     @Override
     public void periodic(){
-        
+
     }
 
     

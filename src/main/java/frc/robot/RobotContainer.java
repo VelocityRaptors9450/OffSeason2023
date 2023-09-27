@@ -10,6 +10,7 @@ import frc.robot.commands.IntakeStopAndResetCommand;
 import frc.robot.commands.NewRotationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.ExtensionSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -28,6 +29,8 @@ public class RobotContainer {
   private ArmSubsystem arm = new ArmSubsystem();
   private IntakeSubsystem intake = new IntakeSubsystem();
   
+  private ExtensionSubsystem ext = new ExtensionSubsystem();
+  //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(1);
   private final CommandXboxController armController = new CommandXboxController(0);
@@ -45,6 +48,16 @@ public class RobotContainer {
     armController.y().onTrue(new NewRotationCommand(arm, 1.5));
     armController.x().onTrue(new NewRotationCommand(arm, 0.75));
     armController.a().onTrue(new NewRotationCommand(arm, 0));
+    // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
+    // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
+    // driverController.a().onTrue(new NewRotationCommand(arm, 0));
+    
+    
+    /*Extension Code test */
+    //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
+    //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
+    //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
+    
     
 
     //Need to turn off intake 
@@ -52,7 +65,6 @@ public class RobotContainer {
     armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
     armController.leftTrigger().onTrue(intakeCommand);
     
-
 
     configureBindings();
   }

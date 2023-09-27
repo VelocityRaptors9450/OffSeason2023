@@ -26,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     //double p = 0;
 
-    public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
+    //public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
 
     private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
     private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
@@ -47,7 +47,7 @@ public class ArmSubsystem extends SubsystemBase{
 
 
         leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kCoast);
         wristMotor.setIdleMode(IdleMode.kBrake);  
         
         //leftMotor.setInverted(true);  
@@ -56,7 +56,7 @@ public class ArmSubsystem extends SubsystemBase{
         extensionMotor.setIdleMode(IdleMode.kBrake);
         
         //Might need this line
-        intake.setIdleMode(IdleMode.kBrake);
+        //intake.setIdleMode(IdleMode.kBrake);
         
         //leftMotor.getEncoder().setVelocityConversionFactor();
         // 144 revolutions of motor to 1 rev of arm

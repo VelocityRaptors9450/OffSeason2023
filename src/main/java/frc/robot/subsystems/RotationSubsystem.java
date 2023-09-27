@@ -268,82 +268,7 @@ public class RotationSubsystem extends SubsystemBase{
         //wristSetPower(wristPower);
     }
 
-    public void intake(double power) {
-        //System.out.println("Velocity Left: " + Math.round(intakeLeft.getEncoder().getVelocity()) + "  Velocity Right: " + Math.round(intakeLeft.getEncoder().getVelocity()));
-        
-        
-        // timeChange = g.get();
-        // g.reset();
-        double changeInPos = Math.abs(intake.getEncoder().getPosition()) - oldpos;
-        velocity = changeInPos / 0.02;
-        //System.out.println("Velocity: " + velocity);
-        oldpos = Math.abs(intake.getEncoder().getPosition());
-        //System.out.println("POWER: " + intake.get());
-        // approximately 19 revolutions / second
-        
-        if (velocity < 4500 && initial) {
-            if (rampUPToggle) {
-                // assigns current state
-                intakeStep = IntakeStep.INITIAL_RAMP_UP;
-                //System.out.println("super duper initial timer got reset");
-                t.restart();
-                rampUPToggle = false;
-            }
-            
-
-            if (rampUp(t.get(), 0.4) > 0.4) {
-                intake.set(power);
-            } else {
-                //System.out.println("------------------- \n RAMPING UP \n ---------------------------");
-                //System.out.println(t.get());
-                intake.set(rampUp(t.get(), 0.4));
-                
-            }
-            
-        } else if (!isOutput && velocity > 3) { // intake 
-            //System.out.println("MADE ITTTTTTTTTTTTTTTTTTTTTT");
-            intakeStep = IntakeStep.INITIAL;
-            initial = false;
-            intake.set(power);
-        } else if (!isOutput){
-            if (temp) {
-                g.reset(); 
-
-                temp = false;
-                //System.out.println("------------------- \n SLOW SPEED \n ---------------------------");
-                intakeStep = IntakeStep.SLOW_INTAKE;
-                intake.set(0.04);
-                
-            }
-            // if (g.get() >= 2.0) {
-            //     System.out.println("------------------- \n OUTPUTTING \n ---------------------------");
-            //     intakeStep = IntakeStep.IS_OUTPUTTING;
-            //     intake.set(-0.4);                
-                
-            // } 
-            // if (g.get() >= 3.5) {
-                
-            //     isOutput = true;
-            //     g.reset();
-            //     t.reset();
-            // }
-        }
-
-        // if (rampDown(t.get(), 0.4) > 0 && t.get() <= 1 && isOutput) {
-        //     intakeStep = IntakeStep.DONE_OUTPUTTING;
-        //     System.out.println("------------------- \n RAMPING DOWN, t = " + t.get() + "\n ---------------------------");
-        //     intake.set(rampDown(t.get(), 0.4));
-        // } else if (t.get() > 2 && g.get() > 2 && isOutput) {
-        //     intake.set(0);
-
-        //     temp = true;
-        //     isOutput = false;
-        //     initial = true;
-        //     rampUPToggle = true;
-        //     velocity = 0;
-        // }
-    }
-
+    
     public void armRotation(double goalPosition) {
         double pidValue = rotationPIDController.calculate((getLeftRotPos()+getRightRotPos())/2, goalPosition);
         double velSetpoint = rotationPIDController.getSetpoint().velocity;
@@ -483,18 +408,11 @@ public class RotationSubsystem extends SubsystemBase{
         return currentHeight;
     }
 
-    public void setIntakePower(double speed) {
-        intake.set(speed);
-    }
-
-    public void stopIntakeMotor() {
-        intake.stopMotor();
-    }
-    
+   
 
     @Override
     public void periodic(){
-        
+
     }
 
     

@@ -60,7 +60,7 @@ public class AutoRotateCommand extends CommandBase {
       ranOnce = true;
     }
 
-    swerve.rotateToHeading(heading.getAsDouble(), rotation.getAsDouble(), time);
+    swerve.rotateToHeadingPID(heading.getAsDouble(), time);
 
     
 

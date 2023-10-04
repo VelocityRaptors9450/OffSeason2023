@@ -80,10 +80,10 @@ public class RobotContainer {
     
     
     /*Extension Code test */
-    driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
-    driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
-    driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
-    driverController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+    //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
+    //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
+    //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
+    armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
 
     
 

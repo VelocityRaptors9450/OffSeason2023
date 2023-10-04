@@ -77,7 +77,11 @@ public class RobotContainer {
     // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
     // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
     // driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    armController.y().onTrue(new InstantCommand(() -> arm.setArmWristGoal(-0.7)));
+    armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.57)));
+    armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0)));
+    armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
+
+
     //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.5)));
 
     
@@ -85,7 +89,7 @@ public class RobotContainer {
     //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
     //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
     //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
-    armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+    //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
 
     
 

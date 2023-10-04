@@ -42,11 +42,11 @@ public class ArmSubsystem extends SubsystemBase{
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
 
-    private final ProfiledPIDController rotation = new ProfiledPIDController(/*1.6*/0, 0, 0, new Constraints(1, 1));
+    private final ProfiledPIDController rotation = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.002, 0);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(0.6, 0, 0, new Constraints(1, 1));
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.054, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
@@ -95,7 +95,7 @@ public class ArmSubsystem extends SubsystemBase{
         // }
         rotation.reset(getPosition());
 
-        setRotationGoal(0.75);
+        setRotationGoal(0);
         
        
 
@@ -103,14 +103,17 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void changeBrake(){
-        
+        rightMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.setIdleMode(IdleMode.kBrake);
+        wristMotor.setIdleMode(IdleMode.kBrake);
         runStuff = true;
         
     }
 
     public void changeCoast(){
         leftMotor.setIdleMode(IdleMode.kCoast);
+        rightMotor.setIdleMode(IdleMode.kCoast);
+        wristMotor.setIdleMode(IdleMode.kCoast);
         runStuff = false;
         
 
@@ -149,12 +152,17 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void setArmWristGoal(double target){
         rotation.setGoal(target);
-        if (target < 0) {
-            wrist.setGoal(getWristAngle() - (target-0.1));
-        } else if (target > 0) {
-            wrist.setGoal(getWristAngle() - (target+0.1));
-        }
+        // if (target < 0) {
+        //     wrist.setGoal(getWristAngle() - (target-0.1));
+        // } else if (target > 0) {
+        //     wrist.setGoal(getWristAngle() - (target+0.1));
+        // }
+        wrist.setGoal(getWristAngle() - target);
         
+    }
+
+    public void setRotationGoal(double target){
+        rotation.setGoal(target);
     }
 
     public void setArmGoal(double target) {
@@ -299,20 +307,14 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        updateWristOutput();
+        
         if(runStuff){
             updateRotationOutput();
-            leftMotor.setIdleMode(IdleMode.kBrake);
-            rightMotor.setIdleMode(IdleMode.kBrake);
+            updateWristOutput();
 
-            
         }else{
             setVoltage(0);
-            leftMotor.setIdleMode(IdleMode.kCoast);
-            rightMotor.setIdleMode(IdleMode.kCoast);
-
-            
-            
+           
         }
         SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("RightPosition", getRightPosition());

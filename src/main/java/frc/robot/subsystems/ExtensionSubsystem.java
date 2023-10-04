@@ -19,7 +19,8 @@ public class ExtensionSubsystem extends SubsystemBase {
   PIDController pid;
 
   public ExtensionSubsystem() {
-    extensionMotor.setIdleMode(IdleMode.kBrake);
+    extensionMotor.setIdleMode(IdleMode.kCoast);
+    extensionMotor.getEncoder().setPosition(0);
   }
   //gear ratio 13.5 rotations for 1 full metal rotation
   public void ExtensionPID(double targetDistance, double targetProportion){

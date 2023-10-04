@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -100,6 +103,21 @@ public final class Constants {
   // wrist stuff
   public static final double upWristBound = 0;
   public static final double lowWristBound = 0;
+
+  // trajectory things
+  public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(Math.PI, Math.PI);
+
+  public static final double kPXController = 1;
+  public static final double kPYController = 1;
+  public static final double kPThetaController = 1;
+
+  public static final SwerveDriveKinematics kDriveKinematics = 
+    new SwerveDriveKinematics(
+      new Translation2d(-Constants.baseWidth / 2, Constants.baseLength / 2),
+      new Translation2d(Constants.baseWidth / 2, Constants.baseLength / 2),
+      new Translation2d(-Constants.baseWidth / 2, -Constants.baseLength / 2),
+      new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2)
+    );
 
   
 

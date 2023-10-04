@@ -38,13 +38,12 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
     private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
     
-
+    private boolean runStuff = true;
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
-    //private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
 
-    private final ProfiledPIDController rotation = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
-    private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0, 0);
+    private final ProfiledPIDController rotation = new ProfiledPIDController(/*1.6*/0, 0, 0, new Constraints(1, 1));
+    private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.002, 0);
 
     // wrist i guess
     private final ProfiledPIDController wrist = new ProfiledPIDController(0.6, 0, 0, new Constraints(1, 1));
@@ -63,7 +62,7 @@ public class ArmSubsystem extends SubsystemBase{
 
 
         leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
         
         //leftMotor.setInverted(true);  
@@ -94,8 +93,26 @@ public class ArmSubsystem extends SubsystemBase{
         initialSetWristEncoder();
             // intialization = false;
         // }
+        rotation.reset(getPosition());
+
+        setRotationGoal(0.75);
+        
        
 
+
+    }
+
+    public void changeBrake(){
+        
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        runStuff = true;
+        
+    }
+
+    public void changeCoast(){
+        leftMotor.setIdleMode(IdleMode.kCoast);
+        runStuff = false;
+        
 
     }
 
@@ -107,8 +124,23 @@ public class ArmSubsystem extends SubsystemBase{
         return leftMotor.getEncoder().getPosition() * -2.5 * Math.PI / 180;
     }
 
+    private double getPosition(){
+        return (getLeftPosition() + getRightPosition()) / 2;
+    }
+
+
     public void setLeftVoltage(double voltage){
         leftMotor.setVoltage(-voltage);
+    }
+
+    public void setRightVoltage(double voltage){
+        rightMotor.setVoltage(voltage);
+    }
+
+    public void setVoltage(double voltage){
+        leftMotor.setVoltage(-voltage);
+        rightMotor.setVoltage(voltage);
+
     }
 
     private double getRightPosition(){
@@ -130,7 +162,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double calculateRotationPID(){
-        return rotation.calculate(getLeftPosition(), rotation.getGoal());
+        return rotation.calculate(getPosition(), rotation.getGoal());
     }
     public double calculateWristFF() {
         return wristFF.calculate(getWristAngle(), wrist.getSetpoint().velocity);
@@ -146,11 +178,13 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void updateRotationOutput(){
-        double percentOutput = MathUtil.clamp(calculateRotationPID() + calculateRotationFF(), -1.0, 1.0);
-        double voltage = -convertToVolts(percentOutput);
+        double ffValue = calculateRotationFF();
+        double percentOutput = MathUtil.clamp(calculateRotationPID() + ffValue, -1.0, 1.0);
+        double voltage = convertToVolts(percentOutput);
 
+        SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
-        leftMotor.setVoltage(voltage);
+        setVoltage(voltage);
         //rightMotor
     }
 
@@ -253,7 +287,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double calculateRotationFF(){
-        return rotationFF.calculate(getLeftPosition(), rotation.getSetpoint().velocity);
+        return rotationFF.calculate(getPosition(), 1);
 
         
     }
@@ -265,9 +299,23 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        updateRotationOutput();
         updateWristOutput();
+        if(runStuff){
+            updateRotationOutput();
+            leftMotor.setIdleMode(IdleMode.kBrake);
+            rightMotor.setIdleMode(IdleMode.kBrake);
+
+            
+        }else{
+            setVoltage(0);
+            leftMotor.setIdleMode(IdleMode.kCoast);
+            rightMotor.setIdleMode(IdleMode.kCoast);
+
+            
+            
+        }
         SmartDashboard.putNumber("LeftPosition", getLeftPosition());
+        SmartDashboard.putNumber("RightPosition", getRightPosition());
         SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
         SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         

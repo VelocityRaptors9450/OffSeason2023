@@ -42,8 +42,8 @@ public class ArmSubsystem extends SubsystemBase{
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
 
-    private final ProfiledPIDController rotation = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
-    private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.002, 0);
+    private final ProfiledPIDController rotation = new ProfiledPIDController(1.58, 0, 0, new Constraints(1, 1));
+    private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
     private final ProfiledPIDController wrist = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
@@ -295,7 +295,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double calculateRotationFF(){
-        return rotationFF.calculate(getPosition(), 1);
+        return rotationFF.calculate(getPosition(), rotation.getSetpoint().velocity);
 
         
     }

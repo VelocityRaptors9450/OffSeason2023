@@ -10,11 +10,13 @@ public class NewRotationCommand extends CommandBase{
      
 
     private final ArmSubsystem arm;
-    private double target;
+    private double wristTarget;
+    private double rotTarget;
     
 
-    public NewRotationCommand(ArmSubsystem arm, double target){
-        this.target = target;
+    public NewRotationCommand(ArmSubsystem arm, double wristTarget, double rotTarget){
+        this.rotTarget = rotTarget;
+        this.wristTarget = wristTarget;
         this.arm = arm;
         addRequirements(arm);
     }
@@ -23,7 +25,9 @@ public class NewRotationCommand extends CommandBase{
 
     @Override
     public void initialize(){
-        arm.setRotationGoal(target);
+        // arm.setRotationGoal(rotTarget);
+
+        // arm.setWristGoal(wristTarget);
     
     }
 

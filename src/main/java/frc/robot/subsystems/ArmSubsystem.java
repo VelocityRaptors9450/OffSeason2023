@@ -47,12 +47,15 @@ public class ArmSubsystem extends SubsystemBase{
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0, 0);
 
     // wrist i guess
+    private final ProfiledPIDController wrist = new ProfiledPIDController(0.6, 0, 0, new Constraints(1, 1));
+    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.054, 0.027);
+
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
     
     Timer timer = new Timer();
-    private double ticsPerArmRevolution = 144, ticsPerWristRevolution = 172.8, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
-
+    private double ticsPerArmRevolution = 144, ticsPerWristRevolution = /*172.8*/ 120, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
+    private boolean intialization = true;
 
     public ArmSubsystem(){
         leftMotor.restoreFactoryDefaults();
@@ -73,7 +76,8 @@ public class ArmSubsystem extends SubsystemBase{
         
         //leftMotor.getEncoder().setVelocityConversionFactor();
         // 144 revolutions of motor to 1 rev of arm
-        // 360 / 144 = 2.5 revolutions per degree
+        // 360 / 144 = 2.5 degrees / arm revolution
+        // 360 / 120 = 3 degrees / wrist revolution
         
         //leftMotor.setInverted(false);
         leftMotor.getEncoder().setPosition(0);
@@ -82,9 +86,14 @@ public class ArmSubsystem extends SubsystemBase{
 
         //timer.start();
         rotation.reset(getLeftPosition());
+        wrist.reset(getWristAngle());
 
-        setRotationGoal(0);
-        
+        setArmWristGoal(0);
+        setWristGoal(0);
+        // if (intialization) {
+        initialSetWristEncoder();
+            // intialization = false;
+        // }
        
 
 
@@ -106,35 +115,73 @@ public class ArmSubsystem extends SubsystemBase{
         return rightMotor.getEncoder().getPosition() * 2.5 * Math.PI / 180;
     }
 
-    public void setRotationGoal(double target){
+    public void setArmWristGoal(double target){
+        rotation.setGoal(target);
+        if (target < 0) {
+            wrist.setGoal(getWristAngle() - (target-0.1));
+        } else if (target > 0) {
+            wrist.setGoal(getWristAngle() - (target+0.1));
+        }
+        
+    }
+
+    public void setArmGoal(double target) {
         rotation.setGoal(target);
     }
 
     public double calculateRotationPID(){
         return rotation.calculate(getLeftPosition(), rotation.getGoal());
     }
+    public double calculateWristFF() {
+        return wristFF.calculate(getWristAngle(), wrist.getSetpoint().velocity);
+    }
+    public double calculateWristPID() {
+        return wrist.calculate(getWristAngle(), wrist.getGoal());
+    }
+    public void setWristGoal(double target) {
+        wrist.setGoal(target);
+    }
+    public void setWristVoltage(double voltage) {
+        wristMotor.setVoltage(voltage);
+    }
 
     public void updateRotationOutput(){
         double percentOutput = MathUtil.clamp(calculateRotationPID() + calculateRotationFF(), -1.0, 1.0);
         double voltage = -convertToVolts(percentOutput);
 
-        SmartDashboard.putNumber("Voltage", voltage);
+        SmartDashboard.putNumber("Rotation Voltage", voltage);
         leftMotor.setVoltage(voltage);
         //rightMotor
     }
 
-    public void wristPID(){
+    public void updateWristOutput(){
+        double percentOutput = MathUtil.clamp(calculateWristPID() + calculateWristFF(), -1.0, 1.0);
+        double voltage = convertToVolts(percentOutput);
 
-        double target = (((90/360) * ticsPerWristRevolution) - (getArmAngleDifference() / (2*Math.PI) * ticsPerWristRevolution));
+        SmartDashboard.putNumber("Wrist Voltage", voltage);
 
+        // stops PID if gets out of proper bounds
+        if (getWristAngle() > /*upper wrist bound */ Math.PI / 2 || getWristAngle() < /*lower wrist bound */ -Math.PI / 2) {
+            setWristVoltage(0);
+        } else {
+            setWristVoltage(voltage);
+        }
+    }
+
+    
+    
+
+    public void wristPID(double armAngleRads){
+
+        double target = (getWristAngle()) - wristAngletoPosTarget(armAngleRads); ; 
         
 
         double power = 0;
 
-        if(target - getWristEncoderTics() > 0){
-            power = wristPID.calculate(getWristEncoderTics(), target);
+        if(target - getWristAngle() > 0){
+            power = wristPID.calculate(getWristAngle(), target);
         }else{
-            power = downWristPID.calculate(getWristEncoderTics(), target);
+            power = downWristPID.calculate(getWristAngle(), target);
         }
 
         if(Math.abs(power) > 0.3){
@@ -147,7 +194,7 @@ public class ArmSubsystem extends SubsystemBase{
 
 
         // stops PID if gets out of proper bounds
-        if (getWristEncoderTics() > Constants.upWristBound || getWristEncoderTics() < Constants.lowWristBound) {
+        if (getWristAngle() > /*upper wrist bound */ (wristAngletoPosTarget(Math.PI / 2)-2) || getWristAngle() < /*lower wrist bound */ (wristAngletoPosTarget(-Math.PI / 2)+2)) {
             setPower(0);
         } else {
             setPower(power);
@@ -156,17 +203,14 @@ public class ArmSubsystem extends SubsystemBase{
 
     }
 
-    public void currentWristPos() {
-        SmartDashboard.putNumber("Wrist Position", getWristEncoderTics());
-    }
 
 
     public void bothPID(double rotationTarget){
         
 
         double target = convertHeightToTics();
-        double armAngleChange = (rotationTarget - getLeftRotPos()) * ticsPerArmRevolution * (2*Math.PI); // this is the angle arm change
-        double wristTargetTics = (convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI); //units checks out ;), but the +90???
+        double armAngleChange = (rotationTarget - getLeftRotPos()) / ticsPerArmRevolution * (2*Math.PI); // this is the angle arm change
+        double wristTargetTics = (getWristAngle()) - wristAngletoPosTarget(armAngleChange); 
         //startWrist = 90 + 37.4 + 75 = 127.4
 
         
@@ -213,6 +257,7 @@ public class ArmSubsystem extends SubsystemBase{
 
         
     }
+    
 
     private double convertToVolts(double percentOutput){
         return percentOutput * Robot.getInstance().getVoltage();
@@ -221,9 +266,13 @@ public class ArmSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
         updateRotationOutput();
+        updateWristOutput();
         SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
         SmartDashboard.putNumber("Position Error", rotation.getPositionError());
+        
+        SmartDashboard.putNumber("Wrist Position", getWristAngle());
+        
 
         
     }
@@ -253,7 +302,9 @@ public class ArmSubsystem extends SubsystemBase{
 
 
 
-
+    public void anEmptyMethod() {
+        // for testing
+    }
     public double getLeftRotPos() {
         return leftMotor.getEncoder().getPosition() ;
     }
@@ -279,12 +330,9 @@ public class ArmSubsystem extends SubsystemBase{
         return angleRads * ticsPerWristRevolution / (2*Math.PI);
     }
 
-    public double getWristTargetAngle(){
-        return getWristAngle() * 2*Math.PI / ticsPerWristRevolution;
-    }
 
-    public double getWristEncoderTics(){
-        return wristMotor.getEncoder().getPosition();
+    public double getWristAngle(){
+        return wristMotor.getEncoder().getPosition() * 3 * Math.PI / 180; // returns radians
     }
 
     public void setWristEncoderTics(double tics){
@@ -295,10 +343,7 @@ public class ArmSubsystem extends SubsystemBase{
         setWristEncoderTics((-90/360) * ticsPerWristRevolution); // intial position -90 degrees
     }
 
-    public double getWristAngle(){
-        return (2*Math.PI * getWristEncoderTics())/ticsPerWristRevolution;
-    }
-
+    
     public double getArmAngle(){
         return (2*Math.PI * getEncoderTics())/ticsPerArmRevolution;
     }

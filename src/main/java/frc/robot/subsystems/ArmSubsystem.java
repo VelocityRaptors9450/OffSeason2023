@@ -47,7 +47,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     // wrist i guess
     private final ProfiledPIDController wrist = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
-    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.054, 0.027);
+    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.068, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);

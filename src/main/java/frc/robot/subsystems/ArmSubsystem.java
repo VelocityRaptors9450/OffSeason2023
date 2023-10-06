@@ -47,7 +47,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     // wrist i guess
     private final ProfiledPIDController wrist = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
-    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.068, 0.027);
+    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.069, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
@@ -84,17 +84,17 @@ public class ArmSubsystem extends SubsystemBase{
 
 
         //timer.start();
-        rotation.reset(getLeftPosition());
+        
         wrist.reset(getWristAngle());
-
-        setArmWristGoal(0);
-        setWristGoal(0);
+        rotation.reset(getPosition());
+        //setArmWristGoal(0);
+        //setWristGoal(0);
         // if (intialization) {
         initialSetWristEncoder();
             // intialization = false;
         // }
-        rotation.reset(getPosition());
-
+        
+        
         setRotationGoal(0);
         
        
@@ -102,22 +102,9 @@ public class ArmSubsystem extends SubsystemBase{
 
     }
 
-    public void changeBrake(){
-        rightMotor.setIdleMode(IdleMode.kBrake);
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        wristMotor.setIdleMode(IdleMode.kBrake);
-        runStuff = true;
-        
-    }
+   
 
-    public void changeCoast(){
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
-        wristMotor.setIdleMode(IdleMode.kCoast);
-        runStuff = false;
-        
-
-    }
+  
 
 
 
@@ -157,7 +144,7 @@ public class ArmSubsystem extends SubsystemBase{
         // } else if (target > 0) {
         //     wrist.setGoal(getWristAngle() - (target+0.1));
         // }
-        wrist.setGoal(getWristAngle() - target);
+        wrist.setGoal(getWristAngle() - (target - getArmAngle()));
         
     }
 
@@ -395,7 +382,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     
     public double getArmAngle(){
-        return (2*Math.PI * getEncoderTics())/ticsPerArmRevolution;
+        return (2*Math.PI * getEncoderTics()) / 180;
     }
 
     public double getArmAngleDifference(){

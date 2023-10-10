@@ -104,6 +104,9 @@ public final class Constants {
   public static final double upWristBound = 0;
   public static final double lowWristBound = 0;
 
+  //extension stuff
+  public static final double maxExtension = 32; // 34.2 full max
+
   // trajectory things
   public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(Math.PI, Math.PI);
 

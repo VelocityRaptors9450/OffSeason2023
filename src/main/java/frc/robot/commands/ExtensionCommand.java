@@ -12,12 +12,9 @@ import frc.robot.subsystems.ExtensionSubsystem;
 public class ExtensionCommand extends CommandBase {
   /** Creates a new ExtensionCommand. */
   ExtensionSubsystem ext = new ExtensionSubsystem();
-  private double targetDistance;
-  private double targetProportion;
+  
   public ExtensionCommand(ExtensionSubsystem ext, double targetDistance, double targetProportion) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.targetDistance = targetDistance;
-    this.targetProportion = targetProportion;
     this.ext = ext;
     addRequirements(ext);
   }
@@ -29,8 +26,7 @@ public class ExtensionCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ext.ExtensionPID(targetDistance, targetProportion);
-    SmartDashboard.putNumber("Current Position", ext.currentPosition());
+   
   }
 
   // Called once the command ends or is interrupted.

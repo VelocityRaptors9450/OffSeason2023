@@ -204,20 +204,20 @@ public class DriveTrain extends SubsystemBase {
   }
   @Override
   public void periodic() {
-      SmartDashboard.putNumber("Front Right Position:", m_frontRight.getAbsRad());
-      SmartDashboard.putNumber("Front Left Position:", m_frontLeft.getAbsRad());
-      SmartDashboard.putNumber("Back Right Position:", m_backRight.getAbsRad());
-      SmartDashboard.putNumber("Back Left Position:", m_backLeft.getAbsRad());
-      SmartDashboard.putNumber("Pigeon", pigeon.getYaw());
-      SmartDashboard.putNumber("Pigeon Cosine", pigeon.getRotation2d().getCos());
-      SmartDashboard.putNumber("Pigeon Sine", pigeon.getRotation2d().getSin());
+      // SmartDashboard.putNumber("Front Right Position:", m_frontRight.getAbsRad());
+      // SmartDashboard.putNumber("Front Left Position:", m_frontLeft.getAbsRad());
+      // SmartDashboard.putNumber("Back Right Position:", m_backRight.getAbsRad());
+      // SmartDashboard.putNumber("Back Left Position:", m_backLeft.getAbsRad());
+      // SmartDashboard.putNumber("Pigeon", pigeon.getYaw());
+      // SmartDashboard.putNumber("Pigeon Cosine", pigeon.getRotation2d().getCos());
+      // SmartDashboard.putNumber("Pigeon Sine", pigeon.getRotation2d().getSin());
 
 
       updateOdometry();
       Pose2d m_pose = m_odometry.getPoseMeters();
-      SmartDashboard.putNumber("Pose x:", m_pose.getX());
-      SmartDashboard.putNumber("Pose y:", m_pose.getY());
-      SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());
+      // SmartDashboard.putNumber("Pose x:", m_pose.getX());
+      // SmartDashboard.putNumber("Pose y:", m_pose.getY());
+      // SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());
 
 
   }

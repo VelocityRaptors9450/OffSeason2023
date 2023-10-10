@@ -35,7 +35,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     //public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
 
-    private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
+    // private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
     private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
     
     private boolean runStuff = true;
@@ -57,11 +57,11 @@ public class ArmSubsystem extends SubsystemBase{
     private boolean intialization = true;
 
     public ArmSubsystem(){
-        leftMotor.restoreFactoryDefaults();
+        // leftMotor.restoreFactoryDefaults();
         rightMotor.restoreFactoryDefaults();
 
 
-        leftMotor.setIdleMode(IdleMode.kBrake);
+        // leftMotor.setIdleMode(IdleMode.kCoast);
         rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
         
@@ -79,14 +79,14 @@ public class ArmSubsystem extends SubsystemBase{
         // 360 / 120 = 3 degrees / wrist revolution
         
         //leftMotor.setInverted(false);
-        leftMotor.getEncoder().setPosition(0);
+        // leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
 
 
         //timer.start();
         
         wrist.reset(getWristAngle());
-        rotation.reset(getPosition());
+        rotation.reset(getRightPosition());
         //setArmWristGoal(0);
         //setWristGoal(0);
         // if (intialization) {
@@ -110,25 +110,25 @@ public class ArmSubsystem extends SubsystemBase{
 
 
 
-    private double getLeftPosition(){
-        return leftMotor.getEncoder().getPosition() * -2.5 * Math.PI / 180;
-    }
+    // private double getLeftPosition(){
+    //     return leftMotor.getEncoder().getPosition() * -2.5 * Math.PI / 180;
+    // }
 
-    private double getPosition(){
-        return (getLeftPosition() + getRightPosition()) / 2;
-    }
+    // private double getPosition(){
+    //     return (getLeftPosition() + getRightPosition()) / 2;
+    // }
 
 
-    public void setLeftVoltage(double voltage){
-        leftMotor.setVoltage(-voltage);
-    }
+    // public void setLeftVoltage(double voltage){
+    //     leftMotor.setVoltage(-voltage);
+    // }
 
     public void setRightVoltage(double voltage){
         rightMotor.setVoltage(voltage);
     }
 
     public void setVoltage(double voltage){
-        leftMotor.setVoltage(-voltage);
+        // leftMotor.setVoltage(-voltage);
         rightMotor.setVoltage(voltage);
 
     }
@@ -157,7 +157,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double calculateRotationPID(){
-        return rotation.calculate(getPosition(), rotation.getGoal());
+        return rotation.calculate(getRightPosition(), rotation.getGoal());
     }
     public double calculateWristFF() {
         return wristFF.calculate(getWristAngle(), wrist.getSetpoint().velocity);
@@ -179,7 +179,12 @@ public class ArmSubsystem extends SubsystemBase{
 
         SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
-        setVoltage(voltage);
+        
+        if (Math.abs(voltage) > 2) {
+            setRightVoltage(Math.signum(voltage)*2);
+        } else {
+            setRightVoltage(voltage);
+        }
         //rightMotor
     }
 
@@ -198,91 +203,13 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     
+
+
+
     
 
-    public void wristPID(double armAngleRads){
-
-        double target = (getWristAngle()) - wristAngletoPosTarget(armAngleRads); ; 
-        
-
-        double power = 0;
-
-        if(target - getWristAngle() > 0){
-            power = wristPID.calculate(getWristAngle(), target);
-        }else{
-            power = downWristPID.calculate(getWristAngle(), target);
-        }
-
-        if(Math.abs(power) > 0.3){
-            if(power < 0){
-                power = -0.3;
-            }else{
-                power = 0.3;
-            }
-        }
-
-
-        // stops PID if gets out of proper bounds
-        if (getWristAngle() > /*upper wrist bound */ (wristAngletoPosTarget(Math.PI / 2)-2) || getWristAngle() < /*lower wrist bound */ (wristAngletoPosTarget(-Math.PI / 2)+2)) {
-            setPower(0);
-        } else {
-            setPower(power);
-        }
-       
-
-    }
-
-
-
-    public void bothPID(double rotationTarget){
-        
-
-        double target = convertHeightToTics();
-        double armAngleChange = (rotationTarget - getLeftRotPos()) / ticsPerArmRevolution * (2*Math.PI); // this is the angle arm change
-        double wristTargetTics = (getWristAngle()) - wristAngletoPosTarget(armAngleChange); 
-        //startWrist = 90 + 37.4 + 75 = 127.4
-
-        
-        double wristPower = 0;
-        double armPower = 0;
-        // arm section
-        if(target - getEncoderTics() > 0){
-            armPower = pid.calculate(getEncoderTics(), target);
-        }else{
-            armPower = downPID.calculate(getEncoderTics(), target);
-        }
-
-        if(Math.abs(armPower) > 0.3){
-            if(armPower < 0){
-                armPower = -0.3;
-            }else{
-                armPower = 0.3;
-            }
-        }
-
-       
-        // wrist section
-        if(wristTargetTics - getEncoderTics() > 0){
-            wristPower = wristPID.calculate(getEncoderTics(), wristTargetTics);
-        }else{
-            wristPower = downWristPID.calculate(getEncoderTics(), wristTargetTics);
-        }
-
-
-        if(Math.abs(wristPower) > 0.3){
-            if(wristPower < 0){
-                wristPower = -0.3;
-            }else{
-                wristPower = 0.3;
-            }
-        }
-
-        //setPower(armPower);
-        //wristSetPower(wristPower);
-    }
-
     public double calculateRotationFF(){
-        return rotationFF.calculate(getPosition(), rotation.getSetpoint().velocity);
+        return rotationFF.calculate(/*getPosition()*/getRightPosition(), rotation.getSetpoint().velocity);
 
         
     }
@@ -296,15 +223,15 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
         
         if(runStuff){
-            updateRotationOutput();
-            updateWristOutput();
+            // updateRotationOutput();
+            // updateWristOutput();
 
         }else{
             setVoltage(0);
            
         }
-        SmartDashboard.putNumber("LeftPosition", getLeftPosition());
-        SmartDashboard.putNumber("RightPosition", getRightPosition());
+        // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
+        SmartDashboard.putNumber("Right Arm Position", getRightPosition());
         SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
         SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
@@ -342,16 +269,16 @@ public class ArmSubsystem extends SubsystemBase{
     public void anEmptyMethod() {
         // for testing
     }
-    public double getLeftRotPos() {
-        return leftMotor.getEncoder().getPosition() ;
-    }
+    // public double getLeftRotPos() {
+    //     return leftMotor.getEncoder().getPosition() ;
+    // }
 
     public double getRightRotPos() {
         return rightMotor.getEncoder().getPosition();
     }
 
     public void runRotMotor(double voltage) {
-        leftMotor.setVoltage(voltage);
+        // leftMotor.setVoltage(voltage);
         rightMotor.setVoltage(-voltage);
     }
 
@@ -393,13 +320,14 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double getEncoderTics(){
-      return (leftMotor.getEncoder().getPosition() + rightMotor.getEncoder().getPosition()) / 2;
+    //   return (leftMotor.getEncoder().getPosition() + rightMotor.getEncoder().getPosition()) / 2;
+    return rightMotor.getEncoder().getPosition();
     }
 
     // --------------------------------------------------------------
     public void setEncoderTics(double tics){
         rightMotor.getEncoder().setPosition(tics);
-        leftMotor.getEncoder().setPosition(tics);
+        // leftMotor.getEncoder().setPosition(tics);
     }
 
     public void initialSetEncoder(){
@@ -432,7 +360,7 @@ public class ArmSubsystem extends SubsystemBase{
 
 
     public void setPower(double power){
-        leftMotor.set(power);
+        // leftMotor.set(power);
         rightMotor.set(power);
     }
 

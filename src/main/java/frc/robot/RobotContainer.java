@@ -76,10 +76,11 @@ public class RobotContainer {
     // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
     // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
     // driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.57)));
-    armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0)));
-    armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
-
+    // armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.57)));
+    // armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0)));
+    // armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
+    armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(3)));
+    armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
 
     //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.5)));
 

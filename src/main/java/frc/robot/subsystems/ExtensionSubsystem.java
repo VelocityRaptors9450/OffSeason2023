@@ -23,8 +23,8 @@ public class ExtensionSubsystem extends SubsystemBase {
   /** Creates a new ExtensionSubsystem. */
   private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
   
-  ProfiledPIDController pid = new ProfiledPIDController(0.2, 0, 0, new Constraints(1, 1));
-  ElevatorFeedforward elevFF = new ElevatorFeedforward(0, 0, 0);
+  ProfiledPIDController pid = new ProfiledPIDController(0.4, 0, 0, new Constraints(6, 5));
+  ElevatorFeedforward elevFF = new ElevatorFeedforward(0.001, 0.035, 0.015);
 
   public ExtensionSubsystem() {
     extensionMotor.setIdleMode(IdleMode.kBrake);
@@ -50,6 +50,8 @@ public class ExtensionSubsystem extends SubsystemBase {
         setVoltage(voltage);
     }
     */
+
+    setVoltage(voltage);
   }
 
   public double calculateExtensionFF() {

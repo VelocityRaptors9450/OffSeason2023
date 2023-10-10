@@ -46,8 +46,8 @@ public class ArmSubsystem extends SubsystemBase{
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.6, 0, 0, new Constraints(1, 1));
-    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.069, 0.027);
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.9, 0, 0, new Constraints(1, 1));
+    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
@@ -81,13 +81,14 @@ public class ArmSubsystem extends SubsystemBase{
         //leftMotor.setInverted(false);
         // leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
+        wristMotor.getEncoder().setPosition(0);
 
 
         //timer.start();
         
         wrist.reset(getWristAngle());
         rotation.reset(getRightPosition());
-        //setArmWristGoal(0);
+        setWristGoal(0);
         //setWristGoal(0);
         // if (intialization) {
         initialSetWristEncoder();
@@ -144,8 +145,9 @@ public class ArmSubsystem extends SubsystemBase{
         // } else if (target > 0) {
         //     wrist.setGoal(getWristAngle() - (target+0.1));
         // }
-        wrist.setGoal(getWristAngle() - (target - getArmAngle()));
-        
+        // wrist.setGoal(getWristAngle() - (target - getArmAngle()));
+        wrist.setGoal(-target + 0.85);
+ 
     }
 
     public void setRotationGoal(double target){
@@ -195,11 +197,12 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Wrist Voltage", voltage);
 
         // stops PID if gets out of proper bounds
-        if (getWristAngle() > /*upper wrist bound */ Math.PI / 2 || getWristAngle() < /*lower wrist bound */ -Math.PI / 2) {
-            setWristVoltage(0);
-        } else {
-            setWristVoltage(voltage);
-        }
+        // if (getWristAngle() > /*upper wrist bound */ Math.PI / 2 || getWristAngle() < /*lower wrist bound */ -Math.PI / 2) {
+        //     setWristVoltage(0);
+        // } else {
+        //     setWristVoltage(voltage);
+        // }
+        setWristVoltage(voltage);
     }
 
     
@@ -223,8 +226,8 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
         
         if(runStuff){
-            // updateRotationOutput();
-            // updateWristOutput();
+            updateRotationOutput();
+            updateWristOutput();
 
         }else{
             setVoltage(0);

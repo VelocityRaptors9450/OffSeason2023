@@ -69,18 +69,21 @@ public class RobotContainer {
     //armController.y().onTrue(new NewRotationCommand(arm, 0, 0));
     // armController.x().onTrue(new NewRotationCommand(arm, 0.75));
     // armController.a().onTrue(new NewRotationCommand(arm, 0));
-    //armController.y().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.5)));
+    // armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.3)));
     
-    //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
-    //armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
+    // armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+    // armController.b().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
     // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
     // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
     // driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    // armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.57)));
-    // armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0)));
-    // armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
-    armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(3)));
-    armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
+    armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.3)));
+    armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0)));
+    armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
+    // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
+    // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
+    // armController.y().onTrue(new InstantCommand(() -> ext.setPower(0.2)));
+    // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
+
 
     //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.5)));
 

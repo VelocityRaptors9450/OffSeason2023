@@ -62,8 +62,8 @@ public class ArmSubsystem extends SubsystemBase{
 
 
         // leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kBrake);
-        wristMotor.setIdleMode(IdleMode.kBrake);  
+        rightMotor.setIdleMode(IdleMode.kCoast);
+        wristMotor.setIdleMode(IdleMode.kCoast);  
         
         //leftMotor.setInverted(true);  
         //rightMotor.setInverted(false);  
@@ -80,7 +80,7 @@ public class ArmSubsystem extends SubsystemBase{
         
         //leftMotor.setInverted(false);
         // leftMotor.getEncoder().setPosition(0);
-        rightMotor.getEncoder().setPosition(0);
+        rightMotor.getEncoder().setPosition(147.4 * Math.PI/180);
         wristMotor.getEncoder().setPosition(0);
 
 
@@ -226,8 +226,8 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
         
         if(runStuff){
-            updateRotationOutput();
-            updateWristOutput();
+            //updateRotationOutput();
+            //updateWristOutput();
 
         }else{
             setVoltage(0);
@@ -235,8 +235,8 @@ public class ArmSubsystem extends SubsystemBase{
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("Right Arm Position", getRightPosition());
-        SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
-        SmartDashboard.putNumber("Position Error", rotation.getPositionError());
+        //SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
+        //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
         SmartDashboard.putNumber("Wrist Position", getWristAngle());
         

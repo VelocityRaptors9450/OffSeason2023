@@ -20,7 +20,6 @@ import frc.robot.Robot;
 
 
 public class ExtensionSubsystem extends SubsystemBase {
-  /** Creates a new ExtensionSubsystem. */
   private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
   
   ProfiledPIDController pid = new ProfiledPIDController(0.4, 0, 0, new Constraints(6, 5));

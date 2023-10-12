@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -35,8 +36,22 @@ public class IntakeCommand extends CommandBase{
     public void execute(){
 
 
-        intake.intake(0.25);
+        
 
+        
+
+      
+
+        //For velocity if it works
+        if(intake.getTemp() > 35){
+            intake.setIntakePower(0);
+        }else{
+            if(intake.getVelocity() < 200){
+                intake.setIntakePower(0.05);
+            }else{
+                intake.setIntakePower(0.4);
+            }
+        }   
         
     
     }

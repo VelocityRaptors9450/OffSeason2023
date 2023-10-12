@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -63,6 +63,14 @@ public class IntakeSubsystem extends SubsystemBase{
         rampUPToggle = true;
         velocity = 0;
     }
+
+    public double getTemp(){
+        return intake.getMotorTemperature();
+    }
+
+    public double getVelocity(){
+        return intake.getEncoder().getVelocity();
+    }
     
 
     public void intake(double power) {
@@ -108,6 +116,12 @@ public class IntakeSubsystem extends SubsystemBase{
         }
 
        
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Velocity of Intake?", getVelocity());
+        SmartDashboard.putNumber("Motor Temp", getTemp());
     }
 
 

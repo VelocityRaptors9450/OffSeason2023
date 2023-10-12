@@ -35,7 +35,7 @@ public class IntakeCommand extends CommandBase{
     public void execute(){
 
 
-        intake.intake(0.4);
+        intake.intake(0.25);
 
         
     

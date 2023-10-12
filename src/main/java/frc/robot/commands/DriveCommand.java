@@ -63,9 +63,7 @@ public class DriveCommand extends CommandBase {
       ranOnce = true;
     }
 
-    // if(controller.getHID().getXButtonPressed()){
-    //   swerve.resetGyro();
-    // }
+   
     // if(controller.getHID().getBButtonPressed()){
     //   swerve.fieldRelativeSwitch();
     // }

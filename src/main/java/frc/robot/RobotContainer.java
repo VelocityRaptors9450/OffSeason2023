@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeStopAndResetCommand;
@@ -47,7 +48,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public DriveTrain driveTrain = new DriveTrain();
-  private ArmSubsystem arm = new ArmSubsystem();
+  public ArmSubsystem arm = new ArmSubsystem();
   private IntakeSubsystem intake = new IntakeSubsystem();
   
   private ExtensionSubsystem ext = new ExtensionSubsystem();
@@ -63,7 +64,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    //driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController::getRightX, driverController::getLeftX, driverController::getLeftY));
+    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, armController/*driverController::getRightX, driverController::getLeftX, driverController::getLeftY*/));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     //armController.y().onTrue(new NewRotationCommand(arm, 0, 0));
@@ -76,8 +77,9 @@ public class RobotContainer {
     // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
     // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
     // driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.3)));
-    armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0)));
+    armController.y().onTrue(new InstantCommand(() -> arm.setArmWristGoal(2.57)));
+    armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.25)));
+    armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.3)));
     armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
     // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
     // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
@@ -97,9 +99,11 @@ public class RobotContainer {
     
 
     //Need to turn off intake 
-    // armController.leftBumper().onTrue(new InstantCommand(() -> intake.setIntakePower(-0.5)));
-    // armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
-    // armController.leftTrigger().onTrue(intakeCommand);
+    armController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
+
+    armController.leftBumper().onTrue(new InstantCommand(() -> intake.setIntakePower(-0.5)));
+    armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
+    armController.leftTrigger().onTrue(intakeCommand);
     
     
 

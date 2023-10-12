@@ -58,12 +58,11 @@ public class ArmSubsystem extends SubsystemBase{
 
     public ArmSubsystem(){
         // leftMotor.restoreFactoryDefaults();
-        rightMotor.restoreFactoryDefaults();
+       
 
 
         // leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
-        wristMotor.setIdleMode(IdleMode.kCoast);  
+        
         
         //leftMotor.setInverted(true);  
         //rightMotor.setInverted(false);  
@@ -80,27 +79,42 @@ public class ArmSubsystem extends SubsystemBase{
         
         //leftMotor.setInverted(false);
         // leftMotor.getEncoder().setPosition(0);
-        rightMotor.getEncoder().setPosition(147.4 * Math.PI/180);
-        wristMotor.getEncoder().setPosition(0);
+        
 
 
         //timer.start();
         
-        wrist.reset(getWristAngle());
-        rotation.reset(getRightPosition());
-        setWristGoal(0);
+        
         //setWristGoal(0);
         // if (intialization) {
-        initialSetWristEncoder();
-            // intialization = false;
-        // }
         
-        
-        setRotationGoal(0);
         
        
 
 
+    }
+
+    
+
+    public void initialize(){
+
+        rightMotor.restoreFactoryDefaults();
+
+        rightMotor.setIdleMode(IdleMode.kBrake);
+        wristMotor.setIdleMode(IdleMode.kBrake);  
+
+        rightMotor.getEncoder().setPosition(59.215);
+        wristMotor.getEncoder().setPosition(0);
+
+        wrist.reset(getWristAngle());
+        rotation.reset(getRightPosition());
+        setWristGoal(0);
+
+        initialSetWristEncoder();
+           
+        
+        
+        setRotationGoal(getRightPosition());
     }
 
    
@@ -146,7 +160,7 @@ public class ArmSubsystem extends SubsystemBase{
         //     wrist.setGoal(getWristAngle() - (target+0.1));
         // }
         // wrist.setGoal(getWristAngle() - (target - getArmAngle()));
-        wrist.setGoal(-target + 0.85);
+        wrist.setGoal(2.57 - target);
  
     }
 
@@ -226,8 +240,8 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
         
         if(runStuff){
-            //updateRotationOutput();
-            //updateWristOutput();
+            updateRotationOutput();
+            updateWristOutput();
 
         }else{
             setVoltage(0);
@@ -235,7 +249,7 @@ public class ArmSubsystem extends SubsystemBase{
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("Right Arm Position", getRightPosition());
-        //SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
+        SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
         SmartDashboard.putNumber("Wrist Position", getWristAngle());

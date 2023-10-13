@@ -74,7 +74,8 @@ public class DriveCommand extends CommandBase {
     // negative values when we push forward.
     double linearModifier = 0.5;
     double rotationalModifier = 0.5;
-    if (controller.rightBumper().getAsBoolean()) {
+    if (controller.rightBumper().getAsBoolean()) {   
+      System.out.print("Right bumper boolean statement" + controller.rightBumper().getAsBoolean()); 
       linearModifier = 1;
       rotationalModifier = 1;
     }

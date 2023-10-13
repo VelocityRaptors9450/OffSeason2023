@@ -39,8 +39,8 @@ public final class Constants {
   }
 
   public static class Speeds{
-    public static final double MaxSpeed = 30;
-    public static final double MaxAngularSpeed = 20*Math.PI;
+    public static final double MaxSpeed = 50;
+    public static final double MaxAngularSpeed = 40*Math.PI;
   }
   
   public static final int flDriveId = 1; //1

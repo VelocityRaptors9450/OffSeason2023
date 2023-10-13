@@ -29,6 +29,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.GenericHID;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,8 +58,9 @@ public class RobotContainer {
   private ExtensionSubsystem ext = new ExtensionSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final EventLoop test = new EventLoop();
   private final CommandXboxController driverController = new CommandXboxController(0);
-  
+  private final PS4Controller driveReveal = new PS4Controller(0);
   private final CommandXboxController armController = new CommandXboxController(1);
   private IntakeCommand intakeCommand = new IntakeCommand(intake);
   InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
@@ -97,8 +100,9 @@ public class RobotContainer {
     
 
     //Need to turn off intake 
-    armController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
-
+    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
+    // driveReveal.touchpad(test).onTrue(new InstantCommand(() -> driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5)));
+    if (driveReveal.getTouchpadPressed()) driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
     armController.leftTrigger().onTrue(new IntakeSetPowerCommand(intake, -0.5));
     armController.leftTrigger().onFalse(new IntakeSetPowerCommand(intake, 0));
     //armController.leftTrigger().onTrue(intakeCommand);

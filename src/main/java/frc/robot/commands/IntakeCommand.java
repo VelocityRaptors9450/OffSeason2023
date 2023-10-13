@@ -6,27 +6,30 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase{
     private final IntakeSubsystem intake;
-    private boolean firstTime = true;
-    private boolean finish;
+    private boolean ramp;
+    //private boolean finish;
     
     
 
     public IntakeCommand(IntakeSubsystem intake){
         this.intake = intake;
+        
         addRequirements(intake);
+        
     }
 
 
 
     @Override
     public void initialize(){
+        ramp = false;
 
-        if(firstTime){
-            finish = false;
-            firstTime = false;
-        }else{
-            finish = true;
-        }
+        // if(firstTime){
+        //     finish = false;
+        //     firstTime = false;
+        // }else{
+        //     finish = true;
+        // }
        
         
     
@@ -46,11 +49,14 @@ public class IntakeCommand extends CommandBase{
         if(intake.getTemp() > 50){
             intake.setIntakePower(0);
         }else{
-            if(intake.getVelocity() < 100){
+            
+            if(ramp && intake.getVelocity() < 200){
                 intake.setIntakePower(0.05);
             }else{
                 intake.setIntakePower(0.4);
-
+                if(intake.getVelocity() > 300){
+                    ramp = true;
+                }
             }
         }   
         
@@ -77,11 +83,12 @@ public class IntakeCommand extends CommandBase{
     public boolean isFinished(){
         //if its near goal then turn this to true
 
-        if(finish){
-            intake.setIntakePower(0);
-            firstTime = true;
-        }
+        // if(finish){
+        //     intake.setIntakePower(0);
+        //     firstTime = true;
+        // }
 
-        return finish;   
+        // return finish;   
+        return false;
     }
 }

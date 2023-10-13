@@ -5,10 +5,11 @@
 package frc.robot;
 
 
+import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.IntakeStopAndResetCommand;
+import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.commands.NewRotationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.ExtensionSubsystem;
@@ -54,33 +56,29 @@ public class RobotContainer {
   private ExtensionSubsystem ext = new ExtensionSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController = new CommandXboxController(1);
-  private final CommandXboxController armController = new CommandXboxController(0);
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  
+  private final CommandXboxController armController = new CommandXboxController(1);
   private IntakeCommand intakeCommand = new IntakeCommand(intake);
+  InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
 
 
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, armController/*driverController::getRightX, driverController::getLeftX, driverController::getLeftY*/));
+    
+    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController/*driverController::getRightX, driverController::getLeftX, driverController::getLeftY*/));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
-    //armController.y().onTrue(new NewRotationCommand(arm, 0, 0));
-    // armController.x().onTrue(new NewRotationCommand(arm, 0.75));
-    // armController.a().onTrue(new NewRotationCommand(arm, 0));
-    // armController.a().onTrue(new InstantCommand(() -> arm.setRotationGoal(1.3)));
     
-    // armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
-    // armController.b().onTrue(new InstantCommand(() -> arm.setRotationGoal(0)));
-    // driverController.y().onTrue(new NewRotationCommand(arm, 1.5));
-    // driverController.x().onTrue(new NewRotationCommand(arm, 0.75));
-    // driverController.a().onTrue(new NewRotationCommand(arm, 0));
-    armController.y().onTrue(new InstantCommand(() -> arm.setArmWristGoal(2.57)));
-    armController.a().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.25)));
-    armController.b().onTrue(new InstantCommand(() -> arm.setArmWristGoal(1.7)));
-    armController.x().onTrue(new InstantCommand(() -> arm.setArmWristGoal(0.75)));
+    
+
+    
+    armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
+    armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.3), new IntakeCommand(intake)));
+    armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
+    armController.x().onTrue(new ArmSetTargetCommand(arm, 0.75));
     // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
     // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
     // armController.y().onTrue(new InstantCommand(() -> ext.setPower(0.2)));
@@ -101,9 +99,9 @@ public class RobotContainer {
     //Need to turn off intake 
     armController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
 
-    armController.leftBumper().onTrue(new InstantCommand(() -> intake.setIntakePower(-0.5)));
-    armController.leftBumper().onFalse(new IntakeStopAndResetCommand(intake));
-    armController.leftTrigger().onTrue(intakeCommand);
+    armController.leftTrigger().onTrue(new IntakeSetPowerCommand(intake, -0.5));
+    armController.leftTrigger().onFalse(new IntakeSetPowerCommand(intake, 0));
+    //armController.leftTrigger().onTrue(intakeCommand);
     
     
 

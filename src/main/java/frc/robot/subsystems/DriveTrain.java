@@ -112,6 +112,14 @@ public class DriveTrain extends SubsystemBase {
         });
   }
 
+  public void brakeFormation(){
+    m_frontLeft.rotatePID(-Math.PI/4);
+    m_frontRight.rotatePID(Math.PI/4);
+    m_backLeft.rotatePID(Math.PI/4);
+    m_backRight.rotatePID(-Math.PI/4);
+
+  }
+
   // rotate to target degrees at specified power
   public void rotateToHeading(double target, double power, double periodSeconds) {
     // controls where bang bang controller shuts off
@@ -138,6 +146,10 @@ public class DriveTrain extends SubsystemBase {
     } else if (distance < 0) {
       drive(0, 0, -power, periodSeconds);
     }
+  }
+
+  public double getYaw(){
+    return pigeon.getYaw() % 360;
   }
 
   // rotate to target degrees at specified power

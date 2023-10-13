@@ -81,6 +81,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_robotContainer.arm.initialize();
+
     //motor1.set(ControlMode.PercentOutput, 0); 
 
     //inverting directions
@@ -201,6 +203,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     
+
+    
     
 
     // System.out.println(cancoder.getPosition());
@@ -271,13 +275,13 @@ public class Robot extends TimedRobot {
     // time.start();
     // time.reset();
     
+    
 
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-
     
     
     // double x = tx.getDouble(0);

@@ -144,6 +144,17 @@ public class SwerveModule {
          driveMotor.set(power);
     }
 
+    public void rotatePID(double target){
+        
+        double turnOutput = turningPIDController.calculate(getAbsRad(), target);
+
+        double trnFeedforward = turnFeedforward.calculate(turningPIDController.getSetpoint().velocity);
+
+        turningMotor.setVoltage(-(turnOutput + trnFeedforward));
+
+
+    }
+
     public void setDesiredState(SwerveModuleState desiredState) {
         // Optimize the reference state to avoid spinning further than 90 degrees
         SwerveModuleState state =

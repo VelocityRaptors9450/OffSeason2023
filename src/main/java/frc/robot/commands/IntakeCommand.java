@@ -43,13 +43,14 @@ public class IntakeCommand extends CommandBase{
       
 
         //For velocity if it works
-        if(intake.getTemp() > 35){
+        if(intake.getTemp() > 50){
             intake.setIntakePower(0);
         }else{
-            if(intake.getVelocity() < 200){
+            if(intake.getVelocity() < 100){
                 intake.setIntakePower(0.05);
             }else{
                 intake.setIntakePower(0.4);
+
             }
         }   
         

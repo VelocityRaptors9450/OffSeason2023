@@ -39,7 +39,7 @@ public final class Constants {
   }
 
   public static class Speeds{
-    public static final double MaxSpeed = 20;
+    public static final double MaxSpeed = 30;
     public static final double MaxAngularSpeed = 20*Math.PI;
   }
   

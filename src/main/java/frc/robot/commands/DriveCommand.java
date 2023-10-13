@@ -64,6 +64,7 @@ public class DriveCommand extends CommandBase {
     }
 
    
+
     // if(controller.getHID().getBButtonPressed()){
     //   swerve.fieldRelativeSwitch();
     // }
@@ -71,20 +72,28 @@ public class DriveCommand extends CommandBase {
 
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    final var xSpeed = -xSpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.02)) * swerve.kMaxSpeed;
+    double linearModifier = 0.5;
+    double rotationalModifier = 0.5;
+    if (controller.rightBumper().getAsBoolean()) {
+      linearModifier = 1;
+      rotationalModifier = 1;
+    }
+
+    final var xSpeed = -xSpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.02)) * swerve.kMaxSpeed * linearModifier;
+    
     //final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
 
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    final var ySpeed = ySpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.02)) * swerve.kMaxSpeed;
+    final var ySpeed = ySpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.02)) * swerve.kMaxSpeed * linearModifier;
     //final double ySpeed = controller.getLeftY() * swerve.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
-    final var rot = rotLimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.02)) * swerve.kMaxAngularSpeed;
+    final var rot = rotLimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.02)) * swerve.kMaxAngularSpeed * rotationalModifier;
     // final double rot = controller.getRightX() * swerve.kMaxAngularSpeed;
     SmartDashboard.putNumber("xSpeed", xSpeed);
     SmartDashboard.putNumber("ySpeed", ySpeed);

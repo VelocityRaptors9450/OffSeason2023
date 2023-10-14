@@ -161,6 +161,12 @@ public class Robot extends TimedRobot {
     // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
     // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
     // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 3, () -> 0).withTimeout(2));
+    m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 5, () -> 0, () -> 0).withTimeout(1)
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 1.7)).andThen(new WaitCommand(3))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.5)).andThen(new WaitCommand(1))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2));
 
     // schedule the autonomous command (example)
     // if (m_autonomousCommand != null) {

@@ -53,7 +53,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public DriveTrain driveTrain = new DriveTrain();
   public ArmSubsystem arm = new ArmSubsystem();
-  private IntakeSubsystem intake = new IntakeSubsystem();
+  public IntakeSubsystem intake = new IntakeSubsystem();
   
   private ExtensionSubsystem ext = new ExtensionSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();

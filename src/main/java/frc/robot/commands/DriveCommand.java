@@ -36,12 +36,17 @@ public class DriveCommand extends CommandBase {
   double time = 0.02;
   boolean ranOnce = false;
 
+  double linearModifier;
+  double rotationalModifier;
+
   /** Creates a new DriveCommand. */
   public DriveCommand(DriveTrain swerve, CommandXboxController controller/*DoubleSupplier rightX, DoubleSupplier leftX, DoubleSupplier leftY*/) {
     // Use addRequirements() here to declare subsystem dependencies.
     // this.leftX = leftX;
     // this.rightX = rightX;
     // this.leftY = leftY;
+    linearModifier = 0.5;
+    rotationalModifier = 0.5;
     this.controller = controller;
 
     this.swerve = swerve;
@@ -72,8 +77,6 @@ public class DriveCommand extends CommandBase {
 
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    double linearModifier = 0.5;
-    double rotationalModifier = 0.5;
 
     if(controller.getHID().getXButtonPressed()){
       swerve.drive(0, 0, 0.01, time);
@@ -81,9 +84,14 @@ public class DriveCommand extends CommandBase {
 
     }else{
       if (controller.rightBumper().getAsBoolean()) {
-        linearModifier = 1;
-        rotationalModifier = 1;
+        linearModifier += 0.01;
+        rotationalModifier += 0.01;
+      } else {
+        linearModifier -= 0.01;
+        rotationalModifier -= 0.01;
       }
+      linearModifier = MathUtil.clamp(linearModifier, 0.5, 1);
+      rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
 
       
 

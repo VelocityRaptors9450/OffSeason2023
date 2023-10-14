@@ -11,6 +11,7 @@ import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.commands.NewRotationCommand;
+import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
@@ -79,9 +80,11 @@ public class RobotContainer {
 
     
     armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
-    armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.3), new IntakeCommand(intake)));
+    armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.23), new IntakeCommand(intake)));
     armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
     armController.x().onTrue(new ArmSetTargetCommand(arm, 0.75));
+    
+
     // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
     // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
     // armController.y().onTrue(new InstantCommand(() -> ext.setPower(0.2)));
@@ -98,13 +101,18 @@ public class RobotContainer {
     //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
 
     
-
+    
     //Need to turn off intake 
     driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     // driveReveal.touchpad(test).onTrue(new InstantCommand(() -> driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5)));
     if (driveReveal.getTouchpadPressed()) driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
-    armController.leftTrigger().onTrue(new IntakeSetPowerCommand(intake, -0.5));
-    armController.leftTrigger().onFalse(new IntakeSetPowerCommand(intake, 0));
+    // armController.rightBumper().onTrue(new IntakeSetPowerCommand(intake, -1));
+    // armController.leftBumper().onTrue(new IntakeSetPowerCommand(intake, -0.5));
+    // armController.leftBumper().and(armController.rightBumper().onFalse(new IntakeSetPowerCommand(intake, 0)));
+    armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
+    armController.leftBumper().onTrue(new TimedIntakeCommand(intake, -0.3));
+
+    
     //armController.leftTrigger().onTrue(intakeCommand);
     
     

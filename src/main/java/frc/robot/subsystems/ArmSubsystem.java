@@ -174,6 +174,10 @@ public class ArmSubsystem extends SubsystemBase{
         rotation.setGoal(target);
     }
 
+    public double getGoal(){
+        return rotation.getGoal().position;
+    }
+
     public double calculateRotationPID(){
         return rotation.calculate(getRightPosition(), rotation.getGoal());
     }
@@ -251,7 +255,7 @@ public class ArmSubsystem extends SubsystemBase{
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("Right Arm Position", getRightPosition());
-        SmartDashboard.putNumber("Target?", rotation.getGoal().position);;
+        SmartDashboard.putNumber("Target?", getGoal());;
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
         SmartDashboard.putNumber("Wrist Position", getWristAngle());

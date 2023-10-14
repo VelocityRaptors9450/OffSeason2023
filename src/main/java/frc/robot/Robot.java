@@ -20,10 +20,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ManualDriveCommand;
+import frc.robot.commands.SecondAutoBalanceCommand;
 import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.AutoRotateCommand;
+import frc.robot.commands.FirstAutoBalanceCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -139,6 +142,11 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     time.restart();
+
+    SequentialCommandGroup balance = new SequentialCommandGroup(
+      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 30),
+      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+      );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
@@ -147,16 +155,20 @@ public class Robot extends TimedRobot {
     .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
     */
 
-    m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 5, () -> 0, () -> 0).withTimeout(1)
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 1.7)).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.5)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 3, () -> 0).withTimeout(2));
+    // m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 5, () -> 0, () -> 0).withTimeout(1)
+    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 1.7)).andThen(new WaitCommand(3))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.5)).andThen(new WaitCommand(1))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 3, () -> 0).withTimeout(2));
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-        m_autonomousCommand.schedule();
+    // if (m_autonomousCommand != null) {
+    //     m_autonomousCommand.schedule();
+    // }
+
+    if(balance != null){
+      balance.schedule();
     }
   }
 
@@ -212,6 +224,8 @@ public class Robot extends TimedRobot {
   int _loopCount = 0;
   @Override
   public void teleopPeriodic() {
+
+    SmartDashboard.putNumber("Pitch", m_robotContainer.driveTrain.getPitch());
 
     
 

@@ -152,6 +152,10 @@ public class DriveTrain extends SubsystemBase {
     return pigeon.getYaw() % 360;
   }
 
+  public double getPitch(){
+    return pigeon.getPitch() % 360;
+  }
+
   // rotate to target degrees at specified power
   public void rotateToHeadingPID(double target, double periodSeconds) {
     // get the difference between the current and target position,

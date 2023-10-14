@@ -42,11 +42,11 @@ public class ArmSubsystem extends SubsystemBase{
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
 
-    private final ProfiledPIDController rotation = new ProfiledPIDController(1.58, 0, 0, new Constraints(2, 1.3));
+    private final ProfiledPIDController rotation = new ProfiledPIDController(1.58, 0, 0, new Constraints(3.3, 2));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.9, 0, 0, new Constraints(1, 1));
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.9, 0, 0, new Constraints(1.8, 1.5));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
@@ -202,8 +202,8 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
         
-        if (Math.abs(voltage) > 3) {
-            setRightVoltage(Math.signum(voltage)*3);
+        if (Math.abs(voltage) > 5) {
+            setRightVoltage(Math.signum(voltage)*5);
         } else {
             setRightVoltage(voltage);
         }

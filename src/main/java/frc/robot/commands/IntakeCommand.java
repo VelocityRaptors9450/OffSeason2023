@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -7,6 +8,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeCommand extends CommandBase{
     private final IntakeSubsystem intake;
     private boolean ramp;
+    Timer timer = new Timer();
+
     //private boolean finish;
     
     
@@ -15,6 +18,8 @@ public class IntakeCommand extends CommandBase{
         this.intake = intake;
         
         addRequirements(intake);
+        timer.reset();
+        timer.start();
         
     }
 
@@ -54,7 +59,7 @@ public class IntakeCommand extends CommandBase{
                 intake.setIntakePower(0.05);
             }else{
                 intake.setIntakePower(0.4);
-                if(intake.getVelocity() > 300){
+                if(intake.getVelocity() > 300 || timer.get() > 1){
                     ramp = true;
                 }
             }

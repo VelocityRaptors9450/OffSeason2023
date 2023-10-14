@@ -143,10 +143,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     time.restart();
 
-    SequentialCommandGroup balance = new SequentialCommandGroup(
-      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 30),
-      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-      );
+    // SequentialCommandGroup balance = new SequentialCommandGroup(
+    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 1, 0, 0)
+    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 30),
+    //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+    //   );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
@@ -155,27 +156,22 @@ public class Robot extends TimedRobot {
     .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
     */
 
-    // m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 5, () -> 0, () -> 0).withTimeout(1)
-    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 1.7)).andThen(new WaitCommand(3))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.5)).andThen(new WaitCommand(1))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 3, () -> 0).withTimeout(2));
-    m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 5, () -> 0, () -> 0).withTimeout(1)
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 1.7)).andThen(new WaitCommand(3))
+    m_autonomousCommand = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.5)).andThen(new WaitCommand(1))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
     .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2));
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(5)
+    ));
 
     // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //     m_autonomousCommand.schedule();
-    // }
-
-    if(balance != null){
-      balance.schedule();
+    if (m_autonomousCommand != null) {
+        m_autonomousCommand.schedule();
     }
+
+    // if(balance != null){
+    //   balance.schedule();
+    // }
   }
 
   /** This function is called periodically during autonomous. */

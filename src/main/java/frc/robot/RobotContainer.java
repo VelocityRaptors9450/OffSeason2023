@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import frc.robot.commands.ArmManualCommand;
 import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExtensionCommand;
@@ -16,6 +17,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
@@ -82,7 +84,7 @@ public class RobotContainer {
     armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
     armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.23), new IntakeCommand(intake)));
     armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
-    armController.x().onTrue(new ArmSetTargetCommand(arm, 0.75));
+    armController.x().onTrue(new ArmSetTargetCommand(arm, 2.2));
     
 
     // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
@@ -105,13 +107,15 @@ public class RobotContainer {
     //Need to turn off intake 
     driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     // driveReveal.touchpad(test).onTrue(new InstantCommand(() -> driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5)));
-    if (driveReveal.getTouchpadPressed()) driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+    //if (driveReveal.getTouchpadPressed()) driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
     // armController.rightBumper().onTrue(new IntakeSetPowerCommand(intake, -1));
     // armController.leftBumper().onTrue(new IntakeSetPowerCommand(intake, -0.5));
     // armController.leftBumper().and(armController.rightBumper().onFalse(new IntakeSetPowerCommand(intake, 0)));
     armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
     armController.leftBumper().onTrue(new TimedIntakeCommand(intake, -0.3));
-
+    armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
+    armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
+    armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));
     
     //armController.leftTrigger().onTrue(intakeCommand);
     

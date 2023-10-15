@@ -72,6 +72,12 @@ public class Robot extends TimedRobot {
 
 
   private Command m_autonomousCommand;
+
+  private Command redBumpAuto;
+  private Command blueBumpAuto;
+  private Command redNoBumpAuto;
+  private Command blueNoBumpAuto;
+
   Timer time = new Timer();
   //private TalonFX motor1 = new TalonFX(1);
   
@@ -144,8 +150,10 @@ public class Robot extends TimedRobot {
     time.restart();
 
     // SequentialCommandGroup balance = new SequentialCommandGroup(
-    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 1, 0, 0)
-    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 30),
+    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> -5, () -> 0, () -> 0).withTimeout(0.5),
+    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
+    //   new WaitCommand(1),
+      
     //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
     //   );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
@@ -156,20 +164,46 @@ public class Robot extends TimedRobot {
     .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
     */
 
-    m_autonomousCommand = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.5)).andThen(new WaitCommand(1))
+    redBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+    ));
+
+    blueBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+    ));
+
+    redNoBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+    ));
+
+    blueNoBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
     .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(5)
+    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
     ));
 
-    // schedule the autonomous command (example)
+    m_autonomousCommand = redBumpAuto;
+
+    //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
     }
 
-    // if(balance != null){
+     // if(balance != null){
     //   balance.schedule();
     // }
   }

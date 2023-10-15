@@ -30,6 +30,8 @@ public class ArmSubsystem extends SubsystemBase{
     }
     private Height currentHeight = Height.GROUND;
 
+    private double armTarget = 2.57;
+
 
     //double p = 0;
 
@@ -140,6 +142,10 @@ public class ArmSubsystem extends SubsystemBase{
     //     leftMotor.setVoltage(-voltage);
     // }
 
+    public void resetArm(){
+        rightMotor.getEncoder().setPosition(59.215);
+    }
+    
     public void setRightVoltage(double voltage){
         rightMotor.setVoltage(voltage);
     }
@@ -154,8 +160,21 @@ public class ArmSubsystem extends SubsystemBase{
         return rightMotor.getEncoder().getPosition() * 2.5 * Math.PI / 180;
     }
 
+    public void downManual(){
+        armTarget -= 0.08;
+
+        wrist.setGoal(2.57 - armTarget);
+    }
+
+    public void upManual(){
+        armTarget += 0.08;
+
+        wrist.setGoal(2.57 - armTarget);
+    }
+
     public void setArmWristGoal(double target){
-        rotation.setGoal(target);
+        //rotation.setGoal(target);
+        armTarget = target;
         // if (target < 0) {
         //     wrist.setGoal(getWristAngle() - (target-0.1));
         // } else if (target > 0) {
@@ -167,11 +186,13 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void setRotationGoal(double target){
-        rotation.setGoal(target);
+        //rotation.setGoal(target);
+        armTarget = target;
     }
 
     public void setArmGoal(double target) {
-        rotation.setGoal(target);
+        //rotation.setGoal(target);
+        armTarget = target;
     }
 
     public double getGoal(){
@@ -179,7 +200,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double calculateRotationPID(){
-        return rotation.calculate(getRightPosition(), rotation.getGoal());
+        return rotation.calculate(getRightPosition(), armTarget);
     }
     public double calculateWristFF() {
         return wristFF.calculate(getWristAngle(), wrist.getSetpoint().velocity);
@@ -202,8 +223,8 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
         
-        if (Math.abs(voltage) > 5) {
-            setRightVoltage(Math.signum(voltage)*5);
+        if (Math.abs(voltage) > 4.5) {
+            setRightVoltage(Math.signum(voltage)*4.5);
         } else {
             setRightVoltage(voltage);
         }

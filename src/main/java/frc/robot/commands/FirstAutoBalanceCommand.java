@@ -57,7 +57,7 @@ public class FirstAutoBalanceCommand extends CommandBase {
 
     //swerve.drive(0, -power.getAsDouble(), 0, time);
 
-    if(Math.abs(swerve.getPitch()) > 10){
+    if(Math.abs(swerve.getPitch()) > 15){
       stop = true;
     }
 

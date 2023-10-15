@@ -25,7 +25,7 @@ public class SecondAutoBalanceCommand extends CommandBase {
   double time = 0.02;
   boolean ranOnce = false;
   private boolean stop;
-  private final double kp = 2;
+  private final double kp = 1.2;
  
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */
@@ -55,16 +55,19 @@ public class SecondAutoBalanceCommand extends CommandBase {
     }
 
 
-    double angleError = swerve.getPitch();
+    double anglePower = swerve.getPitch() * kp;
 
-    SmartDashboard.putNumber("Balance Angle Error", angleError);
-    SmartDashboard.putNumber("Balance Power", angleError * kp);
+    
     SmartDashboard.putString("Auto Balance", "Second");
 
+    anglePower = MathUtil.clamp(anglePower, -5, 5);
 
 
+    swerve.drive(0, anglePower, 0, time);
 
-    swerve.drive(0, angleError * kp, 0, time);
+    if(swerve.getPitch() < 2){
+      stop = true;
+    }
 
 
 

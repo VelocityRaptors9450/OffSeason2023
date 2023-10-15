@@ -84,7 +84,7 @@ public class RobotContainer {
     armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
     armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.23), new IntakeCommand(intake)));
     armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
-    armController.x().onTrue(new ArmSetTargetCommand(arm, 2.2));
+    armController.x().onTrue(new ArmSetTargetCommand(arm, 2));
     
 
     // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));

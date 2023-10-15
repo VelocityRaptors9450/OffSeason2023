@@ -196,7 +196,7 @@ public class Robot extends TimedRobot {
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
     ));
 
-    m_autonomousCommand = redBumpAuto;
+    m_autonomousCommand = blueNoBumpAuto;
 
     //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

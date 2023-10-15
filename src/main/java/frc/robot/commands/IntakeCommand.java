@@ -58,7 +58,7 @@ public class IntakeCommand extends CommandBase{
             if(ramp && intake.getVelocity() < 200){
                 intake.setIntakePower(0.05);
             }else{
-                intake.setIntakePower(0.4);
+                intake.setIntakePower(0.8);
                 if(intake.getVelocity() > 300 || timer.get() > 1){
                     ramp = true;
                 }

@@ -25,7 +25,7 @@ public class SecondAutoBalanceCommand extends CommandBase {
   double time = 0.02;
   boolean ranOnce = false;
   private boolean stop;
-  private final double kp = 1.2;
+  private final double kp = 1.1;
  
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */

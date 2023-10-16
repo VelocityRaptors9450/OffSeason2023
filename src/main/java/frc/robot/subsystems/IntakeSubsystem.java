@@ -38,8 +38,10 @@ public class IntakeSubsystem extends SubsystemBase{
         
 
         intake.restoreFactoryDefaults();
+        intake.setSmartCurrentLimit(20);
         //Might need this line
         intake.setIdleMode(IdleMode.kBrake);
+        intake.burnFlash();
         
     }
 

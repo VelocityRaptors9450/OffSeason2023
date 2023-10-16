@@ -16,6 +16,7 @@ import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
+import frc.robot.commands.ManualDriveCommand;
 
 import java.time.Instant;
 import java.util.List;
@@ -74,7 +75,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController/*driverController::getRightX, driverController::getLeftX, driverController::getLeftY*/));
+    driveTrain.setDefaultCommand(new ManualDriveCommand(driveTrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     

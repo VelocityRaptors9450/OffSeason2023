@@ -71,6 +71,10 @@ public class DriveTrain extends SubsystemBase {
   public void resetGyro(){
     pigeon.reset();
   }
+
+  public WPI_Pigeon2 getGyro() {
+    return pigeon;
+  }
   public void fieldRelativeSwitch(){
     fieldRelative = !fieldRelative;
   }
@@ -119,6 +123,24 @@ public class DriveTrain extends SubsystemBase {
     m_backRight.rotatePID(-Math.PI/4);
 
   }
+
+  public void strafePos() {
+    // if (Math.abs(m_frontLeft.getAbsRad())  )
+    // TODO: find shortest distance and move shortest distance
+    m_frontLeft.rotatePID(Math.PI/2);
+    m_frontRight.rotatePID(Math.PI/2);
+    m_backLeft.rotatePID(Math.PI/2);
+    m_backRight.rotatePID(Math.PI/2);
+  }
+
+  public void forwardPos() {
+    m_frontLeft.rotatePID(0);
+    m_frontRight.rotatePID(0);
+    m_backLeft.rotatePID(0);
+    m_backRight.rotatePID(0);
+  }
+
+
 
   // rotate to target degrees at specified power
   public void rotateToHeading(double target, double power, double periodSeconds) {

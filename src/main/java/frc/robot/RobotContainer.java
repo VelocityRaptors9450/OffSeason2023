@@ -8,6 +8,7 @@ package frc.robot;
 import frc.robot.commands.ArmManualCommand;
 import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveCommandSuppliers;
 import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
@@ -75,7 +76,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    driveTrain.setDefaultCommand(new ManualDriveCommand(driveTrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
+    driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
+                                                          driverController::getLeftX, driverController::getRightX, 
+                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean()));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     

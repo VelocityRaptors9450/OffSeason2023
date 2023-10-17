@@ -182,4 +182,21 @@ public class SwerveModule {
         SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
       }
 
+
+      public void setDesiredStateOnlyRot(SwerveModuleState desiredState) {
+        // Optimize the reference state to avoid spinning further than 90 degrees
+        SwerveModuleState state =
+            SwerveModuleState.optimize(desiredState, new Rotation2d(getAbsRad()));
+        // Calculate the turning motor output from the turning PID controller.
+        final double turnOutput =
+            turningPIDController.calculate(getAbsRad(), state.angle.getRadians());
+    
+        final double trnFeedforward =
+            turnFeedforward.calculate(turningPIDController.getSetpoint().velocity);
+    
+        turningMotor.setVoltage(-(turnOutput + trnFeedforward));
+        SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
+        SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
+      }
+
 }

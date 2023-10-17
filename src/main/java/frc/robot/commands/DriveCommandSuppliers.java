@@ -41,10 +41,10 @@ public class DriveCommandSuppliers extends CommandBase {
   DoubleSupplier forward, strafe, rotation;
   // other buttons etc.
   //Trigger xButton, rightBumper;
-  BooleanSupplier xButton, rightBumper;
+  BooleanSupplier xButton, rightBumper, leftStickClick, rightStickClick;
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */
-  public DriveCommandSuppliers(DriveTrain swerve, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation, BooleanSupplier xButton, BooleanSupplier rightBumper) {
+  public DriveCommandSuppliers(DriveTrain swerve, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation, BooleanSupplier xButton, BooleanSupplier rightBumper, BooleanSupplier leftStickClick, BooleanSupplier rightStickClick) {
     // Use addRequirements() here to declare subsystem dependencies.
     
     linearModifier = 0.5;
@@ -56,6 +56,8 @@ public class DriveCommandSuppliers extends CommandBase {
     this.rotation = rotation;
     this.xButton = xButton;
     this.rightBumper = rightBumper;
+    this.leftStickClick = leftStickClick;
+    this.rightStickClick = rightStickClick;
   }
 
   // Called when the command is initially scheduled.
@@ -74,46 +76,57 @@ public class DriveCommandSuppliers extends CommandBase {
     }
 
 
+
     if(xButton.getAsBoolean()){
       swerve.drive(0, 0, 0.01, time);
 
 
-    }else{
-      if (rightBumper.getAsBoolean()) {
-        linearModifier += 0.01;
-        rotationalModifier += 0.01;
-      } else {
-        linearModifier -= 0.01;
-        rotationalModifier -= 0.01;
-      }
-      linearModifier = MathUtil.clamp(linearModifier, 0.5, 1.5);
-      rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
+    } else if (leftStickClick.getAsBoolean()) {
+        // assumes maximum controller input of 1 as seen in the deadband
+        // final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * swerve.kMaxSpeed * linearModifier;
+        // swerve.strafePos(xSpeed, time);
+        // swerve.strafePos(0, time);
+    } else if (rightStickClick.getAsBoolean()) {
+        // assumes maximum controller input of 1 as seen in the deadband
+        // final var ySpeed = -ySpeedLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * swerve.kMaxSpeed * linearModifier;
+        // swerve.forwardPos(ySpeed, time);
+        // swerve.forwardPos(0, time);
+    } else {
+        if (rightBumper.getAsBoolean()) {
+          linearModifier += 0.01;
+          rotationalModifier += 0.01;
+        } else {
+          linearModifier -= 0.01;
+          rotationalModifier -= 0.01;
+        }
+        linearModifier = MathUtil.clamp(linearModifier, 0.5, 1.5);
+        rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
 
-      final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;
+        final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;
+        
+        //final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
+
+        // Get the y speed or sideways/strafe speed. We are inverting this because
+        // we want a positive value when we pull to the left. Xbox controllers
+        // return positive values when you pull to the right by default.
+        final var ySpeed = -ySpeedLimiter.calculate(MathUtil.applyDeadband(-forward.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;
+        //final double ySpeed = controller.getLeftY() * swerve.kMaxSpeed;
+
+        // Get the rate of angular rotation. We are inverting this because we want a
+        // positive value when we pull to the left (remember, CCW is positive in
+        // mathematics). Xbox controllers return positive values when you pull to
+        // the right by default.
+        final var rot = rotLimiter.calculate(MathUtil.applyDeadband(rotation.getAsDouble(), 0.02)) * swerve.kMaxAngularSpeed * rotationalModifier;
+        // final double rot = controller.getRightX() * swerve.kMaxAngularSpeed;
+        SmartDashboard.putNumber("xSpeed", xSpeed);
+        SmartDashboard.putNumber("ySpeed", ySpeed);
+
+        swerve.drive(xSpeed, ySpeed, rot, time);
+
       
-      //final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
 
-      // Get the y speed or sideways/strafe speed. We are inverting this because
-      // we want a positive value when we pull to the left. Xbox controllers
-      // return positive values when you pull to the right by default.
-      final var ySpeed = -ySpeedLimiter.calculate(MathUtil.applyDeadband(-forward.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;
-      //final double ySpeed = controller.getLeftY() * swerve.kMaxSpeed;
-
-      // Get the rate of angular rotation. We are inverting this because we want a
-      // positive value when we pull to the left (remember, CCW is positive in
-      // mathematics). Xbox controllers return positive values when you pull to
-      // the right by default.
-      final var rot = rotLimiter.calculate(MathUtil.applyDeadband(rotation.getAsDouble(), 0.02)) * swerve.kMaxAngularSpeed * rotationalModifier;
-      // final double rot = controller.getRightX() * swerve.kMaxAngularSpeed;
-      SmartDashboard.putNumber("xSpeed", xSpeed);
-      SmartDashboard.putNumber("ySpeed", ySpeed);
-
-      swerve.drive(xSpeed, ySpeed, rot, time);
-
-    
-
-    
-    t.restart();
+      
+      t.restart();
     }
   }
 

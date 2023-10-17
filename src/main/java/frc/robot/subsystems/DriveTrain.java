@@ -116,6 +116,7 @@ public class DriveTrain extends SubsystemBase {
         });
   }
 
+  // DOESN'T WORK
   public void brakeFormation(){
     m_frontLeft.rotatePID(-Math.PI/4);
     m_frontRight.rotatePID(Math.PI/4);
@@ -124,21 +125,41 @@ public class DriveTrain extends SubsystemBase {
 
   }
 
-  public void strafePos() {
-    // if (Math.abs(m_frontLeft.getAbsRad())  )
-    // TODO: find shortest distance and move shortest distance
-    m_frontLeft.rotatePID(Math.PI/2);
-    m_frontRight.rotatePID(Math.PI/2);
-    m_backLeft.rotatePID(Math.PI/2);
-    m_backRight.rotatePID(Math.PI/2);
+  public void strafePos(double xSpeed, double periodSeconds) {
+      SwerveModuleState[] swerveModuleStates =
+          m_kinematics.toSwerveModuleStates(
+              fromDiscreteSpeeds(
+                  fieldRelative
+                      ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                          xSpeed, 0, 0, pigeon.getRotation2d())
+                      : new ChassisSpeeds(xSpeed, 0, 0),
+                  periodSeconds));
+      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+      m_frontLeft.setDesiredStateOnlyRot(swerveModuleStates[0]);
+      m_frontRight.setDesiredStateOnlyRot(swerveModuleStates[1]);
+      m_backLeft.setDesiredStateOnlyRot(swerveModuleStates[2]);
+      m_backRight.setDesiredStateOnlyRot(swerveModuleStates[3]);
+
+
   }
 
-  public void forwardPos() {
-    m_frontLeft.rotatePID(0);
-    m_frontRight.rotatePID(0);
-    m_backLeft.rotatePID(0);
-    m_backRight.rotatePID(0);
-  }
+  public void forwardPos(double ySpeed, double periodSeconds) {
+    SwerveModuleState[] swerveModuleStates =
+        m_kinematics.toSwerveModuleStates(
+            fromDiscreteSpeeds(
+                fieldRelative
+                    ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                        0, ySpeed, 0, pigeon.getRotation2d())
+                    : new ChassisSpeeds(0, ySpeed, 0),
+                periodSeconds));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    m_frontLeft.setDesiredStateOnlyRot(swerveModuleStates[0]);
+    m_frontRight.setDesiredStateOnlyRot(swerveModuleStates[1]);
+    m_backLeft.setDesiredStateOnlyRot(swerveModuleStates[2]);
+    m_backRight.setDesiredStateOnlyRot(swerveModuleStates[3]);
+
+
+}
 
 
 

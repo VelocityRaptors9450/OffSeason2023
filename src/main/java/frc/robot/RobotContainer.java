@@ -78,7 +78,7 @@ public class RobotContainer {
     
     driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
                                                           driverController::getLeftX, driverController::getRightX, 
-                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean()));
+                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     

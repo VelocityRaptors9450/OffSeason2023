@@ -117,11 +117,11 @@ public class DriveTrain extends SubsystemBase {
   }
 
   // DOESN'T WORK
-  public void brakeFormation(){
-    m_frontLeft.rotatePID(-Math.PI/4);
-    m_frontRight.rotatePID(Math.PI/4);
-    m_backLeft.rotatePID(Math.PI/4);
-    m_backRight.rotatePID(-Math.PI/4);
+  public void rotate90(){
+    m_frontLeft.rotatePID(Math.PI/2);
+    m_frontRight.rotatePID(Math.PI/2);
+    m_backLeft.rotatePID(Math.PI/2);
+    m_backRight.rotatePID(Math.PI/2);
 
   }
 
@@ -134,7 +134,7 @@ public class DriveTrain extends SubsystemBase {
                           xSpeed, 0, 0, pigeon.getRotation2d())
                       : new ChassisSpeeds(xSpeed, 0, 0),
                   periodSeconds));
-      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed + 10);
       m_frontLeft.setDesiredStateOnlyRot(swerveModuleStates[0]);
       m_frontRight.setDesiredStateOnlyRot(swerveModuleStates[1]);
       m_backLeft.setDesiredStateOnlyRot(swerveModuleStates[2]);

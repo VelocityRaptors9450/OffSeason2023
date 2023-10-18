@@ -35,9 +35,13 @@ public class SwerveModule {
     private final ProfiledPIDController turningPIDController =
       new ProfiledPIDController(Constants.turnKp,0,Constants.turnKd,new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
+    private final ProfiledPIDController clickTurningPIDController =
+    new ProfiledPIDController(Constants.turnKp+2,0,Constants.turnKd,new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity+80, kModuleMaxAngularAcceleration+3));
+
     // Gains are for example purposes only - must be determined for your own robot!
     private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(Constants.driveKs, Constants.driveKv);
     private final SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(Constants.turnKs, Constants.turnKv);
+    private final SimpleMotorFeedforward clickTurnFeedforward = new SimpleMotorFeedforward(Constants.turnKs+0.3, Constants.turnKv);
 
     int id;
     // In case when installed, the forward on the encoder isnt the actual forward
@@ -189,14 +193,15 @@ public class SwerveModule {
             SwerveModuleState.optimize(desiredState, new Rotation2d(getAbsRad()));
         // Calculate the turning motor output from the turning PID controller.
         final double turnOutput =
-            turningPIDController.calculate(getAbsRad(), state.angle.getRadians());
+            clickTurningPIDController.calculate(getAbsRad(), state.angle.getRadians());
     
         final double trnFeedforward =
-            turnFeedforward.calculate(turningPIDController.getSetpoint().velocity);
+            clickTurnFeedforward.calculate(clickTurningPIDController.getSetpoint().velocity);
     
-        turningMotor.setVoltage(-(turnOutput + trnFeedforward));
+        turningMotor.setVoltage(0);
+        
         SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
-        SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
+        SmartDashboard.putNumber("TurnVoltage",turningMotor.getBusVoltage());
       }
 
 }

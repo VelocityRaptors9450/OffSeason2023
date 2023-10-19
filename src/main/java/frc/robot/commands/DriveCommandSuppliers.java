@@ -32,6 +32,7 @@ public class DriveCommandSuppliers extends CommandBase {
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(4);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(4);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4);
+  private final SlewRateLimiter clickRotLimiter = new SlewRateLimiter(2);
   
  
   public Timer t = new Timer();
@@ -83,14 +84,14 @@ public class DriveCommandSuppliers extends CommandBase {
 
     } else if (leftStickClick.getAsBoolean()) {
         // assumes maximum controller input of 1 as seen in the deadband
-        // final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * swerve.kMaxSpeed * linearModifier;
-        // swerve.strafePos(xSpeed, time);
-        // swerve.strafePos(0, time);
+        final var xSpeed = clickRotLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * (swerve.kMaxSpeed) * linearModifier;
+        swerve.strafePos(xSpeed, time);
+        swerve.drive(0, 0, 0, time);
     } else if (rightStickClick.getAsBoolean()) {
         // assumes maximum controller input of 1 as seen in the deadband
-        // final var ySpeed = -ySpeedLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * swerve.kMaxSpeed * linearModifier;
-        // swerve.forwardPos(ySpeed, time);
-        // swerve.forwardPos(0, time);
+        final var ySpeed = -clickRotLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * (swerve.kMaxSpeed) * linearModifier;
+        swerve.forwardPos(ySpeed, time);
+        swerve.drive(0, 0, 0, time);
     } else {
         if (rightBumper.getAsBoolean()) {
           linearModifier += 0.01;
@@ -105,7 +106,6 @@ public class DriveCommandSuppliers extends CommandBase {
         final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;
         
         //final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
-
         // Get the y speed or sideways/strafe speed. We are inverting this because
         // we want a positive value when we pull to the left. Xbox controllers
         // return positive values when you pull to the right by default.

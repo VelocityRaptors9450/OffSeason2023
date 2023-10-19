@@ -71,6 +71,9 @@ public class DriveTrain extends SubsystemBase {
   public void resetGyro(){
     pigeon.reset();
   }
+  public void setGyroHeading(double heading) {
+    pigeon.setYaw(heading);
+  }
 
   public WPI_Pigeon2 getGyro() {
     return pigeon;
@@ -274,8 +277,8 @@ public class DriveTrain extends SubsystemBase {
 
       updateOdometry();
       Pose2d m_pose = m_odometry.getPoseMeters();
-      // SmartDashboard.putNumber("Pose x:", m_pose.getX());
-      // SmartDashboard.putNumber("Pose y:", m_pose.getY());
+      SmartDashboard.putNumber("Pose x:", m_pose.getX());
+      SmartDashboard.putNumber("Pose y:", m_pose.getY());
       // SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());
 
 

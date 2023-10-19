@@ -105,7 +105,6 @@ public class DriveCommandSuppliers extends CommandBase {
         final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;
         
         //final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
-
         // Get the y speed or sideways/strafe speed. We are inverting this because
         // we want a positive value when we pull to the left. Xbox controllers
         // return positive values when you pull to the right by default.

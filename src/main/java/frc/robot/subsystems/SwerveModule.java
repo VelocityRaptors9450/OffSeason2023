@@ -158,7 +158,7 @@ public class SwerveModule {
 
 
     }
-
+/* */
     public void setDesiredState(SwerveModuleState desiredState) {
         // Optimize the reference state to avoid spinning further than 90 degrees
         SwerveModuleState state =
@@ -189,19 +189,7 @@ public class SwerveModule {
 
       public void setDesiredStateOnlyRot(SwerveModuleState desiredState) {
         // Optimize the reference state to avoid spinning further than 90 degrees
-        SwerveModuleState state =
-            SwerveModuleState.optimize(desiredState, new Rotation2d(getAbsRad()));
-        // Calculate the turning motor output from the turning PID controller.
-        final double turnOutput =
-            clickTurningPIDController.calculate(getAbsRad(), state.angle.getRadians());
-    
-        final double trnFeedforward =
-            clickTurnFeedforward.calculate(clickTurningPIDController.getSetpoint().velocity);
-    
-        turningMotor.setVoltage(0);
         
-        SmartDashboard.putNumber("desiredA" + id, state.angle.getRadians());
-        SmartDashboard.putNumber("TurnVoltage",turningMotor.getBusVoltage());
       }
 
 }

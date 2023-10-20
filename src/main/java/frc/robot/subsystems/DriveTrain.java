@@ -134,7 +134,7 @@ public class DriveTrain extends SubsystemBase {
                           xSpeed, 0, 0, pigeon.getRotation2d())
                       : new ChassisSpeeds(xSpeed, 0, 0),
                   periodSeconds));
-      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed + 10);
+      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
       m_frontLeft.setDesiredStateOnlyRot(swerveModuleStates[0]);
       m_frontRight.setDesiredStateOnlyRot(swerveModuleStates[1]);
       m_backLeft.setDesiredStateOnlyRot(swerveModuleStates[2]);

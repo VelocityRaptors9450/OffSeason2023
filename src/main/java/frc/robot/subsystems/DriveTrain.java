@@ -21,11 +21,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
+
+  private final Field2d m_field = new Field2d();
 
   public static final double kMaxSpeed = Constants.Speeds.MaxSpeed; // 3 meters per second
   public static final double kMaxAngularSpeed = Constants.Speeds.MaxAngularSpeed; // 1/2 rotation per second (Math.PI)
@@ -66,10 +69,14 @@ public class DriveTrain extends SubsystemBase {
           });
 
   public DriveTrain() {
+    SmartDashboard.putData("Field", m_field);
     pigeon.reset();
   }
   public void resetGyro(){
     pigeon.reset();
+  }
+  public void setGyroHeading(double heading) {
+    pigeon.setYaw(heading);
   }
 
   public WPI_Pigeon2 getGyro() {
@@ -274,8 +281,10 @@ public class DriveTrain extends SubsystemBase {
 
       updateOdometry();
       Pose2d m_pose = m_odometry.getPoseMeters();
-      // SmartDashboard.putNumber("Pose x:", m_pose.getX());
-      // SmartDashboard.putNumber("Pose y:", m_pose.getY());
+      m_field.setRobotPose(m_pose);
+      SmartDashboard.putNumber("Pose x", m_pose.getX());
+      SmartDashboard.putNumber("Pose y", m_pose.getY());
+
       // SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());
 
 

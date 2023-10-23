@@ -181,7 +181,15 @@ public class ArmSubsystem extends SubsystemBase{
         //     wrist.setGoal(getWristAngle() - (target+0.1));
         // }
         // wrist.setGoal(getWristAngle() - (target - getArmAngle()));
-        wrist.setGoal(2.57 - target);
+        
+        //wrist.setGoal(2.57 - target);
+        
+        /* THIS BELOW NEED TESTING FOR NEW ARM, not SURE IF IT WILL WORK ORIgiONAL CODE IS THE ONE LINE ABOVE */
+        if(target > 2.57){
+            wrist.setGoal(target - 2.57);
+        }else if(target < 2.57 && target > 0){
+            wrist.setGoal(2.57 - target);
+        }
  
     }
 

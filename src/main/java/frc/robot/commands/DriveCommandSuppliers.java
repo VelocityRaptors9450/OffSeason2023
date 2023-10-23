@@ -10,15 +10,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
 
 public class DriveCommandSuppliers extends CommandBase {
@@ -85,12 +79,14 @@ public class DriveCommandSuppliers extends CommandBase {
     } else if (leftStickClick.getAsBoolean()) {
         // assumes maximum controller input of 1 as seen in the deadband
         final var xSpeed = clickRotLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * (swerve.kMaxSpeed) * linearModifier;
-        swerve.strafePos(xSpeed, time);
+        //swerve.strafePos(xSpeed, time);
+        swerve.rotate90();
         swerve.drive(0, 0, 0, time);
     } else if (rightStickClick.getAsBoolean()) {
         // assumes maximum controller input of 1 as seen in the deadband
+        swerve.rotate90();
         final var ySpeed = -clickRotLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * (swerve.kMaxSpeed) * linearModifier;
-        swerve.forwardPos(ySpeed, time);
+        //swerve.forwardPos(ySpeed, time);
         swerve.drive(0, 0, 0, time);
     } else {
         if (rightBumper.getAsBoolean()) {
@@ -121,7 +117,7 @@ public class DriveCommandSuppliers extends CommandBase {
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
 
-        swerve.drive(xSpeed, ySpeed, rot, time);
+        //swerve.drive(xSpeed, ySpeed, rot, time);
 
       
 

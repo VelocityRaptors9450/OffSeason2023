@@ -129,9 +129,9 @@ public class DriveTrain extends SubsystemBase {
     m_frontRight.rotatePID(Math.PI/2);
     m_backLeft.rotatePID(Math.PI/2);
     m_backRight.rotatePID(Math.PI/2);
-
+    SmartDashboard.putNumber("TurnPosition",m_frontLeft.getAbsRad() );
   }
-
+/*
   public void strafePos(double xSpeed, double periodSeconds) {
       SwerveModuleState[] swerveModuleStates =
           m_kinematics.toSwerveModuleStates(
@@ -167,6 +167,7 @@ public class DriveTrain extends SubsystemBase {
 
 
 }
+*/
 
 
 

@@ -76,27 +76,22 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
-                                                          driverController::getLeftX, driverController::getRightX, 
-                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
+    //driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
+                                                          //driverController::getLeftX, driverController::getRightX, 
+                                                          //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
     
 
     
-    armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
-    armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.23), new IntakeCommand(intake)));
-    armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
-    armController.x().onTrue(new ArmSetTargetCommand(arm, 2));
+    // armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
+    // armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.23), new IntakeCommand(intake)));
+    // armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
+    // armController.x().onTrue(new ArmSetTargetCommand(arm, 2));
     
 
-    // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
-    // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
-    // armController.y().onTrue(new InstantCommand(() -> ext.setPower(0.2)));
-    // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
-
-
+    
     //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.5)));
 
     
@@ -109,19 +104,14 @@ public class RobotContainer {
     
     
     //Need to turn off intake 
-    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
-    // driveReveal.touchpad(test).onTrue(new InstantCommand(() -> driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5)));
-    //if (driveReveal.getTouchpadPressed()) driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
-    // armController.rightBumper().onTrue(new IntakeSetPowerCommand(intake, -1));
-    // armController.leftBumper().onTrue(new IntakeSetPowerCommand(intake, -0.5));
-    // armController.leftBumper().and(armController.rightBumper().onFalse(new IntakeSetPowerCommand(intake, 0)));
-    armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
-    armController.leftBumper().onTrue(new TimedIntakeCommand(intake, -0.3));
-    armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
-    armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
-    armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));
+    // driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     
-    //armController.leftTrigger().onTrue(intakeCommand);
+    // armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
+    // armController.leftBumper().onTrue(new TimedIntakeCommand(intake, -0.3));
+    // armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
+    // armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
+    // armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));
+    
     
     
 

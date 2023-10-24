@@ -13,6 +13,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -58,6 +60,8 @@ public class ArmSubsystem extends SubsystemBase{
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = /*172.8*/ 120, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
     private boolean intialization = true;
 
+    DutyCycleEncoder absEncoder = new DutyCycleEncoder(0);
+
     public ArmSubsystem(){
         // leftMotor.restoreFactoryDefaults();
        
@@ -94,6 +98,10 @@ public class ArmSubsystem extends SubsystemBase{
        
 
 
+    }
+
+    public double getAbsEnc(){
+        return absEncoder.get();
     }
 
     
@@ -275,15 +283,15 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
         
         if(runStuff){
-            updateRotationOutput();
-            updateWristOutput();
+            //updateRotationOutput();
+            //updateWristOutput();
 
         }else{
             setVoltage(0);
            
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
-        SmartDashboard.putNumber("Right Arm Position", getRightPosition());
+        SmartDashboard.putNumber("Right Arm Position", getAbsEnc());
         SmartDashboard.putNumber("Target?", getGoal());;
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         

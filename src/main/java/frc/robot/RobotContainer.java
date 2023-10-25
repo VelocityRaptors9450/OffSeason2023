@@ -7,21 +7,25 @@ package frc.robot;
 
 import frc.robot.commands.ArmManualCommand;
 import frc.robot.commands.ArmSetTargetCommand;
+import frc.robot.commands.ArmWristSetTargetCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommandSuppliers;
 import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.commands.NewRotationCommand;
+import frc.robot.commands.SetArmHeightPreset;
 import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
+import frc.robot.subsystems.ArmSubsystem.Height;
 import frc.robot.commands.ManualDriveCommand;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -54,6 +58,7 @@ import edu.wpi.first.wpilibj.GenericHID;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public DriveTrain driveTrain = new DriveTrain();
@@ -70,8 +75,8 @@ public class RobotContainer {
   private IntakeCommand intakeCommand = new IntakeCommand(intake);
   InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
 
-
-  
+  double wristScorePos = 0.46;
+  double armScorePos = 0.35;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -82,6 +87,17 @@ public class RobotContainer {
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
     
+    // right trigger = intake pos
+    // left trigger = outake
+    // left bumper = scoring pos
+
+    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.03, 0.72), new IntakeCommand(intake)));
+    armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
+
+    armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
+    armController.x().onTrue(new SetArmHeightPreset(arm, Height.MID));
+    armController.y().onTrue(new SetArmHeightPreset(arm, Height.HIGH));
+    armController.b().onTrue(new SetArmHeightPreset(arm, Height.GROUND));
 
     //armController.y().onTrue(new ArmSetTargetCommand(arm, 0.35));
     //armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.03)/*, new IntakeCommand(intake)*/));
@@ -106,7 +122,7 @@ public class RobotContainer {
     // driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     
     // armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
-    // armController.leftBumper().onTrue(new TimedIntakeCommand(intake, -0.3));
+    armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
     // armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
     // armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
     // armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));

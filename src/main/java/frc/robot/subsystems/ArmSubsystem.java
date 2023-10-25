@@ -2,12 +2,12 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
-import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -37,7 +37,6 @@ public class ArmSubsystem extends SubsystemBase{
 
     private double armTarget = 0.35;
 
-
     //double p = 0;
 
     //public CANSparkMax intake = new CANSparkMax(Constants.intakeId, MotorType.kBrushless);
@@ -48,13 +47,14 @@ public class ArmSubsystem extends SubsystemBase{
     private boolean runStuff = true;
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
+    SparkMaxAbsoluteEncoder wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
     
     
     private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(3.3, 2));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.9, 0, 0, new Constraints(1.8, 1.5));
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.3, 0, 0, new Constraints(1.8, 1.5));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
@@ -110,7 +110,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double getWristPosition() {
-        return wristMotor.getAlternateEncoder(4096).getPosition();
+        return wristEncoder.getPosition();
     }
 
     
@@ -130,10 +130,8 @@ public class ArmSubsystem extends SubsystemBase{
 
         //initialSetWristEncoder();
            
-        
-        
-        //setRotationGoal(getRightPosition());
         setArmGoal(0.35);
+        setWristGoal(0.46);
 
     }
 
@@ -176,9 +174,10 @@ public class ArmSubsystem extends SubsystemBase{
         //wrist.setGoal(2.57 - armTarget);
     }
 
-    public void setArmWristGoal(double target){
+    public void setArmWristGoal(double armTarget, double wristTarget){
         //rotation.setGoal(target);
-        armTarget = target;
+        setArmGoal(armTarget);
+        setWristGoal(wristTarget);
         // if (target < 0) {
         //     wrist.setGoal(getWristAngle() - (target-0.1));
         // } else if (target > 0) {
@@ -210,10 +209,10 @@ public class ArmSubsystem extends SubsystemBase{
         return rotation.calculate(getPosition(), armTarget);
     }
     public double calculateWristFF() {
-        return wristFF.calculate(getWristAngle(), wrist.getSetpoint().velocity);
+        return wristFF.calculate(getWristPosition(), wrist.getSetpoint().velocity);
     }
     public double calculateWristPID() {
-        return wrist.calculate(getWristAngle(), wrist.getGoal());
+        return wrist.calculate(getWristPosition(), wrist.getGoal());
     }
     public void setWristGoal(double target) {
         wrist.setGoal(target);
@@ -275,7 +274,7 @@ public class ArmSubsystem extends SubsystemBase{
         
         if(runStuff){
             updateRotationOutput();
-            //updateWristOutput();
+            updateWristOutput();
 
         }else{
             setArmVoltage(0);
@@ -325,46 +324,18 @@ public class ArmSubsystem extends SubsystemBase{
     // }
 
     public void wristSetPower(double power){
-        //wristMotor.set(power);
-    }
-
-    public double getWristTarget(){
-        return ((convertToRads(90) + getArmAngle()) * ticsPerWristRevolution / (2*Math.PI));
+        wristMotor.set(power);
     }
 
     public double wristAngletoPosTarget(double angleRads) {
         return angleRads * ticsPerWristRevolution / (2*Math.PI);
     }
 
-
-    public double getWristAngle(){
-        return getWristPosition() * 3 * Math.PI / 180; // returns radians
-    }
-
-    public void setWristEncoderTics(double tics){
-    }
-
-    public void initialSetWristEncoder(){
-        setWristEncoderTics((-90/360) * ticsPerWristRevolution); // intial position -90 degrees
-    }
-
-    
-    public double getArmAngle(){
-        return (2*Math.PI * getPosition()) / 180;
-    }
-
-    public double getArmAngleDifference(){
-        return (getArmAngle() - (convertToRads(37.4)));
-    }
     public double convertToRads(double angle) {
         return angle/360*2*Math.PI;
     }
 
     // --------------------------------------------------------------
-
-    public void initialSetEncoder(){
-        //setEncoderTics(groundTics);
-    }
 
     public void changeHeight(Height height){
         currentHeight = height;
@@ -372,6 +343,22 @@ public class ArmSubsystem extends SubsystemBase{
 
     public Height getHeight(){
         return currentHeight;
+    }
+
+    public void goToHeight() {
+        if(currentHeight == Height.HIGH){
+            setArmGoal(0.5);
+            setWristGoal(0.645);
+        }else if(currentHeight == Height.MID){
+            setArmGoal(0.5);
+            setWristGoal(0.756);
+        }else if(currentHeight == Height.LOW){
+            setArmGoal(0.5);
+            setWristGoal(0.935);
+        }else{
+            setArmGoal(0.35);
+            setWristGoal(0.46);
+        }
     }
 
     public double convertHeightToTics(){

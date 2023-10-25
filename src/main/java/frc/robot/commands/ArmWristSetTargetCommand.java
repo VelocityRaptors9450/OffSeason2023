@@ -1,30 +1,31 @@
 package frc.robot.commands;
 
+import java.util.concurrent.SubmissionPublisher;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class ArmSetTargetCommand extends CommandBase{
+public class ArmWristSetTargetCommand extends CommandBase{
     private final ArmSubsystem arm;
-    private double target;
-    
+    private double armTarget;
+    private double wristTarget;
     
     
 
-    public ArmSetTargetCommand(ArmSubsystem arm, double target){
+    public ArmWristSetTargetCommand(ArmSubsystem arm, double armTarget, double wristTarget){
         this.arm = arm;
         addRequirements(arm);
-        this.target = target;
+        this.armTarget = armTarget;
+        this.wristTarget = wristTarget;
     }
-
 
 
     @Override
     public void initialize(){
-        arm.setArmGoal(target);
-        
-        
-       
+        arm.setArmGoal(armTarget);
+        arm.setWristGoal(wristTarget);
         
     
     }

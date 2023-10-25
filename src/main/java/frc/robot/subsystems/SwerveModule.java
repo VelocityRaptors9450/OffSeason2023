@@ -95,7 +95,7 @@ public class SwerveModule {
         // Limit the PID Controller's input range between -pi and pi and set the input
         // to be continuous.
         turningPIDController.enableContinuousInput(0, 2 * Math.PI);
-        driveMotor.setIdleMode(IdleMode.kBrake);
+        driveMotor.setIdleMode(IdleMode.kCoast);
         turningMotor.setIdleMode(IdleMode.kBrake);
         driveEncoder.setPosition(0);
     }

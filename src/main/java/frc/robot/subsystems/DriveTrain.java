@@ -40,13 +40,13 @@ public class DriveTrain extends SubsystemBase {
   private final Translation2d m_backLeftLocation = new Translation2d(-Constants.baseWidth / 2, -Constants.baseLength / 2);
   private final Translation2d m_backRightLocation = new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, false, false, Constants.flAbsoluteId, Constants.flAbsoluteEncoderOffset, false);
+  private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, true, false, Constants.flAbsoluteId, Constants.flAbsoluteEncoderOffset, false);
   // private final SwerveModule m_frontRight = fieldRelative ? new SwerveModule(Constants.frDriveId, Constants.frTurnId, true, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false) : new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
   private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, true, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
 
   
-  private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, false, false, Constants.blAbsoluteId, Constants.blAbsoluteEncoderOffset, false);
-  private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, false, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
+  private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, true, false, Constants.blAbsoluteId, Constants.blAbsoluteEncoderOffset, false);
+  private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, true, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
 
   private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(Constants.gyroId, "rio");
   private PIDController rotPID = new PIDController(0.05, 0, 0.02);
@@ -125,11 +125,16 @@ public class DriveTrain extends SubsystemBase {
 
   // DOESN'T WORK
   public void rotate90(){
+
+    //drive(0.1, 0, 0, 0.2);
+
+    /*
     m_frontLeft.rotatePID(Math.PI/2);
     m_frontRight.rotatePID(Math.PI/2);
     m_backLeft.rotatePID(Math.PI/2);
     m_backRight.rotatePID(Math.PI/2);
     SmartDashboard.putNumber("TurnPosition",m_frontLeft.getAbsRad() );
+    */
   }
 /*
   public void strafePos(double xSpeed, double periodSeconds) {

@@ -126,4 +126,8 @@ public final class Constants {
 
   //Width:  19.5in 0.4953m
   //Length: 25.5in 0.6477m
+
+  // intake pos: 0.03
+  // store pos: 0.35
+  // score pos: 0.5
 }

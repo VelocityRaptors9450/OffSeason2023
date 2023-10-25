@@ -2,10 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
-import com.revrobotics.AlternateEncoderType;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -26,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class ArmSubsystem extends SubsystemBase{
+public class ArmSubsystemCopy extends SubsystemBase{
     public enum Height{
         LOW,
         MID,
@@ -35,7 +33,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
     private Height currentHeight = Height.GROUND;
 
-    private double armTarget = 0.35;
+    private double armTarget = 2.57;
 
 
     //double p = 0;
@@ -48,9 +46,8 @@ public class ArmSubsystem extends SubsystemBase{
     private boolean runStuff = true;
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
-    
-    
-    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(3.3, 2));
+
+    private final ProfiledPIDController rotation = new ProfiledPIDController(1.58, 0, 0, new Constraints(3.3, 2));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
@@ -66,8 +63,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     DutyCycleEncoder absEncoder = new DutyCycleEncoder(0);
 
-
-    public ArmSubsystem(){
+    public ArmSubsystemCopy(){
         // leftMotor.restoreFactoryDefaults();
        
 
@@ -105,12 +101,8 @@ public class ArmSubsystem extends SubsystemBase{
 
     }
 
-    public double getPosition(){
+    public double getAbsEnc(){
         return absEncoder.get();
-    }
-
-    public double getWristPosition() {
-        return wristMotor.getAlternateEncoder(4096).getPosition();
     }
 
     
@@ -122,18 +114,19 @@ public class ArmSubsystem extends SubsystemBase{
         rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
 
-        //wristMotor.getEncoder().setPosition(0);
+        rightMotor.getEncoder().setPosition(59.215);
+        wristMotor.getEncoder().setPosition(0);
 
-        //wrist.reset(getWristAngle());
-        rotation.reset(getPosition());
-        //setWristGoal(0);
+        wrist.reset(getWristAngle());
+        rotation.reset(getRightPosition());
+        setWristGoal(0);
 
-        //initialSetWristEncoder();
+        initialSetWristEncoder();
            
         
         
         //setRotationGoal(getRightPosition());
-        setArmGoal(0.35);
+        setRotationGoal(2.57);
 
     }
 
@@ -158,22 +151,34 @@ public class ArmSubsystem extends SubsystemBase{
     //     leftMotor.setVoltage(-voltage);
     // }
 
-    public void setArmVoltage(double voltage){
+    public void resetArm(){
+        rightMotor.getEncoder().setPosition(59.215);
+    }
+    
+    public void setRightVoltage(double voltage){
+        rightMotor.setVoltage(voltage);
+    }
+
+    public void setVoltage(double voltage){
         // leftMotor.setVoltage(-voltage);
         rightMotor.setVoltage(voltage);
 
     }
 
-    public void downManual(){
-        armTarget -= 0.01;
+    private double getRightPosition(){
+        return rightMotor.getEncoder().getPosition() * 2.5 * Math.PI / 180;
+    }
 
-        //wrist.setGoal(2.57 - armTarget);
+    public void downManual(){
+        armTarget -= 0.08;
+
+        wrist.setGoal(2.57 - armTarget);
     }
 
     public void upManual(){
         armTarget += 0.08;
 
-        //wrist.setGoal(2.57 - armTarget);
+        wrist.setGoal(2.57 - armTarget);
     }
 
     public void setArmWristGoal(double target){
@@ -189,12 +194,17 @@ public class ArmSubsystem extends SubsystemBase{
         //wrist.setGoal(2.57 - target);
         
         /* THIS BELOW NEED TESTING FOR NEW ARM, not SURE IF IT WILL WORK ORIgiONAL CODE IS THE ONE LINE ABOVE */
-        //if(target > 2.57){
-        //    wrist.setGoal(target - 2.57);
-        //}else if(target < 2.57 && target > 0){
-        //    wrist.setGoal(2.57 - target);
-        //}
+        if(target > 2.57){
+            wrist.setGoal(target - 2.57);
+        }else if(target < 2.57 && target > 0){
+            wrist.setGoal(2.57 - target);
+        }
  
+    }
+
+    public void setRotationGoal(double target){
+        //rotation.setGoal(target);
+        armTarget = target;
     }
 
     public void setArmGoal(double target) {
@@ -207,7 +217,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double calculateRotationPID(){
-        return rotation.calculate(getPosition(), armTarget);
+        return rotation.calculate(getRightPosition(), armTarget);
     }
     public double calculateWristFF() {
         return wristFF.calculate(getWristAngle(), wrist.getSetpoint().velocity);
@@ -231,9 +241,9 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Rotation Voltage", voltage);
         
         if (Math.abs(voltage) > 4.5) {
-            setArmVoltage(Math.signum(voltage)*4.5);
+            setRightVoltage(Math.signum(voltage)*4.5);
         } else {
-            setArmVoltage(voltage);
+            setRightVoltage(voltage);
         }
         
     }
@@ -260,7 +270,7 @@ public class ArmSubsystem extends SubsystemBase{
     
 
     public double calculateRotationFF(){
-        return rotationFF.calculate(/*getPosition()*/getPosition(), rotation.getSetpoint().velocity);
+        return rotationFF.calculate(/*getPosition()*/getRightPosition(), rotation.getSetpoint().velocity);
 
         
     }
@@ -274,19 +284,20 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
         
         if(runStuff){
-            updateRotationOutput();
+            //updateRotationOutput();
             //updateWristOutput();
 
         }else{
-            setArmVoltage(0);
+            setVoltage(0);
            
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
-        SmartDashboard.putNumber("Right Arm Position", getPosition());
+        SmartDashboard.putNumber("Abs Right Arm Position", getAbsEnc());
+        SmartDashboard.putNumber("Right Arm Position", getRightPosition());
         SmartDashboard.putNumber("Target?", getGoal());;
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
-        SmartDashboard.putNumber("Wrist Position", getWristPosition());
+        SmartDashboard.putNumber("Wrist Position", getWristAngle());
         
 
         
@@ -324,8 +335,17 @@ public class ArmSubsystem extends SubsystemBase{
     //     return leftMotor.getEncoder().getPosition() ;
     // }
 
+    public double getRightRotPos() {
+        return rightMotor.getEncoder().getPosition();
+    }
+
+    public void runRotMotor(double voltage) {
+        // leftMotor.setVoltage(voltage);
+        rightMotor.setVoltage(-voltage);
+    }
+
     public void wristSetPower(double power){
-        //wristMotor.set(power);
+        wristMotor.set(power);
     }
 
     public double getWristTarget(){
@@ -338,10 +358,11 @@ public class ArmSubsystem extends SubsystemBase{
 
 
     public double getWristAngle(){
-        return getWristPosition() * 3 * Math.PI / 180; // returns radians
+        return wristMotor.getEncoder().getPosition() * 3 * Math.PI / 180; // returns radians
     }
 
     public void setWristEncoderTics(double tics){
+        wristMotor.getEncoder().setPosition(tics);
     }
 
     public void initialSetWristEncoder(){
@@ -350,7 +371,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     
     public double getArmAngle(){
-        return (2*Math.PI * getPosition()) / 180;
+        return (2*Math.PI * getEncoderTics()) / 180;
     }
 
     public double getArmAngleDifference(){
@@ -360,7 +381,16 @@ public class ArmSubsystem extends SubsystemBase{
         return angle/360*2*Math.PI;
     }
 
+    public double getEncoderTics(){
+    //   return (leftMotor.getEncoder().getPosition() + rightMotor.getEncoder().getPosition()) / 2;
+    return rightMotor.getEncoder().getPosition();
+    }
+
     // --------------------------------------------------------------
+    public void setEncoderTics(double tics){
+        rightMotor.getEncoder().setPosition(tics);
+        // leftMotor.getEncoder().setPosition(tics);
+    }
 
     public void initialSetEncoder(){
         //setEncoderTics(groundTics);

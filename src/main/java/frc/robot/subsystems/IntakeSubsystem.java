@@ -125,6 +125,7 @@ public class IntakeSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Velocity of Intake?", getVelocity());
         SmartDashboard.putNumber("Motor Temp", getTemp());
         SmartDashboard.putNumber("Intake Motor Power", intake.get());
+        SmartDashboard.putNumber("Intake amp draw: ", intake.getOutputCurrent());
     }
 
 

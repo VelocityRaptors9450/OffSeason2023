@@ -1,32 +1,28 @@
 package frc.robot.commands;
 
+import java.util.concurrent.SubmissionPublisher;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class ArmSetTargetCommand extends CommandBase{
+public class SetArmHeightPreset extends CommandBase{
     private final ArmSubsystem arm;
-    private double target;
-    
+    ArmSubsystem.Height height;
     
     
 
-    public ArmSetTargetCommand(ArmSubsystem arm, double target){
+    public SetArmHeightPreset(ArmSubsystem arm, ArmSubsystem.Height height){
         this.arm = arm;
         addRequirements(arm);
-        this.target = target;
+        this.height = height;
     }
-
 
 
     @Override
     public void initialize(){
-        arm.setArmGoal(target);
-        
-        
-       
-        
-    
+        arm.changeHeight(height);
     }
 
     @Override

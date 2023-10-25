@@ -64,6 +64,7 @@ public class DriveCommandSuppliers extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     if (ranOnce) {
       time = t.get();
     } else {
@@ -117,7 +118,7 @@ public class DriveCommandSuppliers extends CommandBase {
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
 
-        //swerve.drive(xSpeed, ySpeed, rot, time);
+        swerve.drive(xSpeed, ySpeed, rot, time);
 
       
 

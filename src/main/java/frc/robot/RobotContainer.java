@@ -75,19 +75,18 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
-    //driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
-                                                          //driverController::getLeftX, driverController::getRightX, 
-                                                          //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
+    driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
+                                                          driverController::getLeftX, driverController::getRightX, 
+                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
     
 
-    
-    armController.y().onTrue(new ArmSetTargetCommand(arm, 0.35));
-    armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.03)/*, new IntakeCommand(intake)*/));
-    armController.b().onTrue(new ArmSetTargetCommand(arm, 0.5));
+    //armController.y().onTrue(new ArmSetTargetCommand(arm, 0.35));
+    //armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.03)/*, new IntakeCommand(intake)*/));
+    //armController.b().onTrue(new ArmSetTargetCommand(arm, 0.5));
+
     //armController.x().onTrue(new ArmSetTargetCommand(arm, 2));
     
 

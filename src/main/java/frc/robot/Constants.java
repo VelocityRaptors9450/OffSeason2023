@@ -82,6 +82,12 @@ public final class Constants {
   public static final double blAbsoluteEncoderOffset = 2.932965338230133;
   public static final double brAbsoluteEncoderOffset = 3.847216039896011+Math.PI/2;//3.850283995270729;
 
+  public static final double flAbsoluteEncoderOffset2 = 5.36431997269392   + Math.PI/2;//4.956281907856464;
+  public static final double frAbsoluteEncoderOffset2 = 5.815309412777424 + Math.PI/2; //4.262923993170261;
+  public static final double blAbsoluteEncoderOffset2 = 2.656849354505539 + Math.PI/2;
+  public static final double brAbsoluteEncoderOffset2 = 1.958889506757259 + Math.PI/2;//3.850283995270729;
+
+
   // PID
   public static final double turnKp = 4.0027;//4.0027
   public static final double turnKd = 0.10234;

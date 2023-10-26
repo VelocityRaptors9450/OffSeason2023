@@ -82,7 +82,11 @@ public class SecondAutoBalanceCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(0, 0, 0, time);
+    swerve.drive(0, 0, 0.01, time);
+
+    //Not sure if we need this, but just giving enough time for wheels to get to X position
+    t.reset();
+    while(t.get() < 0.5);
   }
 
   // Returns true when the command should end.

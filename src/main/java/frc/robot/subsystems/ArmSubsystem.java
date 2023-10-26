@@ -35,7 +35,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
     private Height currentHeight = Height.GROUND;
 
-    private double armTarget = 0.35;
+    private double armTarget = 0.37;
 
     //double p = 0;
 
@@ -130,8 +130,8 @@ public class ArmSubsystem extends SubsystemBase{
 
         //initialSetWristEncoder();
            
-        setArmGoal(0.35);
-        setWristGoal(0.46);
+        setArmGoal(0.37);
+        setWristGoal(0.40);
 
     }
 
@@ -356,8 +356,8 @@ public class ArmSubsystem extends SubsystemBase{
             setArmGoal(0.5);
             setWristGoal(0.935);
         }else{
-            setArmGoal(0.35);
-            setWristGoal(0.46);
+            setArmGoal(0.37);
+            setWristGoal(0.4);
         }
     }
 

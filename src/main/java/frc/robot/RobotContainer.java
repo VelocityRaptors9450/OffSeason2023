@@ -91,7 +91,7 @@ public class RobotContainer {
     // left trigger = outake
     // left bumper = scoring pos
 
-    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.03, 0.72), new IntakeCommand(intake)));
+    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommand(intake)));
     armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
 
     armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));

@@ -290,6 +290,11 @@ public class DriveTrain extends SubsystemBase {
       m_field.setRobotPose(m_pose);
       SmartDashboard.putNumber("Pose x", m_pose.getX());
       SmartDashboard.putNumber("Pose y", m_pose.getY());
+      SmartDashboard.putNumber("FL Drive", m_frontLeft.getDrivePosition());
+      SmartDashboard.putNumber("FR Drive", m_frontRight.getDrivePosition());
+      SmartDashboard.putNumber("BL Drive", m_backLeft.getDrivePosition());
+      SmartDashboard.putNumber("BR Drive", m_backRight.getDrivePosition());
+
 
       // SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());
 

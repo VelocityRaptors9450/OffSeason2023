@@ -150,13 +150,13 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     time.restart();
 
-    // SequentialCommandGroup balance = new SequentialCommandGroup(
-    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> -5, () -> 0, () -> 0).withTimeout(0.5),
-    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
-    //   new WaitCommand(1),
+    SequentialCommandGroup balance = new SequentialCommandGroup(
+      new ManualDriveCommand(m_robotContainer.driveTrain, () -> -5, () -> 0, () -> 0).withTimeout(0.5),
+      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
+      new WaitCommand(1),
       
-    //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-    //   );
+      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+      );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));

@@ -120,7 +120,7 @@ public class ArmSubsystem extends SubsystemBase{
         rightMotor.restoreFactoryDefaults();
 
         rightMotor.setIdleMode(IdleMode.kBrake);
-        wristMotor.setIdleMode(IdleMode.kBrake);  
+        wristMotor.setIdleMode(IdleMode.kBrake);
 
         //wristMotor.getEncoder().setPosition(0);
 

@@ -90,7 +90,7 @@ public class DriveCommand extends CommandBase {
         linearModifier -= 0.01;
         rotationalModifier -= 0.01;
       }
-      linearModifier = MathUtil.clamp(linearModifier, 0.5, 1.5);
+      linearModifier = MathUtil.clamp(linearModifier, 0.5, 2.5);
       rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
 
       

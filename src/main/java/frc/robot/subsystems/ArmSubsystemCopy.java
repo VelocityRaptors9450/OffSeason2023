@@ -112,7 +112,7 @@ public class ArmSubsystemCopy extends SubsystemBase{
         rightMotor.restoreFactoryDefaults();
 
         rightMotor.setIdleMode(IdleMode.kBrake);
-        wristMotor.setIdleMode(IdleMode.kBrake);  
+        wristMotor.setIdleMode(IdleMode.kCoast);  
 
         rightMotor.getEncoder().setPosition(59.215);
         wristMotor.getEncoder().setPosition(0);

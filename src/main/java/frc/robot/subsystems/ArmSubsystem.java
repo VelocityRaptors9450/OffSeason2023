@@ -54,7 +54,7 @@ public class ArmSubsystem extends SubsystemBase{
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.3, 0, 0, new Constraints(1.8, 1.5));
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.1, 0, 0, new Constraints(1.8, 1.5));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
@@ -229,8 +229,8 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
         
-        if (Math.abs(voltage) > 4.5) {
-            setArmVoltage(Math.signum(voltage)*4.5);
+        if (Math.abs(voltage) > 6) {
+            setArmVoltage(Math.signum(voltage)*6);
         } else {
             setArmVoltage(voltage);
         }
@@ -351,10 +351,10 @@ public class ArmSubsystem extends SubsystemBase{
             setWristGoal(0.645);
         }else if(currentHeight == Height.MID){
             setArmGoal(0.5);
-            setWristGoal(0.756);
+            setWristGoal(0.7);
         }else if(currentHeight == Height.LOW){
             setArmGoal(0.5);
-            setWristGoal(0.935);
+            setWristGoal(0.89);
         }else{
             setArmGoal(0.37);
             setWristGoal(0.4);

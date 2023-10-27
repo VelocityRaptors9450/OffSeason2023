@@ -12,6 +12,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommandSuppliers;
 import frc.robot.commands.ExtensionCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeCommandWrist;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.commands.NewRotationCommand;
 import frc.robot.commands.SetArmHeightPreset;
@@ -65,7 +66,7 @@ public class RobotContainer {
   public ArmSubsystem arm = new ArmSubsystem();
   public IntakeSubsystem intake = new IntakeSubsystem();
   
-  private ExtensionSubsystem ext = new ExtensionSubsystem();
+  //private ExtensionSubsystem ext = new ExtensionSubsystem();
   //private TestsSubsystem motorTest = new TestsSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final EventLoop test = new EventLoop();
@@ -91,13 +92,15 @@ public class RobotContainer {
     // left trigger = outake
     // left bumper = scoring pos
 
-    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommand(intake)));
+    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommandWrist(intake, arm)));
     armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
 
     armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
     armController.x().onTrue(new SetArmHeightPreset(arm, Height.MID));
     armController.y().onTrue(new SetArmHeightPreset(arm, Height.HIGH));
-    armController.b().onTrue(new SetArmHeightPreset(arm, Height.GROUND));
+    armController.b().onTrue(new SetArmHeightPreset(arm, Height.GROUND).andThen(new InstantCommand(() -> arm.goToHeight())));
+
+    armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.22, 0.57), new IntakeCommandWrist(intake, arm)));
 
     //armController.y().onTrue(new ArmSetTargetCommand(arm, 0.35));
     //armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.03)/*, new IntakeCommand(intake)*/));
@@ -119,9 +122,9 @@ public class RobotContainer {
     
     
     //Need to turn off intake 
-    // driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
+    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     
-    // armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
+    armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
     armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
     // armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
     // armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));

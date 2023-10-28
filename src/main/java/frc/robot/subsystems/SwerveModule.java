@@ -96,9 +96,11 @@ public class SwerveModule {
         // to be continuous.
         turningPIDController.enableContinuousInput(0, 2 * Math.PI);
         driveMotor.setIdleMode(IdleMode.kBrake);
-        driveMotor.setSmartCurrentLimit(40);
         turningMotor.setIdleMode(IdleMode.kBrake);
         driveEncoder.setPosition(0);
+
+        driveMotor.setSmartCurrentLimit(50);
+        turningMotor.setSmartCurrentLimit(40);
     }
         
 

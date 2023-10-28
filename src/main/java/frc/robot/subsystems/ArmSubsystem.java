@@ -348,10 +348,10 @@ public class ArmSubsystem extends SubsystemBase{
     public void goToHeight() {
         if(currentHeight == Height.HIGH){
             setArmGoal(0.5);
-            setWristGoal(0.645);
+            setWristGoal(0.5);
         }else if(currentHeight == Height.MID){
             setArmGoal(0.5);
-            setWristGoal(0.7);
+            setWristGoal(0.67);
         }else if(currentHeight == Height.LOW){
             setArmGoal(0.5);
             setWristGoal(0.89);

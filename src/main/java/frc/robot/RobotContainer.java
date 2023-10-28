@@ -98,7 +98,7 @@ public class RobotContainer {
     armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
     armController.x().onTrue(new SetArmHeightPreset(arm, Height.MID));
     armController.y().onTrue(new SetArmHeightPreset(arm, Height.HIGH));
-    armController.b().onTrue(new SetArmHeightPreset(arm, Height.GROUND).andThen(new InstantCommand(() -> arm.goToHeight())));
+    armController.b().onTrue(new ArmWristSetTargetCommand(arm,0.37, 0.8));
 
     armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.22, 0.57), new IntakeCommandWrist(intake, arm)));
 

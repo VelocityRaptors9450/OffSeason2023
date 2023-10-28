@@ -121,8 +121,12 @@ public class SwerveModule {
 
     // returns distance traveled by each individual motor
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDrivePosition() * Constants.ModuleConversion.DRIVE_MOTOR_CONVERSION, Rotation2d.fromRotations(
+        return new SwerveModulePosition(getDrivePosition() * Constants.ModuleConversion.DRIVE_MOTOR_CONVERSION, Rotation2d.fromRadians(
            getAbsRad()));
+    }
+
+    public double getRotationNoOffset() {
+        return absolute.getAbsolutePosition();
     }
 
     // public double getAbsoluteEncoderRad() {
@@ -134,7 +138,7 @@ public class SwerveModule {
     // }
 
     public double getAbsRad(){
-        return absolute.getAbsolutePosition() - absoluteEncoderOffset;
+        return absolute.getPosition() * (Math.PI/180);
     }
     public double getRad(){
         return absolute.getAbsolutePosition();

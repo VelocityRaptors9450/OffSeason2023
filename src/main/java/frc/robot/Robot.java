@@ -166,8 +166,8 @@ public class Robot extends TimedRobot {
       new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
       new WaitCommand(1),
       
-      new SecondAutoBalanceCommand(m_robotContainer.driveTrain),
-      new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
+      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+      //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
       );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))

@@ -91,13 +91,13 @@ public class DriveCommandSuppliers extends CommandBase {
         swerve.drive(0, 0.1, 0, time);
     } else {
         if (rightBumper.getAsBoolean()) {
-          linearModifier += 0.02;
-          rotationalModifier += 0.02;
+          linearModifier += 0.03;
+          rotationalModifier += 0.03;
         } else {
-          linearModifier -= 0.02;
-          rotationalModifier -= 0.02;
+          linearModifier -= 0.03;
+          rotationalModifier -= 0.03;
         }
-        linearModifier = MathUtil.clamp(linearModifier, 0.5, 2);
+        linearModifier = MathUtil.clamp(linearModifier, 0.5, 2.5);
         rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
 
         final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;

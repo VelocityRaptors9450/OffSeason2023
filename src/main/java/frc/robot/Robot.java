@@ -25,11 +25,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SecondAutoBalanceCommand;
+import frc.robot.commands.SetArmHeightPreset;
+import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.commands.ArmSetTargetCommand;
+import frc.robot.commands.ArmWristSetTargetCommand;
 import frc.robot.commands.AutoRotateCommand;
 import frc.robot.commands.FirstAutoBalanceCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem.Height;
 
 
 
@@ -150,13 +154,18 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     time.restart();
 
-    // SequentialCommandGroup balance = new SequentialCommandGroup(
-    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> -5, () -> 0, () -> 0).withTimeout(0.5),
-    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
-    //   new WaitCommand(1),
+    SequentialCommandGroup balance = new SequentialCommandGroup(
+      new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
+      new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
+      new WaitCommand(0.5),
+      new TimedIntakeCommand(m_robotContainer.intake, -0.2),
+      new WaitCommand(0.5),
+      new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
+      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
+      new WaitCommand(1),
       
-    //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-    //   );
+      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+      );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
@@ -165,49 +174,51 @@ public class Robot extends TimedRobot {
     .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
     */
 
-    redBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    
+    redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
     ));
 
-    blueBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
     ));
 
-    redNoBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
     ));
 
-    blueNoBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
+    blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
     .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
+    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
     .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
     .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
     ));
+    
 
-    m_autonomousCommand = blueNoBumpAuto;
+    m_autonomousCommand = balance;
 
     //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
     }
 
-     // if(balance != null){
+    //if(balance != null){
     //   balance.schedule();
-    // }
+    //}
   }
 
   /** This function is called periodically during autonomous. */

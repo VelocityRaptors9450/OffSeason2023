@@ -25,7 +25,7 @@ public class SecondAutoBalanceCommand extends CommandBase {
   double time = 0.02;
   boolean ranOnce = false;
   private boolean stop;
-  private final double kp = 1.1;
+  private final double kp = 0.5;
  
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */
@@ -54,8 +54,12 @@ public class SecondAutoBalanceCommand extends CommandBase {
       ranOnce = true;
     }
 
+    double pitch = swerve.getPitch();
+    double anglePower = 0;
 
-    double anglePower = swerve.getPitch() * kp;
+    if (Math.abs(pitch) > 5) {
+      anglePower = pitch * kp + 2 * Math.signum(pitch);
+    }
 
     
     SmartDashboard.putString("Auto Balance", "Second");
@@ -64,10 +68,6 @@ public class SecondAutoBalanceCommand extends CommandBase {
 
 
     swerve.drive(0, anglePower, 0, time);
-
-    if(swerve.getPitch() < 2){
-      stop = true;
-    }
 
 
 
@@ -82,12 +82,19 @@ public class SecondAutoBalanceCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(0, 0, 0, time);
+    swerve.drive(0, 0, 0.01, time);
+
+    //Not sure if we need this, but just giving enough time for wheels to get to X position
+    t.reset();
+    while(t.get() < 0.5);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(Math.abs(swerve.getPitch()) < 5){
+      stop = true;
+    }
     return stop;
   }
 }

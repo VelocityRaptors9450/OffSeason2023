@@ -209,7 +209,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getPitch(){
-    return pigeon.getPitch() % 360;
+    return pigeon.getRoll() % 360;
   }
 
   // rotate to target degrees at specified power
@@ -294,6 +294,7 @@ public class DriveTrain extends SubsystemBase {
       SmartDashboard.putNumber("FR Drive", m_frontRight.getDrivePosition());
       SmartDashboard.putNumber("BL Drive", m_backLeft.getDrivePosition());
       SmartDashboard.putNumber("BR Drive", m_backRight.getDrivePosition());
+      SmartDashboard.putNumber("Pigeon roll", pigeon.getRoll());
 
 
       // SmartDashboard.putNumber("Pose rotation:", m_pose.getRotation().getDegrees());

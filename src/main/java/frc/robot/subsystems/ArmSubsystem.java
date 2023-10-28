@@ -357,7 +357,7 @@ public class ArmSubsystem extends SubsystemBase{
             setWristGoal(0.89);
         }else{
             setArmGoal(0.37);
-            setWristGoal(0.4);
+            setWristGoal(0.8);
         }
     }
 

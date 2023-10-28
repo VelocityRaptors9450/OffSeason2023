@@ -83,7 +83,7 @@ public class RobotContainer {
   public RobotContainer() {
     driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
                                                           driverController::getLeftX, driverController::getRightX, 
-                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
+                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.b().getAsBoolean(), () -> driverController.y().getAsBoolean()));
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
@@ -92,7 +92,7 @@ public class RobotContainer {
     // left trigger = outake
     // left bumper = scoring pos
 
-    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommandWrist(intake, arm)));
+    armController.rightBumper().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommandWrist(intake, arm)));
     armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
 
     armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
@@ -124,7 +124,7 @@ public class RobotContainer {
     //Need to turn off intake 
     driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     
-    armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
+    armController.rightTrigger().onTrue(new TimedIntakeCommand(intake, -0.8));
     armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
     // armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
     // armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));

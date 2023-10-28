@@ -81,23 +81,23 @@ public class DriveCommandSuppliers extends CommandBase {
         // assumes maximum controller input of 1 as seen in the deadband
         final var xSpeed = clickRotLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * (swerve.kMaxSpeed) * linearModifier;
         //swerve.strafePos(xSpeed, time);
-        swerve.rotate90();
-        swerve.drive(0, 0, 0, time);
+        //swerve.rotate90();
+        swerve.drive(0.1, 0, 0, time);
     } else if (rightStickClick.getAsBoolean()) {
         // assumes maximum controller input of 1 as seen in the deadband
         swerve.rotate90();
         final var ySpeed = -clickRotLimiter.calculate(MathUtil.applyDeadband(1, 0.02)) * (swerve.kMaxSpeed) * linearModifier;
         //swerve.forwardPos(ySpeed, time);
-        swerve.drive(0, 0, 0, time);
+        swerve.drive(0, 0.1, 0, time);
     } else {
         if (rightBumper.getAsBoolean()) {
-          linearModifier += 0.01;
-          rotationalModifier += 0.01;
+          linearModifier += 0.02;
+          rotationalModifier += 0.02;
         } else {
-          linearModifier -= 0.01;
-          rotationalModifier -= 0.01;
+          linearModifier -= 0.02;
+          rotationalModifier -= 0.02;
         }
-        linearModifier = MathUtil.clamp(linearModifier, 0.5, 1.5);
+        linearModifier = MathUtil.clamp(linearModifier, 0.5, 2);
         rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
 
         final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;

@@ -156,15 +156,18 @@ public class Robot extends TimedRobot {
 
     SequentialCommandGroup balance = new SequentialCommandGroup(
       new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
+      new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
+      new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
       new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
       new WaitCommand(0.5),
       new TimedIntakeCommand(m_robotContainer.intake, -0.2),
       new WaitCommand(0.5),
       new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
-      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
+      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
       new WaitCommand(1),
       
-      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+      new SecondAutoBalanceCommand(m_robotContainer.driveTrain),
+      new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
       );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))

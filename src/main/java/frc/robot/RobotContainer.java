@@ -87,12 +87,11 @@ public class RobotContainer {
 
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
-    
     // right trigger = intake pos
     // left trigger = outake
     // left bumper = scoring pos
 
-    armController.rightBumper().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommandWrist(intake, arm)));
+    armController.povDown().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommandWrist(intake, arm)));
     armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
 
     armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
@@ -107,6 +106,7 @@ public class RobotContainer {
     //armController.b().onTrue(new ArmSetTargetCommand(arm, 0.5));
 
     //armController.x().onTrue(new ArmSetTargetCommand(arm, 2));
+    
     
 
     

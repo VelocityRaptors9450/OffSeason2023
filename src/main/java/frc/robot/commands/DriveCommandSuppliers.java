@@ -97,7 +97,7 @@ public class DriveCommandSuppliers extends CommandBase {
           linearModifier -= 0.03;
           rotationalModifier -= 0.03;
         }
-        linearModifier = MathUtil.clamp(linearModifier, 0.5, 2.5);
+        linearModifier = MathUtil.clamp(linearModifier, 0.5, 2.8);
         rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
 
         final var xSpeed = xSpeedLimiter.calculate(MathUtil.applyDeadband(-strafe.getAsDouble(), 0.02)) * swerve.kMaxSpeed * linearModifier;

@@ -39,8 +39,8 @@ public final class Constants {
   }
 
   public static class Speeds{
-    public static final double MaxSpeed = 37;
-    public static final double MaxAngularSpeed = 40*Math.PI;
+    public static final double MaxSpeed = 55;
+    public static final double MaxAngularSpeed = 50*Math.PI;
   }
   
   public static final int flDriveId = 1; //1
@@ -77,14 +77,14 @@ public final class Constants {
   public static final double baseLength = 0.6477;
   
   //Offset turn wheel so that gears are all pointed to the right
-  public static final double flAbsoluteEncoderOffset = 2.11;
-  public static final double frAbsoluteEncoderOffset = 2.57; 
-  public static final double blAbsoluteEncoderOffset = 5.83;
-  public static final double brAbsoluteEncoderOffset = 5.18;
+  public static final double flAbsoluteEncoderOffset = 5.36431997269392 + Math.PI/2;
+  public static final double frAbsoluteEncoderOffset = 5.815309412777424 + Math.PI/2; 
+  public static final double blAbsoluteEncoderOffset = 2.656849354505539 + Math.PI/2;
+  public static final double brAbsoluteEncoderOffset = 1.958889506757259 + Math.PI/2;
 
 
   // PID
-  public static final double turnKp = 4.0027;//4.0027
+  public static final double turnKp = 8;//4.0027 //12.0027
   public static final double turnKd = 0.10234;
 
   public static final double driveKp = 0.034037; //0.034037

@@ -121,7 +121,7 @@ public class SwerveModule {
 
     // returns distance traveled by each individual motor
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDrivePosition() * Constants.ModuleConversion.DRIVE_MOTOR_CONVERSION, Rotation2d.fromRadians(
+        return new SwerveModulePosition(getDrivePosition() * Constants.ModuleConversion.DRIVE_MOTOR_CONVERSION, Rotation2d.fromRotations(
            getAbsRad()));
     }
 
@@ -138,7 +138,7 @@ public class SwerveModule {
     // }
 
     public double getAbsRad(){
-        return absolute.getPosition() * (Math.PI/180);
+        return absolute.getAbsolutePosition() - absoluteEncoderOffset;
     }
     public double getRad(){
         return absolute.getAbsolutePosition();
@@ -168,6 +168,10 @@ public class SwerveModule {
         turningMotor.setVoltage(-(turnOutput + trnFeedforward));
         SmartDashboard.putNumber("PIDTurn voltage",-(turnOutput + trnFeedforward));
 
+    }
+
+    public double getAmps() {
+        return driveMotor.getOutputCurrent();
     }
     
 

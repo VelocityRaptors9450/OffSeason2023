@@ -169,6 +169,14 @@ public class Robot extends TimedRobot {
       new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
       //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
       );
+
+      SequentialCommandGroup scoreHighOnly = new SequentialCommandGroup(
+        new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
+        new WaitCommand(1),
+        new TimedIntakeCommand(m_robotContainer.intake, -0.8),
+        new WaitCommand(1),
+        new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
+        );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
@@ -211,8 +219,11 @@ public class Robot extends TimedRobot {
     .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
     ));
     
+    // CHANGE AUTO HERE:
+    // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
+    // To build: connect ethernet to roborio, click on vscode, and hit shift f5
 
-    m_autonomousCommand = balance;
+    m_autonomousCommand = blueNoBumpAuto;
 
     //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

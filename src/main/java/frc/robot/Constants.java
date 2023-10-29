@@ -22,8 +22,8 @@ public final class Constants {
   public static class ModuleConversion {
     //TOO BE UPDATEEDDDDD
     public static final double WheelDiameter = Units.inchesToMeters(4);
-    public static final double DriveMotorGearRatio = 1 / 6;
-    public static final double TurnMotorGearRatio = 1 / 6;
+    public static final double DriveMotorGearRatio = 6.75;
+    public static final double TurnMotorGearRatio = 150.0/7;
     public static final double DriveEncoderRot2Meter = DriveMotorGearRatio * Math.PI * WheelDiameter;
     public static final double TurnEncoderRot2Rad = TurnMotorGearRatio * 2 * Math.PI;
     public static final double DriveEncoderRPM2MeterPerSec = DriveEncoderRot2Meter / 60;

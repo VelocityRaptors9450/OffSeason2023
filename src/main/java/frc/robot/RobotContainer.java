@@ -101,36 +101,17 @@ public class RobotContainer {
 
     armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.22, 0.57), new IntakeCommandWrist(intake, arm)));
 
-    //armController.y().onTrue(new ArmSetTargetCommand(arm, 0.35));
-    //armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.03)/*, new IntakeCommand(intake)*/));
-    //armController.b().onTrue(new ArmSetTargetCommand(arm, 0.5));
-
-    //armController.x().onTrue(new ArmSetTargetCommand(arm, 2));
     
-    
-
-    
-    //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.5)));
-
-    
-    /*Extension Code test */
-    //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
-    //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
-    //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
-    //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
-
-    
+  
     
     //Need to turn off intake 
-    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     
     armController.rightTrigger().onTrue(new TimedIntakeCommand(intake, -0.8));
     armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
-    // armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
-    // armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
-    // armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));
     
     
+    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
+
     
 
     configureBindings();

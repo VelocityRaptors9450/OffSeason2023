@@ -35,13 +35,10 @@ public class SwerveModule {
     private final ProfiledPIDController turningPIDController =
       new ProfiledPIDController(Constants.turnKp,0,Constants.turnKd,new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
-    private final ProfiledPIDController clickTurningPIDController =
-    new ProfiledPIDController(Constants.turnKp+2,0,Constants.turnKd,new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity+80, kModuleMaxAngularAcceleration+3));
 
     // Gains are for example purposes only - must be determined for your own robot!
     private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(Constants.driveKs, Constants.driveKv);
     private final SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(Constants.turnKs, Constants.turnKv);
-    private final SimpleMotorFeedforward clickTurnFeedforward = new SimpleMotorFeedforward(Constants.turnKs+0.3, Constants.turnKv);
 
     int id;
     // In case when installed, the forward on the encoder isnt the actual forward
@@ -73,7 +70,7 @@ public class SwerveModule {
        
         
         driveEncoder.setVelocityConversionFactor(Constants.ModuleConversion.VELOCITY_CONVERSION_FACTOR);
-       /* 
+         /* 
         
         // Set the distance per pulse for the drive encoder. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
@@ -203,13 +200,7 @@ public class SwerveModule {
         SmartDashboard.putNumber("TurnVoltage",-(turnOutput + trnFeedforward));
       }
      
-      /*
-      public void setDesiredStateOnlyRot(SwerveModuleState desiredState) {
-        // Optimize the reference state to avoid spinning further than 90 degrees
-        
-      }
-
-      */
+     
    
 
 }

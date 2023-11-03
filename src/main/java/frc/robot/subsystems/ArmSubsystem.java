@@ -68,6 +68,9 @@ public class ArmSubsystem extends SubsystemBase{
 
 
     public ArmSubsystem(){
+        //leftMotor.setSmartCurrentLimit(40);
+        rightMotor.setSmartCurrentLimit(40);
+        wristMotor.setSmartCurrentLimit(40);
         // leftMotor.restoreFactoryDefaults();
        
 
@@ -116,9 +119,9 @@ public class ArmSubsystem extends SubsystemBase{
     
 
     public void initialize(){
-
         rightMotor.restoreFactoryDefaults();
 
+        
         rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);  
 

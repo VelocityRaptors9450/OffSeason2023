@@ -35,16 +35,16 @@ public class DriveTrain extends SubsystemBase {
   private boolean fieldRelative = true; // true for tele, false for auto
 
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(-Constants.baseWidth / 2, Constants.baseLength / 2);
-  private final Translation2d m_frontRightLocation = new Translation2d(Constants.baseWidth / 2, Constants.baseLength / 2);
-  private final Translation2d m_backLeftLocation = new Translation2d(-Constants.baseWidth / 2, -Constants.baseLength / 2);
-  private final Translation2d m_backRightLocation = new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2);
+  private final Translation2d m_frontLeftLocation = new Translation2d(Constants.baseWidth / 2, Constants.baseLength / 2);
+  private final Translation2d m_frontRightLocation = new Translation2d(Constants.baseWidth / 2, -Constants.baseLength / 2);
+  private final Translation2d m_backLeftLocation = new Translation2d(-Constants.baseWidth / 2, Constants.baseLength / 2);
+  private final Translation2d m_backRightLocation = new Translation2d(-Constants.baseWidth / 2, -Constants.baseLength / 2);
 
   private final SwerveModule m_frontLeft = new SwerveModule(Constants.flDriveId, Constants.flTurnId, true, false, Constants.flAbsoluteId, Constants.flAbsoluteEncoderOffset, false);
   // private final SwerveModule m_frontRight = fieldRelative ? new SwerveModule(Constants.frDriveId, Constants.frTurnId, true, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false) : new SwerveModule(Constants.frDriveId, Constants.frTurnId, false, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
   private final SwerveModule m_frontRight = new SwerveModule(Constants.frDriveId, Constants.frTurnId, true, false, Constants.frAbsoluteId, Constants.frAbsoluteEncoderOffset, false);
 
-  
+
   private final SwerveModule m_backLeft = new SwerveModule(Constants.blDriveId, Constants.blTurnId, true, false, Constants.blAbsoluteId, Constants.blAbsoluteEncoderOffset, false);
   private final SwerveModule m_backRight = new SwerveModule(Constants.brDriveId, Constants.brTurnId, true, false, Constants.brAbsoluteId, Constants.brAbsoluteEncoderOffset, false);
 

@@ -4,18 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExtensionCommand;
-import frc.robot.commands.ParallelLinkageTurnCommand;
-import frc.robot.commands.ParallelLinkageWristCommand;
-// import frc.robot.commands.ShooterLinkageMoverCommand;
-import frc.robot.commands.SpringAssemblyShooterCommand;
-import frc.robot.subsystems.ExtensionSubsystem;
-import frc.robot.subsystems.ParallelLinkageTurnSubsystem;
-// import frc.robot.subsystems.ShooterLinkageMoverSubsystem;
-import frc.robot.subsystems.SpringAssemblyShooterSubsystem;
-import frc.robot.subsystems.ParallelLinkageWristSubsystem;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -40,7 +29,6 @@ public class RobotContainer {
   private final ParallelLinkageTurnSubsystem turnSubsystem = new ParallelLinkageTurnSubsystem(5, true, 18, false, -4, 4);
   private final ParallelLinkageTurnCommand turnCmnd = new ParallelLinkageTurnCommand(turnSubsystem, false);
   */
-  private final ParallelLinkageTurnSubsystem turnSubManual = new ParallelLinkageTurnSubsystem(5);
   /*Current ratios with P = 0.018 D = 0.015
    * Desired: 0.2 Acheived: 0.76
    * Desired: 0.5 Achieved: 1   * Desired: 0.5(used 0.2) Achieved 0.5
@@ -62,8 +50,7 @@ public class RobotContainer {
   //private final ExtensionCommand extensionCommand = new ExtensionCommand(extension);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -100,10 +87,7 @@ public class RobotContainer {
 
     */
     
-    driverController.leftTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, () -> -driverController.getLeftTriggerAxis()));
-    driverController.rightTrigger().onTrue(new ParallelLinkageTurnCommand(turnSubManual, () -> driverController.getRightTriggerAxis()));
-    // for our old shooter we used .onTrue()
-
+   
   }
 
   /**
@@ -115,9 +99,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return null;
   }
-  public double getDriverRawAxis(int axis){
-      return driverController.getRawAxis(axis);
-  }
+
 
   
 }

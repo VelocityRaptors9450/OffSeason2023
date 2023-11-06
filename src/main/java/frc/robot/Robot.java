@@ -16,7 +16,10 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -63,9 +66,6 @@ public class Robot extends TimedRobot {
 
   
   
-  
-
-  
   //private ShooterSubsystem shooter = new ShooterSubsystem();
   //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
   //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
@@ -76,12 +76,23 @@ public class Robot extends TimedRobot {
 
 
 
-  private Command m_autonomousCommand;
 
+  /* Command Declarations */
+  private SequentialCommandGroup balance;
+  private SequentialCommandGroup scoreHighOnly;
   private Command redBumpAuto;
   private Command blueBumpAuto;
   private Command redNoBumpAuto;
   private Command blueNoBumpAuto;
+
+  /* Autonomous Chooser Declarations */
+  private Command m_autonomousCommand;
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+
+
+
+
 
   Timer time = new Timer();
   //private TalonFX motor1 = new TalonFX(1);
@@ -100,6 +111,34 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     m_robotContainer.arm.initialize();
 
+
+
+
+
+
+    /* Initializing the Autonomous Chooser (stuff) */
+    // Adds the options for the auto chooser.
+    m_chooser.addOption("Balance", balance);
+    m_chooser.addOption("Score High Only", scoreHighOnly);
+    m_chooser.addOption("Red Bump", redBumpAuto);
+    m_chooser.addOption("Blue Bump", blueBumpAuto);
+    m_chooser.addOption("Red No Bump", redNoBumpAuto);
+    m_chooser.addOption("Blue No Bump", blueNoBumpAuto);
+
+    // Puts the auto chooser into it's own tab on Shuffleboard.
+    ShuffleboardTab autoTab =
+      Shuffleboard.getTab("Auto");
+
+    Shuffleboard.getTab("Auto")
+      .add("Autonomous Select:", m_chooser)
+      .withWidget(BuiltInWidgets.kSplitButtonChooser)
+      .withSize(5, 1);
+
+
+
+
+
+
     //motor1.set(ControlMode.PercentOutput, 0); 
 
     //inverting directions
@@ -116,6 +155,7 @@ public class Robot extends TimedRobot {
 */
     //init encoders(only init if want ot reset)
     
+
   }
 
   /**
@@ -143,8 +183,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    
-
 
   }
 
@@ -154,7 +192,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     time.restart();
 
-    SequentialCommandGroup balance = new SequentialCommandGroup(
+    balance = new SequentialCommandGroup(
       new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
       new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
       new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
@@ -170,7 +208,7 @@ public class Robot extends TimedRobot {
       //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
       );
 
-      SequentialCommandGroup scoreHighOnly = new SequentialCommandGroup(
+      scoreHighOnly = new SequentialCommandGroup(
         new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
         new WaitCommand(1),
         new TimedIntakeCommand(m_robotContainer.intake, -0.8),
@@ -223,7 +261,7 @@ public class Robot extends TimedRobot {
     // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
     // To build: connect ethernet to roborio, click on vscode, and hit shift f5
 
-    m_autonomousCommand = blueNoBumpAuto;
+    m_autonomousCommand = m_chooser.getSelected();
 
     //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

@@ -87,7 +87,7 @@ public class Robot extends TimedRobot {
 
   /* Autonomous Chooser Declarations */
   private Command m_autonomousCommand;
-  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private final SendableChooser<Command> m_autoChooser = new SendableChooser<>();
 
 
 
@@ -118,19 +118,19 @@ public class Robot extends TimedRobot {
 
     /* Initializing the Autonomous Chooser (stuff) */
     // Adds the options for the auto chooser.
-    m_chooser.addOption("Balance", balance);
-    m_chooser.addOption("Score High Only", scoreHighOnly);
-    m_chooser.addOption("Red Bump", redBumpAuto);
-    m_chooser.addOption("Blue Bump", blueBumpAuto);
-    m_chooser.addOption("Red No Bump", redNoBumpAuto);
-    m_chooser.addOption("Blue No Bump", blueNoBumpAuto);
+    m_autoChooser.addOption("Balance", balance);
+    m_autoChooser.addOption("Score High Only", scoreHighOnly);
+    m_autoChooser.addOption("Red Bump", redBumpAuto);
+    m_autoChooser.addOption("Blue Bump", blueBumpAuto);
+    m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
+    m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
 
     // Puts the auto chooser into it's own tab on Shuffleboard.
     ShuffleboardTab autoTab =
       Shuffleboard.getTab("Auto");
 
     Shuffleboard.getTab("Auto")
-      .add("Autonomous Select:", m_chooser)
+      .add("Autonomous Select:", m_autoChooser)
       .withWidget(BuiltInWidgets.kSplitButtonChooser)
       .withSize(5, 1);
 
@@ -261,7 +261,7 @@ public class Robot extends TimedRobot {
     // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
     // To build: connect ethernet to roborio, click on vscode, and hit shift f5
 
-    m_autonomousCommand = m_chooser.getSelected();
+    m_autonomousCommand = m_autoChooser.getSelected();
 
     //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

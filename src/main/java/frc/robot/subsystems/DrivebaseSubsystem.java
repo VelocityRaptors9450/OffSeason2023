@@ -52,10 +52,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public static boolean IS_COMP = true; // just so i don't need to bother anymore with removing is_comp stuff
 		// max drive speed is from SDS website and not calculated with robot weight
-	public static final double MAX_DRIVE_SPEED_METERS_PER_SEC = 2; // was 4.4196
+	public static final double MAX_DRIVE_SPEED_METERS_PER_SEC = 0.5; // was 4.4196
 	// this is calculated as rotations_per_sec = velocity/(2*pi*turning radius (diagonal diameter))
 	public static final Rotation2d MAX_ROTATIONS_PER_SEC =
-			Rotation2d.fromRotations(0.8574);
+			Rotation2d.fromRotations(0.2); // was 0.8574
 
 	// magic number found by trial and error (aka informal characterization)
 	private static final double ODOMETRY_ADJUSTMENT = 0.973748457;

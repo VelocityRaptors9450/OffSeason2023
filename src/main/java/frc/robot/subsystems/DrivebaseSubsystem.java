@@ -43,10 +43,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// ordered from front left, front right, back left, back right
 	private static final Rotation2d[] COMP_DRIVEBASE_ENCODER_OFFSETS = {
-		Rotation2d.fromRadians(5.36431997269392),
-		Rotation2d.fromRadians(5.815309412777424),
-		Rotation2d.fromRadians(2.656849354505539),
-		Rotation2d.fromRadians(1.958889506757259)
+		// Rotation2d.fromRadians(5.36431997269392),
+		// Rotation2d.fromRadians(5.815309412777424),
+		// Rotation2d.fromRadians(2.656849354505539),
+		// Rotation2d.fromRadians(1.958889506757259)
+		Rotation2d.fromDegrees(303.486),
+		Rotation2d.fromDegrees(323.086),
+		Rotation2d.fromDegrees(330.820+180),
+		Rotation2d.fromDegrees(290.566+180)
 		
 	};
 

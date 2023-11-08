@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
 	enum RobotType {
 		COMPETITION,
 		DRIVEBASE;
-	}
+	} 
 
 	public static Robot getInstance() {
 		if (instance == null) instance = new Robot();
@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		LiveWindow.disableAllTelemetry();
-		LiveWindow.enableTelemetry(PDP);
+		//LiveWindow.enableTelemetry(PDP);
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);

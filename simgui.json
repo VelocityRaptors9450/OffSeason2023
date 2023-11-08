@@ -1,7 +1,32 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "Pigeon 2[13]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [1]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [4]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/DrivebaseSubsystem": "Subsystem",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Gyro": "Gyro",
+      "/SmartDashboard/Rotational PID": "PIDController",
+      "/SmartDashboard/Scheduler": "Scheduler",
+      "/SmartDashboard/Translational PID": "PIDController"
     }
   }
 }

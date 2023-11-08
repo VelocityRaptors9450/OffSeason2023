@@ -43,16 +43,16 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// ordered from front left, front right, back left, back right
 	private static final Rotation2d[] COMP_DRIVEBASE_ENCODER_OFFSETS = {
-		Rotation2d.fromRadians(5.36431997269392 + Math.PI/2),
-		Rotation2d.fromRadians(5.815309412777424 + Math.PI/2),
-		Rotation2d.fromRadians(2.656849354505539 + Math.PI/2),
-		Rotation2d.fromRadians(1.958889506757259 + Math.PI/2)
+		Rotation2d.fromRadians(5.36431997269392),
+		Rotation2d.fromRadians(5.815309412777424),
+		Rotation2d.fromRadians(2.656849354505539),
+		Rotation2d.fromRadians(1.958889506757259)
 		
 	};
 
 	public static boolean IS_COMP = true; // just so i don't need to bother anymore with removing is_comp stuff
 		// max drive speed is from SDS website and not calculated with robot weight
-	public static final double MAX_DRIVE_SPEED_METERS_PER_SEC = 4.4196;
+	public static final double MAX_DRIVE_SPEED_METERS_PER_SEC = 2; // was 4.4196
 	// this is calculated as rotations_per_sec = velocity/(2*pi*turning radius (diagonal diameter))
 	public static final Rotation2d MAX_ROTATIONS_PER_SEC =
 			Rotation2d.fromRotations(0.8574);

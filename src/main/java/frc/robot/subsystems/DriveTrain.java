@@ -71,6 +71,14 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
     SmartDashboard.putData("Field", m_field);
     pigeon.reset();
+
+    // https://v5.docs.ctr-electronics.com/en/stable/ch18_CommonAPI.html
+    pigeon.setStatusFramePeriod(11, 65535); // Accumulated Gyro Angles
+    pigeon.setStatusFramePeriod(3, 65535);  // Accelerometer derived angles
+    pigeon.setStatusFramePeriod(10, 65535); // Six degree fused Quaternion
+    pigeon.setStatusFramePeriod(2, 65535);  // Biased gyro values (x,y,z)
+    pigeon.setStatusFramePeriod(6, 65535);  // Biased accelerometer values (x,y,z)
+    pigeon.setStatusFramePeriod(4, 65535);  // Unprocessed magnetometer values (x,y,z)
   }
   public void resetGyro(){
     pigeon.reset();

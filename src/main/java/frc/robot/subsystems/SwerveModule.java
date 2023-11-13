@@ -98,6 +98,19 @@ public class SwerveModule {
 
         driveMotor.setSmartCurrentLimit(50);
         turningMotor.setSmartCurrentLimit(40);
+
+        //https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300);   //For follower motors
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535); //Analog Sensor Voltage + Velocity + position
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535); //Duty cycler velocity + pos
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535); //Duty Cycle Absolute Encoder Position and Abs angle
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); //Duty Cycle Absolute Encoder Velocity + Frequency
+        
+        turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300);
+        turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
     }
         
 

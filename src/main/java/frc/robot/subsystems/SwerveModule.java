@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 public class SwerveModule {
 
@@ -99,6 +101,7 @@ public class SwerveModule {
         driveMotor.setSmartCurrentLimit(50);
         turningMotor.setSmartCurrentLimit(40);
 
+        //CANCoder only has one status frame and should not really be turned down
         //https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces
         driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300);   //For follower motors
         driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535); //Analog Sensor Voltage + Velocity + position
@@ -111,6 +114,9 @@ public class SwerveModule {
         turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
         turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
         turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+
+        
+        
     }
         
 

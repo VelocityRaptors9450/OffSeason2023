@@ -67,7 +67,7 @@ public class Controls {
 		driveController.rightTrigger().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyroAngle)); // start is the right one
 		driveController.back().onTrue(new InstantCommand(s.drivebaseSubsystem::resetPose)); // back is the left one
 		driveController.leftStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
-
+		// this version has totes code working completely
 		
 	}
 

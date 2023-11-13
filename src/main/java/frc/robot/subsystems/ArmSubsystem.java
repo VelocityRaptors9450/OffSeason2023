@@ -101,7 +101,17 @@ public class ArmSubsystem extends SubsystemBase{
         
         //setWristGoal(0);
         // if (intialization) {
+        rightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300);   //For follower motors
+        rightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535); //Analog Sensor Voltage + Velocity + position
+        rightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535); //Duty cycler velocity + pos
+        //rightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);        //Duty Cycle Absolute Encoder Position and Abs angle
+        rightMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); //Duty Cycle Absolute Encoder Velocity + Frequency
         
+        wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300); 
+        wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        //wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535); 
+        wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); 
         
        
 

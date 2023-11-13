@@ -22,34 +22,26 @@ public final class Constants {
   
   public static class OperatorConstants{
       public static final int DRIVER_CONTROLLER_PORT = 0;
-      public static final int FL_MOVE_MOTOR_ID = 1;
-      public static final int FL_TURN_MOTOR_ID = 2;
-      public static final int BL_MOVE_MOTOR_ID = 3;
-      public static final int BL_TURN_MOTOR_ID = 4;
-      public static final int FR_MOVE_MOTOR_ID = 5;
-      public static final int FR_TURN_MOTOR_ID = 6;
-      public static final int BR_MOVE_MOTOR_ID = 7;
-      public static final int BR_TURN_MOTOR_ID = 8;
 
-  }
+      public static final int FrontLeftSpeed = 1;
+      public static final int FrontLeftTurn = 2;
+      public static final int FrontLeftCAN = 3;
 
-  public static class ModuleConversion {
-    //TOO BE UPDATEEDDDDD
-    public static final double WheelDiameter = Units.inchesToMeters(4);
-    public static final double DriveMotorGearRatio = 1 / 6;
-    public static final double TurnMotorGearRatio = 1 / 6;
-    public static final double DriveEncoderRot2Meter = DriveMotorGearRatio * Math.PI * WheelDiameter;
-    //gear ratio 10:60    :    16:64
-    public static final double ParallelLinkageTurnRation = 64 / 60 * 10;
-    public static final double TurnEncoderRot2Rad = TurnMotorGearRatio * 2 * Math.PI;
-    public static final double DriveEncoderRPM2MeterPerSec = DriveEncoderRot2Meter / 60;
-    public static final double TurnEncoderRPM2RadPerSec = TurnEncoderRot2Rad / 60;
-    //ticks * 1 rotations/4096 ticks  *  gear ratio  * 6pi inches/1 rotation  * 1 ft / 12 inches
-    public static final double drivetcks2ftfactor = 1.0 / 4096 * 6 * Math.PI / 12;
+      public static final int FrontRightSpeed = 4;
+      public static final int FrontRightTurn = 5;
+      public static final int FrontRightCAN = 6;
 
-  }
-  public static class Positions{
+      public static final int BackLeftSpeed = 7;
+      public static final int BackLeftTurn = 8;
+      public static final int BackLeftCAN = 9;
+      
+      public static final int BackRightSpeed = 10;
+      public static final int BackRightTurn = 11;
+      public static final int BackRightCAN = 12;
 
+      public static final int ShooterBackSpin = 13;
+      public static final int ShooterFront1 = 14;
+      public static final int ShooterFront2 = 15;
   }
 
 }

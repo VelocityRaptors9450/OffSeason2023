@@ -6,10 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SwerveTest extends SubsystemBase {
-  /** Creates a new SwerveTest. */
-  private DriveTrain drive = new DriveTrain();
-  public SwerveTest() {}
+public class ShooterSubsystem extends SubsystemBase {
+  /** Creates a new ShooterSubsystem. */
+  public ShooterSubsystem() {}
 
   @Override
   public void periodic() {

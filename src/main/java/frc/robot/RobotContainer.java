@@ -18,7 +18,6 @@ import frc.robot.commands.NewRotationCommand;
 import frc.robot.commands.SetArmHeightPreset;
 import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
 import frc.robot.subsystems.ArmSubsystem.Height;
 import frc.robot.commands.ManualDriveCommand;
@@ -62,7 +61,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public DriveTrain driveTrain = new DriveTrain();
   public ArmSubsystem arm = new ArmSubsystem();
   public IntakeSubsystem intake = new IntakeSubsystem();
   
@@ -81,10 +79,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
-                                                          driverController::getLeftX, driverController::getRightX, 
-                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.b().getAsBoolean(), () -> driverController.y().getAsBoolean()));
-
+    
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
     // right trigger = intake pos
@@ -110,7 +105,6 @@ public class RobotContainer {
     armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
     
     
-    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
 
     
 

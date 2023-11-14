@@ -104,60 +104,153 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-  @Override
-  public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+
+
+   private static Robot instance = null;
+
+   enum RobotType {
+     COMPETITION,
+     DRIVEBASE;
+   } 
+ 
+   public static Robot getInstance() {
+     if (instance == null) instance = new Robot();
+     return instance;
+   }
+ 
+   private final PowerDistribution PDP;
+ 
+   public Controls controls;
+   public Subsystems subsystems;
+ 
+   private final RobotType robotType;
+   public final Field2d field = new Field2d();
+   
+   protected Robot(RobotType type) {
+     instance = this;
+     PDP = new PowerDistribution(Hardware.PDP_ID, ModuleType.kRev);
+     robotType = type;
+   }
+ 
+   public double getVoltage() {
+     return PDP.getVoltage();
+   }
+ 
+   protected Robot() {
+     this(getTypeFromAddress());
+   }
+ 
+   public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
+   public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x28, 0x40, 0x82);
+ 
+   private static RobotType getTypeFromAddress() {
+     if (/*PRACTICE_ADDRESS.exists() */true) return RobotType.DRIVEBASE;
+     else return RobotType.COMPETITION;
+   }
+ 
+   @Override
+   public void robotInit() {
+     LiveWindow.disableAllTelemetry();
+     //LiveWindow.enableTelemetry(PDP);
+ 
+     subsystems = new Subsystems();
+     controls = new Controls(subsystems);
+     
+ 
+     if (subsystems.drivebaseSubsystem != null) {
+       subsystems.drivebaseSubsystem.enableNoMotionCalibration();
+     }
+ 
+     Shuffleboard.startRecording();
+ 
+     if (RobotBase.isReal()) {
+       DataLogManager.start();
+       DriverStation.startDataLog(DataLogManager.getLog(), true);
+     }
+ 
+     CommandScheduler.getInstance()
+         .onCommandInitialize(
+             command -> System.out.println("Command initialized: " + command.getName()));
+     CommandScheduler.getInstance()
+         .onCommandInterrupt(
+             command -> System.out.println("Command interrupted: " + command.getName()));
+     CommandScheduler.getInstance()
+         .onCommandFinish(command -> System.out.println("Command finished: " + command.getName()));
+ 
+     SmartDashboard.putData("Field", field);
+     SmartDashboard.putData(CommandScheduler.getInstance());
+     SmartDashboard.putData(subsystems.drivebaseSubsystem);
+     DriverStation.silenceJoystickConnectionWarning(true);
+ 
+     PathPlannerServer.startServer(5811);
+ 
+     logRobotInfo();
+
+
     m_robotContainer = new RobotContainer();
     m_robotContainer.arm.initialize();
 
-
-
-
-
-
     /* Initializing the Autonomous Chooser (stuff) */
     // Adds the options for the auto chooser.
-    m_autoChooser.addOption("Balance", balance);
-    m_autoChooser.addOption("Score High Only", scoreHighOnly);
-    m_autoChooser.addOption("Red Bump", redBumpAuto);
-    m_autoChooser.addOption("Blue Bump", blueBumpAuto);
-    m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
-    m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
+    // m_autoChooser.addOption("Balance", balance);
+    // m_autoChooser.addOption("Score High Only", scoreHighOnly);
+    // m_autoChooser.addOption("Red Bump", redBumpAuto);
+    // m_autoChooser.addOption("Blue Bump", blueBumpAuto);
+    // m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
+    // m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
 
     // Puts the auto chooser into it's own tab on Shuffleboard.
-    ShuffleboardTab autoTab =
-      Shuffleboard.getTab("Auto");
+    // ShuffleboardTab autoTab =
+    //   Shuffleboard.getTab("Auto");
 
-    Shuffleboard.getTab("Auto")
-      .add("Autonomous Select:", m_autoChooser)
-      .withWidget(BuiltInWidgets.kSplitButtonChooser)
-      .withSize(5, 1);
+    // Shuffleboard.getTab("Auto")
+    //   .add("Autonomous Select:", m_autoChooser)
+    //   .withWidget(BuiltInWidgets.kSplitButtonChooser)
+    //   .withSize(5, 1);
 
-
-
-
-
-
-    //motor1.set(ControlMode.PercentOutput, 0); 
-
-    //inverting directions
-    //leftMotor1.setInverted(true);
-    //rightMotor1.setInverted(true);
-
-    // "slave" settings
-    /* 
-    leftMotor2.follow(leftMotor1);
-    rightMotor2.follow(rightMotor1);
-
-    leftMotor2.setInverted(true);
-    rightMotor2.setInverted(true);
-*/
-    //init encoders(only init if want ot reset)
-    
-
-  }
-
+   }
+ 
+   private void logRobotInfo() {
+     try {
+       File gitInfoFile = new File(Filesystem.getDeployDirectory(), "git-info.txt");
+       System.out.println("Git info:\n" + Files.readString(gitInfoFile.toPath()));
+     } catch (IOException e) {
+       DriverStation.reportWarning("Could not open git info file", true);
+     }
+   }
+ 
+   public SwerveAutoBuilder getAutoBuilder(HashMap<String, Command> eventMap) {
+     if (subsystems.drivebaseSubsystem != null) {
+       return new SwerveAutoBuilder(
+           subsystems.drivebaseSubsystem::getPose, // Pose2d supplier
+           subsystems.drivebaseSubsystem
+               ::resetPose, // Pose2d consumer, used to reset odometry at the beginning of
+           // auto
+           subsystems.drivebaseSubsystem.getKinematics(), // SwerveDriveKinematics
+           new PIDConstants(
+               5.0, 0.0,
+               0.0), // PID constants to correct for translation error (used to create the X and
+           // Y
+           // PID controllers)
+           new PIDConstants(
+               3.0, 0.0,
+               0.0), // PID constants to correct for rotation error (used to create the rotation
+           // controller)
+           subsystems.drivebaseSubsystem
+               ::drive, // Module states consumer used to output to the drive subsystem
+           eventMap,
+           true, // Should the path be automatically mirrored depending on alliance color.
+           // Optional, defaults to true
+           subsystems
+               .drivebaseSubsystem // The drive subsystem. Used to properly set the requirements
+           // of
+           // path following commands
+           );
+     } else {
+       return null;
+     }
+   }
+   
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -192,29 +285,29 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     time.restart();
 
-    balance = new SequentialCommandGroup(
-      new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
-      new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
-      new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
-      new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
-      new WaitCommand(0.5),
-      new TimedIntakeCommand(m_robotContainer.intake, -0.2),
-      new WaitCommand(0.5),
-      new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
-      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
-      new WaitCommand(1),
+    // balance = new SequentialCommandGroup(
+    //   new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
+    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
+    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
+    //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
+    //   new WaitCommand(0.5),
+    //   new TimedIntakeCommand(m_robotContainer.intake, -0.2),
+    //   new WaitCommand(0.5),
+    //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
+    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
+    //   new WaitCommand(1),
       
-      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-      //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
-      );
+    //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+    //   //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
+    //   );
 
-      scoreHighOnly = new SequentialCommandGroup(
-        new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
-        new WaitCommand(1),
-        new TimedIntakeCommand(m_robotContainer.intake, -0.8),
-        new WaitCommand(1),
-        new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
-        );
+    //   scoreHighOnly = new SequentialCommandGroup(
+    //     new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
+    //     new WaitCommand(1),
+    //     new TimedIntakeCommand(m_robotContainer.intake, -0.8),
+    //     new WaitCommand(1),
+    //     new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
+    //     );
     //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
     //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
@@ -224,38 +317,38 @@ public class Robot extends TimedRobot {
     */
 
     
-    redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-    ));
+    // redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+    // ));
 
-    blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-    ));
+    // blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+    // ));
 
-    redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-    ));
+    // redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+    // ));
 
-    blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-    .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
-    ));
+    // blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+    // .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
+    // ));
     
     // CHANGE AUTO HERE:
     // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
@@ -290,6 +383,12 @@ public class Robot extends TimedRobot {
     time.restart();
 
     m_robotContainer.arm.initialize();
+
+	Shuffleboard.startRecording();
+
+	if (subsystems.drivebaseSubsystem != null) {
+		subsystems.drivebaseSubsystem.setUseVisionMeasurements(true);
+	}
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -297,6 +396,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+
+	
 
     
 
@@ -318,6 +420,15 @@ public class Robot extends TimedRobot {
 
     
   }
+
+  @Override
+	public void teleopExit() {
+		CommandScheduler.getInstance().cancelAll();
+		if (subsystems.drivebaseSubsystem != null) {
+			subsystems.drivebaseSubsystem.stopAllMotors();
+		}
+		
+	}
   //CANCoder angle = new CANCoder(1);
   /** This function is called periodically during operator control. */
 
@@ -326,7 +437,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    SmartDashboard.putNumber("Pitch", m_robotContainer.driveTrain.getPitch());
+    //SmartDashboard.putNumber("Pitch", m_robotContainer.driveTrain.getPitch());
 
     
 

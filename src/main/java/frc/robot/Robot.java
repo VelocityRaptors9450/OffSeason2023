@@ -7,18 +7,31 @@ package frc.robot;
 
 
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,17 +39,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.ManualDriveCommand;
-import frc.robot.commands.SecondAutoBalanceCommand;
 import frc.robot.commands.SetArmHeightPreset;
 import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.ArmWristSetTargetCommand;
-import frc.robot.commands.AutoRotateCommand;
-import frc.robot.commands.FirstAutoBalanceCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.Height;
+import frc.robot.util.MACAddress;
 
 
 
@@ -49,16 +59,6 @@ import frc.robot.subsystems.ArmSubsystem.Height;
  * project.
  */
 public class Robot extends TimedRobot {
-  
-
-  private static Robot instance = null;
-  //private final PowerDistribution PDP = new PowerDistribution(1, ModuleType.kRev);
-
-
-  public static Robot getInstance(){
-    if(instance == null) instance = new Robot();
-    return instance;
-  }
 
   public double getVoltage(){
     return /*PDP.getVoltage()*/ 12;
@@ -130,10 +130,6 @@ public class Robot extends TimedRobot {
      instance = this;
      PDP = new PowerDistribution(Hardware.PDP_ID, ModuleType.kRev);
      robotType = type;
-   }
- 
-   public double getVoltage() {
-     return PDP.getVoltage();
    }
  
    protected Robot() {

@@ -193,6 +193,7 @@ public class Robot extends TimedRobot {
     time.restart();
 
     balance = new SequentialCommandGroup(
+      
       new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
       new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
       new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),

@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.BooleanTopic;
@@ -20,7 +19,6 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +34,6 @@ import frc.robot.util.motorcontroller.BrushlessSparkMaxController;
 import frc.robot.util.motorcontroller.MotorController;
 import frc.robot.util.motorcontroller.MotorController.MotorControlMode;
 import frc.robot.util.motorcontroller.MotorController.MotorNeutralMode;
-import frc.robot.util.motorcontroller.TalonFXController;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
@@ -124,20 +121,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				new Translation2d(-baseWidth / 2, baseLength / 2), // back left
 				new Translation2d(-baseWidth / 2, -baseLength / 2) // back right
 			};
-	/* --> below is totes' version
-
-			new Translation2d[] {
-			new Translation2d(
-					Units.inchesToMeters(12.375), Units.inchesToMeters(10.375)), // front left
-			new Translation2d(
-					Units.inchesToMeters(12.375), Units.inchesToMeters(-10.375)), // front right
-			new Translation2d(
-					Units.inchesToMeters(-12.375), Units.inchesToMeters(10.375)), // back left
-			new Translation2d(
-					Units.inchesToMeters(-12.375), Units.inchesToMeters(-10.375)) // back right
-		};
-
-	*/
 
 	public static final SwerveDriveKinematics kinematics =
 			new SwerveDriveKinematics(

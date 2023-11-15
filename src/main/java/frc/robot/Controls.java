@@ -5,15 +5,9 @@ import static frc.robot.Controls.ControlConstants.*;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmWristSetTargetCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.IntakeCommandWrist;
-import frc.robot.commands.SetArmHeightPreset;
-import frc.robot.commands.TimedIntakeCommand;
-import frc.robot.subsystems.ArmSubsystem.Height;
 
 public class Controls {
 	public static class ControlConstants {
@@ -24,7 +18,6 @@ public class Controls {
 	}
 
 	private final CommandXboxController driveController;
-	private final CommandXboxController armController;
 
 	// Drivebase
 
@@ -36,7 +29,6 @@ public class Controls {
 
 	public Controls(Subsystems s) {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
-		armController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
 		this.s = s;
 
 		triggerDriverAssistCube = driveController.leftBumper();
@@ -47,7 +39,6 @@ public class Controls {
 			bindDrivebaseControls();
 		}
 
-		bindArmControls();
 
 		/* below is an example
 		if (Subsystems.SubsystemConstants.INTAKE_ENABLED) {
@@ -77,26 +68,6 @@ public class Controls {
 		driveController.leftStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 		// this version has totes code working completely
 		
-	}
-
-	public void bindArmControls() {
-		armController.povDown().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(s.arm,0.063, 0.65), new IntakeCommandWrist(s.intake, s.arm)));
-		armController.leftBumper().onTrue(new InstantCommand(() -> s.arm.goToHeight()));
-
-		armController.a().onTrue(new SetArmHeightPreset(s.arm, Height.LOW));
-		armController.x().onTrue(new SetArmHeightPreset(s.arm, Height.MID));
-		armController.y().onTrue(new SetArmHeightPreset(s.arm, Height.HIGH));
-		armController.b().onTrue(new ArmWristSetTargetCommand(s.arm,0.37, 0.8));
-
-		armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(s.arm,0.22, 0.57), new IntakeCommandWrist(s.intake, s.arm)));
-
-		
-	
-		
-		//Need to turn off intake 
-		
-		armController.rightTrigger().onTrue(new TimedIntakeCommand(s.intake, -0.8));
-		armController.leftTrigger().onTrue(new TimedIntakeCommand(s.intake, -0.3));
 	}
 
 

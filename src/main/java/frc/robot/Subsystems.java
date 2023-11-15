@@ -10,10 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.robot.commands.ArmSetTargetCommand;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivebaseSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 
 
 public class Subsystems {
@@ -32,10 +29,6 @@ public class Subsystems {
 
 	public SwerveDrivePoseEstimator poseEstimator;
 
-	public ArmSubsystem arm;
-
-	public IntakeSubsystem intake;
-
 	public Subsystems() {
 		SwerveModulePosition[] pseudoPositions = new SwerveModulePosition[4];
 		SwerveModulePosition defaultPosition = new SwerveModulePosition(0.0, new Rotation2d());
@@ -51,9 +44,6 @@ public class Subsystems {
 		if (DRIVEBASE_ENABLED) {
 			drivebaseSubsystem = new DrivebaseSubsystem(poseEstimator, field);
 		}
-
-		arm = new ArmSubsystem();
-		intake = new IntakeSubsystem();
 		
 		
 	}

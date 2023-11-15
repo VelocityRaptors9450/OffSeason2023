@@ -63,14 +63,6 @@ public final class Constants {
   public static final int brAbsoluteId = 12;
 
   public static final int gyroId = 13;
-
-  public static final int rotationLeftId = 14;
-  public static final int rotationRightId = 15;
-  public static final int extensionId = 16;
-
-  public static final int wristId = 17;
-
-  public static final int intakeId = 18;
   
 
   public static final double baseWidth = 0.4953;

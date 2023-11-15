@@ -65,8 +65,8 @@ public class RobotContainer {
   public ArmSubsystem arm = new ArmSubsystem();
   public IntakeSubsystem intake = new IntakeSubsystem();
   
-  private ExtensionSubsystem ext = new ExtensionSubsystem();
-  //private TestsSubsystem motorTest = new TestsSubsystem();
+  //private ExtensionSubsystem ext = new ExtensionSubsystem();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final EventLoop test = new EventLoop();
   private final CommandXboxController driverController = new CommandXboxController(0);

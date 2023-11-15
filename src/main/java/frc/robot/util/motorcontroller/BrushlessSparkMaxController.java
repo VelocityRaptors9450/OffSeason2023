@@ -8,7 +8,6 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.sim.PhysicsSim;
 import frc.robot.sim.SparkMaxSimProfile;
-import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class BrushlessSparkMaxController extends MotorController {
 	private static final double TICKS_PER_ROTATION = 42.0;
@@ -112,7 +111,6 @@ public class BrushlessSparkMaxController extends MotorController {
 	@Override
 	public void configureOptimization() {
 		motorPID.setPositionPIDWrappingEnabled(true);
-		motorPID.setPositionPIDWrappingMaxInput(DrivebaseSubsystem.STEER_REDUCTION);
 		motorPID.setPositionPIDWrappingMinInput(0);
 	}
 

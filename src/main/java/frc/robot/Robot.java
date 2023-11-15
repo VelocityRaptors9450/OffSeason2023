@@ -153,10 +153,7 @@ public class Robot extends TimedRobot {
      subsystems = new Subsystems();
      controls = new Controls(subsystems);
      
- 
-     if (subsystems.drivebaseSubsystem != null) {
-       subsystems.drivebaseSubsystem.enableNoMotionCalibration();
-     }
+
  
      Shuffleboard.startRecording();
  
@@ -176,7 +173,6 @@ public class Robot extends TimedRobot {
  
      SmartDashboard.putData("Field", field);
      SmartDashboard.putData(CommandScheduler.getInstance());
-     SmartDashboard.putData(subsystems.drivebaseSubsystem);
      DriverStation.silenceJoystickConnectionWarning(true);
  
      PathPlannerServer.startServer(5811);
@@ -212,37 +208,7 @@ public class Robot extends TimedRobot {
      }
    }
  
-   public SwerveAutoBuilder getAutoBuilder(HashMap<String, Command> eventMap) {
-     if (subsystems.drivebaseSubsystem != null) {
-       return new SwerveAutoBuilder(
-           subsystems.drivebaseSubsystem::getPose, // Pose2d supplier
-           subsystems.drivebaseSubsystem
-               ::resetPose, // Pose2d consumer, used to reset odometry at the beginning of
-           // auto
-           subsystems.drivebaseSubsystem.getKinematics(), // SwerveDriveKinematics
-           new PIDConstants(
-               5.0, 0.0,
-               0.0), // PID constants to correct for translation error (used to create the X and
-           // Y
-           // PID controllers)
-           new PIDConstants(
-               3.0, 0.0,
-               0.0), // PID constants to correct for rotation error (used to create the rotation
-           // controller)
-           subsystems.drivebaseSubsystem
-               ::drive, // Module states consumer used to output to the drive subsystem
-           eventMap,
-           true, // Should the path be automatically mirrored depending on alliance color.
-           // Optional, defaults to true
-           subsystems
-               .drivebaseSubsystem // The drive subsystem. Used to properly set the requirements
-           // of
-           // path following commands
-           );
-     } else {
-       return null;
-     }
-   }
+   
    
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -377,9 +343,7 @@ public class Robot extends TimedRobot {
 
 	Shuffleboard.startRecording();
 
-	if (subsystems.drivebaseSubsystem != null) {
-		subsystems.drivebaseSubsystem.setUseVisionMeasurements(true);
-	}
+	
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -415,9 +379,7 @@ public class Robot extends TimedRobot {
   @Override
 	public void teleopExit() {
 		CommandScheduler.getInstance().cancelAll();
-		if (subsystems.drivebaseSubsystem != null) {
-			subsystems.drivebaseSubsystem.stopAllMotors();
-		}
+		
 		
 	}
   //CANCoder angle = new CANCoder(1);

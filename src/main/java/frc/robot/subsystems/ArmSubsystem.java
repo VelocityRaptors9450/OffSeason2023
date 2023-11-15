@@ -51,15 +51,13 @@ public class ArmSubsystem extends SubsystemBase{
     SparkMaxAbsoluteEncoder wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
     
     
-    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(3.3, 2));
+    private final ProfiledPIDController rotation = new ProfiledPIDController(6/*6*/ , 0, 0, new Constraints(3.5, 2.5));//3.3, 2
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
-    // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.2, 0, 0, new Constraints(1.8, 1.5));
-    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
+    // wrist i guess[]\
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.2, 0, 0, new Constraints(1.8, 1.5));//1.8, 1.5
+    private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.029);
 
-    private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
-    private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
     
     Timer timer = new Timer();
     private double ticsPerArmRevolution = 144, ticsPerWristRevolution = /*172.8*/ 120, lowTics = (50/360) * ticsPerArmRevolution, midTics = (100/360) * ticsPerArmRevolution, highTics = (135/360) * ticsPerArmRevolution, groundTics = (37.4/360) * ticsPerArmRevolution;
@@ -246,11 +244,13 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
         
-        if (Math.abs(voltage) > 6) {
-            setArmVoltage(Math.signum(voltage)*6);
-        } else {
-            setArmVoltage(voltage);
-        }
+        // if (Math.abs(voltage) > 6) {
+        //     setArmVoltage(Math.signum(voltage)*6);
+        // } else {
+        //     setArmVoltage(voltage);
+        // }
+
+        setArmVoltage(voltage);
         
     }
 

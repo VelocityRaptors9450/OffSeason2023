@@ -4,9 +4,27 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.MathConstants;
+import frc.robot.Constants.OperatorConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
+
+  /* Motor Declarations */
+  private final CANSparkMax backSpin = new CANSparkMax(OperatorConstants.ShooterBackSpin, MotorType.kBrushless);
+
+  private final CANSparkMax frontSpin1 = new CANSparkMax(OperatorConstants.ShooterBackSpin, MotorType.kBrushless);
+  private final CANSparkMax frontSpin2 = new CANSparkMax(OperatorConstants.ShooterBackSpin, MotorType.kBrushless);
+
+
+  /* PID Declarations */
+  private final ProfiledPIDController backSpinPID = new ProfiledPIDController(MathConstants.back_kp, MathConstants.back_ki, MathConstants.back_kd, null);
+
+
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {}
 

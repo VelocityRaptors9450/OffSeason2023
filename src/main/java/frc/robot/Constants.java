@@ -21,27 +21,38 @@ public final class Constants {
   
   
   public static class OperatorConstants{
-      public static final int DRIVER_CONTROLLER_PORT = 0;
+    public static final int DRIVER_CONTROLLER_PORT = 0;
 
-      public static final int FrontLeftSpeed = 1;
-      public static final int FrontLeftTurn = 2;
-      public static final int FrontLeftCAN = 3;
+    public static final int FrontLeftSpeed = 1;
+    public static final int FrontLeftTurn = 2;
+    public static final int FrontLeftCAN = 3;
 
-      public static final int FrontRightSpeed = 4;
-      public static final int FrontRightTurn = 5;
-      public static final int FrontRightCAN = 6;
+    public static final int FrontRightSpeed = 4;
+    public static final int FrontRightTurn = 5;
+    public static final int FrontRightCAN = 6;
 
-      public static final int BackLeftSpeed = 7;
-      public static final int BackLeftTurn = 8;
-      public static final int BackLeftCAN = 9;
-      
-      public static final int BackRightSpeed = 10;
-      public static final int BackRightTurn = 11;
-      public static final int BackRightCAN = 12;
+    public static final int BackLeftSpeed = 7;
+    public static final int BackLeftTurn = 8;
+    public static final int BackLeftCAN = 9;
+    
+    public static final int BackRightSpeed = 10;
+    public static final int BackRightTurn = 11;
+    public static final int BackRightCAN = 12;
 
-      public static final int ShooterBackSpin = 13;
-      public static final int ShooterFront1 = 14;
-      public static final int ShooterFront2 = 15;
+    public static final int ShooterBackSpin = 13;
+    public static final int ShooterFront1 = 14;
+    public static final int ShooterFront2 = 15;
+  }
+
+  public static class MathConstants
+  {
+    public static final double back_kp = 0;
+    public static final double back_ki = 0;
+    public static final double back_kd = 0;
+
+    public static final double front_kp = 0;
+    public static final double front_ki = 0;
+    public static final double front_kd = 0;
   }
 
 }

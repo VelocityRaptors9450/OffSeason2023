@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.server.PathPlannerServer;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.networktables.NetworkTable;
@@ -179,7 +180,7 @@ public class Robot extends TimedRobot {
      SmartDashboard.putData(subsystems.drivebaseSubsystem);
      DriverStation.silenceJoystickConnectionWarning(true);
  
-     PathPlannerServer.startServer(5811);
+     //PathPlannerServer.startServer(5811);
  
      logRobotInfo();
 
@@ -209,38 +210,6 @@ public class Robot extends TimedRobot {
        System.out.println("Git info:\n" + Files.readString(gitInfoFile.toPath()));
      } catch (IOException e) {
        DriverStation.reportWarning("Could not open git info file", true);
-     }
-   }
- 
-   public SwerveAutoBuilder getAutoBuilder(HashMap<String, Command> eventMap) {
-     if (subsystems.drivebaseSubsystem != null) {
-       return new SwerveAutoBuilder(
-           subsystems.drivebaseSubsystem::getPose, // Pose2d supplier
-           subsystems.drivebaseSubsystem
-               ::resetPose, // Pose2d consumer, used to reset odometry at the beginning of
-           // auto
-           subsystems.drivebaseSubsystem.getKinematics(), // SwerveDriveKinematics
-           new PIDConstants(
-               5.0, 0.0,
-               0.0), // PID constants to correct for translation error (used to create the X and
-           // Y
-           // PID controllers)
-           new PIDConstants(
-               3.0, 0.0,
-               0.0), // PID constants to correct for rotation error (used to create the rotation
-           // controller)
-           subsystems.drivebaseSubsystem
-               ::drive, // Module states consumer used to output to the drive subsystem
-           eventMap,
-           true, // Should the path be automatically mirrored depending on alliance color.
-           // Optional, defaults to true
-           subsystems
-               .drivebaseSubsystem // The drive subsystem. Used to properly set the requirements
-           // of
-           // path following commands
-           );
-     } else {
-       return null;
      }
    }
    
@@ -347,7 +316,7 @@ public class Robot extends TimedRobot {
     // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
     // To build: connect ethernet to roborio, click on vscode, and hit shift f5
 
-    m_autonomousCommand = m_autoChooser.getSelected();
+    m_autonomousCommand = subsystems.drivebaseSubsystem.getAuto();
 
     //schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

@@ -55,7 +55,7 @@ public class ArmSubsystem extends SubsystemBase{
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.1, 0, 0, new Constraints(1.8, 1.5));
+    private final ProfiledPIDController wrist = new ProfiledPIDController(1.2, 0, 0, new Constraints(1.8, 1.5));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
@@ -111,10 +111,12 @@ public class ArmSubsystem extends SubsystemBase{
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300); 
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+
         //wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535); 
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); 
         
-       
+        setArmGoal(0.37);
+        setWristGoal(0.40);
 
 
     }
@@ -148,6 +150,7 @@ public class ArmSubsystem extends SubsystemBase{
         setWristGoal(0.40);
 
     }
+    
 
    
 
@@ -183,7 +186,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void upManual(){
-        armTarget += 0.08;
+        armTarget += 0.01;
 
         //wrist.setGoal(2.57 - armTarget);
     }

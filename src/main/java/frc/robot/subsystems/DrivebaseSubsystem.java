@@ -31,7 +31,6 @@ import frc.robot.sim.PhysicsSim;
 import frc.robot.util.ModuleUtil;
 import frc.robot.util.PFFController;
 import frc.robot.util.gyroscope.Gyroscope;
-import frc.robot.util.gyroscope.NavXGyro;
 import frc.robot.util.gyroscope.Pigeon2Gyro;
 import frc.robot.util.motorcontroller.BrushlessSparkMaxController;
 import frc.robot.util.motorcontroller.MotorController;

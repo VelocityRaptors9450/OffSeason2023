@@ -58,55 +58,12 @@ import edu.wpi.first.wpilibj.GenericHID;
  */
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  public ArmSubsystem arm = new ArmSubsystem();
-  public IntakeSubsystem intake = new IntakeSubsystem();
-  
-  //private ExtensionSubsystem ext = new ExtensionSubsystem();
-  //private TestsSubsystem motorTest = new TestsSubsystem();
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final EventLoop test = new EventLoop();
-  private final CommandXboxController driverController = new CommandXboxController(0);
-  private final PS4Controller driveReveal = new PS4Controller(0);
-  private final CommandXboxController armController = new CommandXboxController(1);
-  private IntakeCommand intakeCommand = new IntakeCommand(intake);
-  InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
-
-  double wristScorePos = 0.46;
-  double armScorePos = 0.35;
+  // The robot's subsystems and commands are defined here..
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
-    // right trigger = intake pos
-    // left trigger = outake
-    // left bumper = scoring pos
-
-    armController.povDown().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.063, 0.65), new IntakeCommandWrist(intake, arm)));
-    armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
-
-    armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
-    armController.x().onTrue(new SetArmHeightPreset(arm, Height.MID));
-    armController.y().onTrue(new SetArmHeightPreset(arm, Height.HIGH));
-    armController.b().onTrue(new ArmWristSetTargetCommand(arm,0.37, 0.8));
-
-    armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.22, 0.57), new IntakeCommandWrist(intake, arm)));
-
-    
-  
-    
-    //Need to turn off intake 
-    
-    armController.rightTrigger().onTrue(new TimedIntakeCommand(intake, -0.8));
-    armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
-    
-    
-
-    
-
-    configureBindings();
   }
 
   /**
@@ -179,9 +136,6 @@ public class RobotContainer {
 
     // An example command will be run in autonomous
     return null;
-  }
-  public double getDriverRawAxis(int axis){
-      return driverController.getRawAxis(axis);
   }
 
   

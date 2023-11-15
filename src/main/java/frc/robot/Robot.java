@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.networktables.NetworkTable;
@@ -98,7 +100,6 @@ public class Robot extends TimedRobot {
   //private TalonFX motor1 = new TalonFX(1);
   
   //private DoubleLogEntry telemetry;
-  private RobotContainer m_robotContainer;
  // private Timer time = new Timer();
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -181,10 +182,6 @@ public class Robot extends TimedRobot {
      PathPlannerServer.startServer(5811);
  
      logRobotInfo();
-
-
-    m_robotContainer = new RobotContainer();
-    m_robotContainer.arm.initialize();
 
     /* Initializing the Autonomous Chooser (stuff) */
     // Adds the options for the auto chooser.
@@ -377,8 +374,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     time.restart();
-
-    m_robotContainer.arm.initialize();
 
 	Shuffleboard.startRecording();
 

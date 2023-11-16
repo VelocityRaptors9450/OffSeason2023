@@ -51,7 +51,7 @@ public class ArmSubsystem extends SubsystemBase{
     SparkMaxAbsoluteEncoder wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
     
     
-    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(3.3, 2));
+    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(3.5, 2.5));
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
@@ -246,11 +246,9 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Rotation FF", ffValue);
         SmartDashboard.putNumber("Rotation Voltage", voltage);
         
-        if (Math.abs(voltage) > 6) {
-            setArmVoltage(Math.signum(voltage)*6);
-        } else {
-            setArmVoltage(voltage);
-        }
+        
+        setArmVoltage(voltage);
+        
         
     }
 

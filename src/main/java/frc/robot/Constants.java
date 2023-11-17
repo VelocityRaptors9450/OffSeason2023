@@ -64,9 +64,13 @@ public final class Constants {
 
   public static final int gyroId = 13;
 
-  public static final int rotationLeftId = 14;
-  public static final int rotationRightId = 15;
-  public static final int extensionId = 16;
+  public static final int rotationLeftId = 25;
+  public static final int rotationRightId = 24;
+  public static final int extensionId = 23;
+
+  public static final int shooterFrontSpinL = 14;
+  public static final int shooterFrontSpinR = 15;
+  public static final int shooterBackSpin = 16;
 
   public static final int wristId = 17;
 

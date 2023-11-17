@@ -15,10 +15,12 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.commands.NewRotationCommand;
 import frc.robot.commands.SetArmHeightPreset;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ArmSubsystem.Height;
 import frc.robot.commands.ManualDriveCommand;
 
@@ -64,7 +66,7 @@ public class RobotContainer {
   public DriveTrain driveTrain = new DriveTrain();
   public ArmSubsystem arm = new ArmSubsystem();
   public IntakeSubsystem intake = new IntakeSubsystem();
-  
+  public ShooterSubsystem shooter = new ShooterSubsystem();
   //private ExtensionSubsystem ext = new ExtensionSubsystem();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -72,18 +74,31 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final PS4Controller driveReveal = new PS4Controller(0);
   private final CommandXboxController armController = new CommandXboxController(1);
-  private IntakeCommand intakeCommand = new IntakeCommand(intake);
-  InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
+  //private IntakeCommand intakeCommand = new IntakeCommand(intake);
+  //InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
+  
 
   double wristScorePos = 0.46;
   double armScorePos = 0.35;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
-                                                          driverController::getLeftX, driverController::getRightX, 
-                                                          () -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
+    //driveTrain.setDefaultCommand(new DriveCommandSuppliers(driveTrain, driverController::getLeftY, 
+                                                          //driverController::getLeftX, driverController::getRightX, 
+                                                          //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
+    
+    //shooter.setDefaultCommand(new ShooterCommand());
+    
+    armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(1,0)));
+    armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));
+    armController.rightBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(0, 1)));
+    armController.rightBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));
+    
+
+    
+    
+    
     //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
     
     
@@ -91,13 +106,13 @@ public class RobotContainer {
     // left trigger = outake
     // left bumper = scoring pos
 
-    armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.03, 0.72), new IntakeCommand(intake)));
-    armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
+    //armController.rightTrigger().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(arm,0.03, 0.72), new IntakeCommand(intake)));
+    //armController.leftBumper().onTrue(new InstantCommand(() -> arm.goToHeight()));
 
-    armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
-    armController.x().onTrue(new SetArmHeightPreset(arm, Height.MID));
-    armController.y().onTrue(new SetArmHeightPreset(arm, Height.HIGH));
-    armController.b().onTrue(new SetArmHeightPreset(arm, Height.GROUND));
+    //armController.a().onTrue(new SetArmHeightPreset(arm, Height.LOW));
+    //armController.x().onTrue(new SetArmHeightPreset(arm, Height.MID));
+    //armController.y().onTrue(new SetArmHeightPreset(arm, Height.HIGH));
+    //armController.b().onTrue(new SetArmHeightPreset(arm, Height.GROUND));
 
     //armController.y().onTrue(new ArmSetTargetCommand(arm, 0.35));
     //armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.03)/*, new IntakeCommand(intake)*/));
@@ -122,7 +137,7 @@ public class RobotContainer {
     // driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
     
     // armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
-    armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
+    //armController.leftTrigger().onTrue(new TimedIntakeCommand(intake, -0.3));
     // armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
     // armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
     // armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));

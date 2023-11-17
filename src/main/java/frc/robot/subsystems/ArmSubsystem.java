@@ -55,7 +55,7 @@ public class ArmSubsystem extends SubsystemBase{
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
-    private final ProfiledPIDController wrist = new ProfiledPIDController(1.2, 0, 0, new Constraints(1.8, 1.5));
+    private final ProfiledPIDController wrist = new ProfiledPIDController(2, 0, 0, new Constraints(1.2, 1.2));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
@@ -72,6 +72,8 @@ public class ArmSubsystem extends SubsystemBase{
         //leftMotor.setSmartCurrentLimit(40);
         rightMotor.setSmartCurrentLimit(40);
         wristMotor.setSmartCurrentLimit(40);
+        rightMotor.setIdleMode(IdleMode.kBrake);
+        wristMotor.setIdleMode(IdleMode.kBrake);
         // leftMotor.restoreFactoryDefaults();
        
 
@@ -147,7 +149,7 @@ public class ArmSubsystem extends SubsystemBase{
         //initialSetWristEncoder();
            
         setArmGoal(0.37);
-        setWristGoal(0.40);
+        setWristGoal(0.18);
 
     }
     
@@ -297,10 +299,12 @@ public class ArmSubsystem extends SubsystemBase{
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("Right Arm Position", getPosition());
-        SmartDashboard.putNumber("Target?", getGoal());;
+        SmartDashboard.putNumber("Target?", wrist.getGoal().position);
+        SmartDashboard.putNumber("Wrist Error", wrist.getPositionError());
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
         SmartDashboard.putNumber("Wrist Position", getWristPosition());
+        SmartDashboard.putNumber("Arm current", rightMotor.getOutputCurrent());
         
 
         
@@ -363,16 +367,16 @@ public class ArmSubsystem extends SubsystemBase{
     public void goToHeight() {
         if(currentHeight == Height.HIGH){
             setArmGoal(0.5);
-            setWristGoal(0.5);
+            setWristGoal(0.28);
         }else if(currentHeight == Height.MID){
             setArmGoal(0.5);
-            setWristGoal(0.67);
+            setWristGoal(0.45);
         }else if(currentHeight == Height.LOW){
             setArmGoal(0.5);
-            setWristGoal(0.89);
+            setWristGoal(0.67);
         }else{
             setArmGoal(0.37);
-            setWristGoal(0.8);
+            setWristGoal(0.58);
         }
     }
 

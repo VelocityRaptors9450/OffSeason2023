@@ -23,8 +23,10 @@ public class ShooterSubsystem extends SubsystemBase {
   //private final ProfiledPIDController backSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(5, 10));
   
   public ShooterSubsystem() {
-    leftFrontSpinMotor.follow(rightFrontSpinMotor, true);
     backSpinMotor.setInverted(true);
+    leftFrontSpinMotor.setInverted(true);
+    rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
+
   }
 
   public void setBackSpinVoltage(double voltage){
@@ -33,6 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setForwardSpinVoltage(double voltage){
     leftFrontSpinMotor.setVoltage(voltage);
+    rightFrontSpinMotor.setVoltage(voltage);
   }
   public void setVoltage(double forSpinVolt, double backSpinVolt){
     setBackSpinVoltage(backSpinVolt);

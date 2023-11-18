@@ -25,11 +25,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SecondAutoBalanceCommand;
-import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.AutoRotateCommand;
 import frc.robot.commands.FirstAutoBalanceCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
-import frc.robot.subsystems.ArmSubsystem;
+
 
 
 
@@ -94,7 +93,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_robotContainer.arm.initialize();
 
     //motor1.set(ControlMode.PercentOutput, 0); 
 
@@ -150,54 +148,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     time.restart();
 
-    SequentialCommandGroup balance = new SequentialCommandGroup(
-      new ManualDriveCommand(m_robotContainer.driveTrain, () -> -5, () -> 0, () -> 0).withTimeout(0.5),
-      new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15),
-      new WaitCommand(1),
-      
-      new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-      );
-    //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
-    //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
-    //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
-    /*
-    m_autonomousCommand = new AutoRotateCommand(m_robotContainer.driveTrain, () -> 40, () -> 5).withTimeout(10)
-    .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
-    */
-
-    redBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-    ));
-
-    blueBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-    ));
-
-    redNoBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-    ));
-
-    blueNoBumpAuto = new ArmSetTargetCommand(m_robotContainer.arm, 1.7).andThen(new WaitCommand(3))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 2.57))
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
-    .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-    .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
-    ));
-
+    
     m_autonomousCommand = blueNoBumpAuto;
 
     //schedule the autonomous command (example)
@@ -226,7 +177,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     time.restart();
 
-    m_robotContainer.arm.initialize();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -263,7 +214,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    SmartDashboard.putNumber("Pitch", m_robotContainer.driveTrain.getPitch());
 
     
 

@@ -5,23 +5,18 @@
 package frc.robot;
 
 
-import frc.robot.commands.ArmManualCommand;
-import frc.robot.commands.ArmSetTargetCommand;
-import frc.robot.commands.ArmWristSetTargetCommand;
+
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommandSuppliers;
-import frc.robot.commands.ExtensionCommand;
+
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
-import frc.robot.commands.NewRotationCommand;
-import frc.robot.commands.SetArmHeightPreset;
+
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TimedIntakeCommand;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.ArmSubsystem.Height;
 import frc.robot.commands.ManualDriveCommand;
 
 import java.time.Instant;
@@ -46,7 +41,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import frc.robot.subsystems.ExtensionSubsystem;
+
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -63,9 +58,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public DriveTrain driveTrain = new DriveTrain();
-  public ArmSubsystem arm = new ArmSubsystem();
-  public IntakeSubsystem intake = new IntakeSubsystem();
+  //public DriveTrain driveTrain = new DriveTrain();
+
   public ShooterSubsystem shooter = new ShooterSubsystem();
   //private ExtensionSubsystem ext = new ExtensionSubsystem();
   
@@ -88,12 +82,10 @@ public class RobotContainer {
                                                           //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
     
-    //shooter.setDefaultCommand(new ShooterCommand());
+    shooter.setDefaultCommand(new ShooterCommand(shooter));
     
-    armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(1,0)));
-    armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));
-    armController.rightBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(0, 1)));
-    armController.rightBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));
+    //armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(2,1.8)));
+    //armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));
     
 
     

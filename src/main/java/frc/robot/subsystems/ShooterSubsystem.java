@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -20,13 +21,16 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinR, MotorType.kBrushless);
 
   
-  //private final ProfiledPIDController backSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(5, 10));
-  
+  private final ProfiledPIDController backSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
+  private final ProfiledPIDController frontSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0,0));
   public ShooterSubsystem() {
     backSpinMotor.setInverted(true);
     leftFrontSpinMotor.setInverted(true);
     rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
-
+    
+    backSpinMotor.setIdleMode(IdleMode.kCoast);
+    leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
+    rightFrontSpinMotor.setIdleMode(IdleMode.kCoast);
   }
 
   public void setBackSpinVoltage(double voltage){

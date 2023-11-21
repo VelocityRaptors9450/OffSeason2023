@@ -5,22 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveTrain;
 
-public class FL_wheel extends CommandBase
-{
+public class FL_wheel extends CommandBase{
+  DriveTrain drive;
 
   /** Creates a new FL_wheel. */
-  public FL_wheel() {
-    
+  public FL_wheel(DriveTrain drive) {
+    this.drive = drive;
   }
-
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    drive.flrun();
+    //System.out.println("front left running");
+  }
 
   // Called once the command ends or is interrupted.
   @Override

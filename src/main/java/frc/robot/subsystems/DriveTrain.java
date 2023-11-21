@@ -17,8 +17,25 @@ public class DriveTrain extends SubsystemBase
   public static final CANSparkMax bl = new CANSparkMax(Constants.blDriveId, MotorType.kBrushless);
   public static final CANSparkMax br = new CANSparkMax(Constants.brDriveId, MotorType.kBrushless);
 
+  public void flrun()
+  {
+    fl.set(0.2);
+  }
 
+  public void frrun()
+  {
+    fr.set(0.2);
+  }
 
+  public void blrun()
+  {
+    bl.set(0.2);
+  }
+
+  public void brrun()
+  {
+    br.set(0.2);
+  }
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {}

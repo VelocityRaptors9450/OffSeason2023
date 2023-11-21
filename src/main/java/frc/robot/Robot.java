@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.FL_wheel;
 import frc.robot.commands.FR_wheel;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.BL_wheel;
 import frc.robot.commands.BR_wheel;
 
 public class Robot extends TimedRobot {
+  private final DriveTrain drive = new DriveTrain();
 
   /* Command Declarations */
   private Command frontLeft;
@@ -31,6 +33,11 @@ public class Robot extends TimedRobot {
    @Override
    public void robotInit()
    {
+    frontLeft = new FL_wheel(drive).withTimeout(3);
+    frontRight = new FR_wheel(drive).withTimeout(3);
+    backLeft = new BL_wheel(drive).withTimeout(3);
+    backRight = new BR_wheel(drive).withTimeout(3);
+
     /* Initializing the Autonomous Chooser (stuff) */
     // Adds the options for the auto chooser.
     m_autoChooser.addOption("Front Left", frontLeft);
@@ -66,12 +73,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     time.restart();
-
-
-    frontLeft = new FL_wheel().withTimeout(3);
-    frontRight = new FR_wheel().withTimeout(3);
-    backLeft = new BL_wheel().withTimeout(3);
-    backRight = new BR_wheel().withTimeout(3);
 
     m_autonomousCommand = m_autoChooser.getSelected();
 

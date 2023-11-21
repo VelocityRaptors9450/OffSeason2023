@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -23,6 +26,10 @@ public class ShooterSubsystem extends SubsystemBase {
   
   private final ProfiledPIDController backSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
   private final ProfiledPIDController frontSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0,0));
+  
+
+  private final RelativeEncoder encoder = rightFrontSpinMotor.getAlternateEncoder(8192);
+
   public ShooterSubsystem() {
     backSpinMotor.setInverted(true);
     leftFrontSpinMotor.setInverted(true);
@@ -44,6 +51,14 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setVoltage(double forSpinVolt, double backSpinVolt){
     setBackSpinVoltage(backSpinVolt);
     setForwardSpinVoltage(forSpinVolt);
+  }
+
+  
+
+  public void setVelocity(double rpm){
+    encoder.getVelocity();
+    leftFrontSpinMotor.set(rpm);
+    //Hi My name is Krish
   }
   
 

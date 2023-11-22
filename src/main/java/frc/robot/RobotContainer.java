@@ -81,8 +81,8 @@ public class RobotContainer {
                                                           //driverController::getLeftX, driverController::getRightX, 
                                                           //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
-    
-    shooter.setDefaultCommand(new ShooterCommand(shooter));
+    //10, 12 max
+    shooter.setDefaultCommand(new ShooterCommand(shooter,1,0,10, 12));
     
     //armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(2,1.8)));
     //armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));

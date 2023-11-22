@@ -148,59 +148,119 @@ public class Robot extends TimedRobot {
  
    @Override
    public void robotInit() {
-     LiveWindow.disableAllTelemetry();
-     //LiveWindow.enableTelemetry(PDP);
- 
-     subsystems = new Subsystems();
-     controls = new Controls(subsystems);
-     
- 
-     if (subsystems.drivebaseSubsystem != null) {
-       subsystems.drivebaseSubsystem.enableNoMotionCalibration();
-     }
- 
-     Shuffleboard.startRecording();
- 
-     if (RobotBase.isReal()) {
-       DataLogManager.start();
-       DriverStation.startDataLog(DataLogManager.getLog(), true);
-     }
- 
-     CommandScheduler.getInstance()
-         .onCommandInitialize(
-             command -> System.out.println("Command initialized: " + command.getName()));
-     CommandScheduler.getInstance()
-         .onCommandInterrupt(
-             command -> System.out.println("Command interrupted: " + command.getName()));
-     CommandScheduler.getInstance()
-         .onCommandFinish(command -> System.out.println("Command finished: " + command.getName()));
- 
-     SmartDashboard.putData("Field", field);
-     SmartDashboard.putData(CommandScheduler.getInstance());
-     SmartDashboard.putData(subsystems.drivebaseSubsystem);
-     DriverStation.silenceJoystickConnectionWarning(true);
- 
-     //PathPlannerServer.startServer(5811);
- 
-     logRobotInfo();
+      LiveWindow.disableAllTelemetry();
+      //LiveWindow.enableTelemetry(PDP);
 
-    /* Initializing the Autonomous Chooser (stuff) */
-    // Adds the options for the auto chooser.
-    // m_autoChooser.addOption("Balance", balance);
-    // m_autoChooser.addOption("Score High Only", scoreHighOnly);
-    // m_autoChooser.addOption("Red Bump", redBumpAuto);
-    // m_autoChooser.addOption("Blue Bump", blueBumpAuto);
-    // m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
-    // m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
+      subsystems = new Subsystems();
+      controls = new Controls(subsystems);
 
-    // Puts the auto chooser into it's own tab on Shuffleboard.
-    // ShuffleboardTab autoTab =
-    //   Shuffleboard.getTab("Auto");
 
-    // Shuffleboard.getTab("Auto")
-    //   .add("Autonomous Select:", m_autoChooser)
-    //   .withWidget(BuiltInWidgets.kSplitButtonChooser)
-    //   .withSize(5, 1);
+      if (subsystems.drivebaseSubsystem != null) {
+        subsystems.drivebaseSubsystem.enableNoMotionCalibration();
+      }
+
+      Shuffleboard.startRecording();
+
+      if (RobotBase.isReal()) {
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog(), true);
+      }
+
+      CommandScheduler.getInstance()
+          .onCommandInitialize(
+              command -> System.out.println("Command initialized: " + command.getName()));
+      CommandScheduler.getInstance()
+          .onCommandInterrupt(
+              command -> System.out.println("Command interrupted: " + command.getName()));
+      CommandScheduler.getInstance()
+          .onCommandFinish(command -> System.out.println("Command finished: " + command.getName()));
+
+      SmartDashboard.putData("Field", field);
+      SmartDashboard.putData(CommandScheduler.getInstance());
+      SmartDashboard.putData(subsystems.drivebaseSubsystem);
+      DriverStation.silenceJoystickConnectionWarning(true);
+
+      //PathPlannerServer.startServer(5811);
+
+      logRobotInfo();
+
+
+      /* Defining the Autonomous Commands. */
+      // balance = new SequentialCommandGroup(
+      //   new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
+      //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
+      //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
+      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
+      //   new WaitCommand(0.5),
+      //   new TimedIntakeCommand(m_robotContainer.intake, -0.2),
+      //   new WaitCommand(0.5),
+      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
+      //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
+      //   new WaitCommand(1),
+        
+      //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+      //   //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
+      //   );
+
+      // scoreHighOnly = new SequentialCommandGroup(
+      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
+      //   new WaitCommand(1),
+      //   new TimedIntakeCommand(m_robotContainer.intake, -0.8),
+      //   new WaitCommand(1),
+      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
+      //   );
+
+
+      // redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+      // ));
+
+      // blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+      // ));
+
+      // redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+      // ));
+
+      // blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
+      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+      // .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
+      // ));
+
+      /* Initializing the Autonomous Chooser (stuff) */
+      //Adds the options for the auto chooser.
+      m_autoChooser.addOption("Balance", balance);
+      m_autoChooser.addOption("Score High Only", scoreHighOnly);
+      m_autoChooser.addOption("Red Bump", redBumpAuto);
+      m_autoChooser.addOption("Blue Bump", blueBumpAuto);
+      m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
+      m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
+
+      //Puts the auto chooser into it's own tab on Shuffleboard.
+      ShuffleboardTab autoTab =
+        Shuffleboard.getTab("Auto");
+
+      Shuffleboard.getTab("Auto")
+        .add("Autonomous Select:", m_autoChooser)
+        .withWidget(BuiltInWidgets.kSplitButtonChooser)
+        .withSize(5, 1);
 
    }
  
@@ -246,79 +306,23 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     time.restart();
-
-    // balance = new SequentialCommandGroup(
-    //   new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
-    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
-    //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
-    //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
-    //   new WaitCommand(0.5),
-    //   new TimedIntakeCommand(m_robotContainer.intake, -0.2),
-    //   new WaitCommand(0.5),
-    //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
-    //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
-    //   new WaitCommand(1),
-      
-    //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-    //   //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
-    //   );
-
-    //   scoreHighOnly = new SequentialCommandGroup(
-    //     new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
-    //     new WaitCommand(1),
-    //     new TimedIntakeCommand(m_robotContainer.intake, -0.8),
-    //     new WaitCommand(1),
-    //     new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
-    //     );
-    //m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
-    //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
-    //.andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
-    /*
-    m_autonomousCommand = new AutoRotateCommand(m_robotContainer.driveTrain, () -> 40, () -> 5).withTimeout(10)
-    .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
-    */
-
     
-    // redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-    // ));
-
-    // blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-    // ));
-
-    // redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-    // ));
-
-    // blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-    // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-    // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
-    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-    // .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
-    // ));
-    
-    // CHANGE AUTO HERE:
+    // CHANGE AUTO HERE (OLD):
     // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
     // To build: connect ethernet to roborio, click on vscode, and hit shift f5
 
+    // m_autonomousCommand = m_autoChooser.getSelected();
+
     m_autonomousCommand = subsystems.drivebaseSubsystem.getAuto();
 
+    // m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
+    // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 10).withTimeout(7));
+
+    // m_autonomousCommand = new AutoRotateCommand(m_robotContainer.driveTrain, () -> 40, () -> 5).withTimeout(10)
+    // .andThen(new AutoRotateCommand(m_robotContainer.driveTrain, () -> 280, () -> 5).withTimeout(10));
     //schedule the autonomous command (example)
+
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
     }
@@ -332,11 +336,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     //System.out.println("Here");
-    
-
-
-    
-
 
   }
   //private CANSparkMax test = new CANSparkMax(9, MotorType.kBrushless);

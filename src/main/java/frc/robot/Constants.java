@@ -66,11 +66,11 @@ public final class Constants {
 
 
 
-  public static final int shooterFrontSpinL = 14;
-  public static final int shooterFrontSpinR = 15;
-  public static final int shooterBackSpin = 16;
+  public static final int shooterFrontSpinLId = 14;
+  public static final int shooterFrontSpinRId = 15;
+  public static final int shooterBackSpinId = 16;
 
-  public static final int wristId = 17;
+  public static final int turretId = 17;
 
   public static final int intakeId = 18;
   

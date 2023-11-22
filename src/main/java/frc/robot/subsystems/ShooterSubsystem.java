@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private final CANSparkMax backSpinMotor = new CANSparkMax(Constants.shooterBackSpin, MotorType.kBrushless);
+  private final CANSparkMax backSpinMotor = new CANSparkMax(Constants.shooterBackSpinId, MotorType.kBrushless);
   //robot's perspectice left and right
-  private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinL, MotorType.kBrushless);
-  private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinR, MotorType.kBrushless);
+  private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
+  private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
   
   //private final ProfiledPIDController backSpin = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(5, 10));

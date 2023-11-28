@@ -26,6 +26,8 @@ public class LimelightMovementSubsystem extends SubsystemBase {
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry ta = table.getEntry("ta");
+  //returns vision derived pose
+  double[] visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
   public LimelightMovementSubsystem() {}
 
 
@@ -35,8 +37,11 @@ public class LimelightMovementSubsystem extends SubsystemBase {
     // min distance:
     double minDistance = 0;
     if (getDistance() < maxDistance || getDistance() > minDistance) { //if between the max and min values
-      // change angle/voltage etc.
-      
+      if (Math.abs(x) > 0) {
+        // turn drive train/turret the opposite value of x --> Math.signum(x)
+      } 
+    } else {
+      // don't turn drivetrain/turret
     }
 
   }
@@ -68,6 +73,8 @@ public class LimelightMovementSubsystem extends SubsystemBase {
     x = tx.getDouble(0.0);
     y = ty.getDouble(0.0);
     area = ta.getDouble(0.0);
+
+    shootNoMatterPosition();
 
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);

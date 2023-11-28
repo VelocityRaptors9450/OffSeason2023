@@ -49,8 +49,8 @@ public class ShooterSubsystem extends SubsystemBase {
     //leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
     rightFrontSpinMotor.setIdleMode(IdleMode.kCoast);
 
-    backSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30); // rev / min   *   1 min / 60 sec   *  2Math.PI * r / rev    radius(2 inches) in meters
-    frontSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
+    //backSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30); // rev / min   *   1 min / 60 sec   *  2Math.PI * r / rev    radius(2 inches) in meters
+    //frontSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
     //backSpinMotor.getEncoder().setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
     //rightFrontSpinMotor.getEncoder().setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
 

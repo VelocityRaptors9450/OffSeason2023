@@ -22,15 +22,15 @@ import frc.robot.Constants;
 public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax backSpinMotor = new CANSparkMax(Constants.shooterBackSpinId, MotorType.kBrushless);
   //robot's perspectice left and right
-  private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
+  //private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
   private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
   
   private final PIDController backSpin = new PIDController(0, 0, 0);
   private final PIDController frontSpin = new PIDController(0, 0, 0);
    
-  private final SimpleMotorFeedforward backSpinff = new SimpleMotorFeedforward(0.5, 0);// ka?
-  private final SimpleMotorFeedforward frontSpinff = new SimpleMotorFeedforward(0, 0);// ka?
+  private final SimpleMotorFeedforward backSpinff = new SimpleMotorFeedforward(0.2, 0);// ka?
+  private final SimpleMotorFeedforward frontSpinff = new SimpleMotorFeedforward(0.2, 0);// ka?
 
   private final RelativeEncoder backSpinEncoder = backSpinMotor.getAlternateEncoder(8192);
   private final RelativeEncoder frontSpinEncoder = rightFrontSpinMotor.getAlternateEncoder(8192);
@@ -41,15 +41,19 @@ public class ShooterSubsystem extends SubsystemBase {
  */ 
   public ShooterSubsystem() {
     backSpinMotor.setInverted(true);
-    leftFrontSpinMotor.setInverted(true);
-    rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
+    //leftFrontSpinMotor.setInverted(true);
+    //rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
+    rightFrontSpinMotor.setInverted(true);
     
     backSpinMotor.setIdleMode(IdleMode.kCoast);
-    leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
+    //leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
     rightFrontSpinMotor.setIdleMode(IdleMode.kCoast);
 
-    backSpinEncoder.setVelocityConversionFactor(4 * 0.0254 * Math.PI / 30); // rev / min   *   1 min / 60 sec   *  2Math.PI * r / rev    radius(4 inches) in meters
-    frontSpinEncoder.setVelocityConversionFactor(4 * 0.0254 * Math.PI / 30);
+    backSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30); // rev / min   *   1 min / 60 sec   *  2Math.PI * r / rev    radius(2 inches) in meters
+    frontSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
+    //backSpinMotor.getEncoder().setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
+    //rightFrontSpinMotor.getEncoder().setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30);
+
     
   }
 
@@ -58,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setForwardSpinVoltage(double voltage){
-    leftFrontSpinMotor.setVoltage(voltage);
+    //leftFrontSpinMotor.setVoltage(voltage);
     rightFrontSpinMotor.setVoltage(voltage);
   }
   public void setVoltage(double forSpinVolt, double backSpinVolt){
@@ -66,10 +70,11 @@ public class ShooterSubsystem extends SubsystemBase {
     setForwardSpinVoltage(forSpinVolt);
   }
 
-  
+   
 
   public void setVelocity(double targetVel, double targetAcc){
-    leftFrontSpinMotor.set(frontSpinff.calculate(targetVel));
+    //leftFrontSpinMotor.set(frontSpinff.calculate(targetVel));
+    rightFrontSpinMotor.set(frontSpinff.calculate(targetVel, targetAcc));
     backSpinMotor.set(backSpinff.calculate(targetVel));
     
     //Hi My name is Krish
@@ -79,10 +84,12 @@ public class ShooterSubsystem extends SubsystemBase {
   
   public double getVelocityFrontSpin(){
     return frontSpinEncoder.getVelocity();
+    //return rightFrontSpinMotor.getEncoder().getVelocity();
   }
 
   public double getVelocityBackSpin(){
     return backSpinEncoder.getVelocity();
+    //return backSpinMotor.getEncoder().getVelocity();
   }
   
   

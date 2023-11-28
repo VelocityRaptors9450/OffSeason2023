@@ -39,20 +39,6 @@ public final class Constants {
     public static final int BackRightTurn = 11;
     public static final int BackRightCAN = 12;
 
-    public static final int ShooterBackSpin = 13;
-    public static final int ShooterFront1 = 14;
-    public static final int ShooterFront2 = 15;
+    public static final int CompressorModuleID = 7;
   }
-
-  public static class MathConstants
-  {
-    public static final double back_kp = 0;
-    public static final double back_ki = 0;
-    public static final double back_kd = 0;
-
-    public static final double front_kp = 0;
-    public static final double front_ki = 0;
-    public static final double front_kd = 0;
-  }
-
 }

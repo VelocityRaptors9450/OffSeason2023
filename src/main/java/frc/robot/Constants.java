@@ -20,7 +20,8 @@ public final class Constants {
   public static final double minWrist = -26.6 + 5; //added to make sure it doesn't go to max
   
   
-  public static class OperatorConstants{
+  public static class OperatorConstants
+  {
     public static final int DRIVER_CONTROLLER_PORT = 0;
 
     public static final int FrontLeftSpeed = 1;
@@ -38,7 +39,13 @@ public final class Constants {
     public static final int BackRightSpeed = 10;
     public static final int BackRightTurn = 11;
     public static final int BackRightCAN = 12;
+  }
 
+  public static class PneumaticsConstants
+  {
     public static final int CompressorModuleID = 7;
+
+    public static final double MaxPSI = 1;
+    public static final double MinPSI = 0.8;
   }
 }

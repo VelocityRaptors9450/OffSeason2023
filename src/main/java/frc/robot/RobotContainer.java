@@ -5,31 +5,31 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.PneumaticsSubsytem;
+import frc.robot.commands.PneumaticsCommand;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class RobotContainer {
+public class RobotContainer
+{
+  PneumaticsSubsytem subsystem = new PneumaticsSubsytem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
 
 
   public RobotContainer()
   {
+    subsystem.setDefaultCommand
+    (
+      new PneumaticsCommand(subsystem, driverController)
+    );
+    
     configureBindings();
   }
 
+  private void configureBindings() {}
 
-  private void configureBindings()
-  {
-
-  }
-
-
-  public Command getAutonomousCommand() {
-    return null;
-  }
-
-  
+  public Command getAutonomousCommand() { return null; } 
 }

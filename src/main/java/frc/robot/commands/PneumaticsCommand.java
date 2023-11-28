@@ -5,14 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.PneumaticsSubsytem;
 
 public class PneumaticsCommand extends CommandBase
 {
-  PneumaticsSubsytem subsystem = new PneumaticsSubsytem();
+  PneumaticsSubsytem subsystem;
+  CommandXboxController controller;
 
-  public PneumaticsCommand(PneumaticsSubsytem subsystem) {
+  public PneumaticsCommand(PneumaticsSubsytem subsystem, CommandXboxController controller) {
     this.subsystem = subsystem;
+    this.controller = controller;
 
     addRequirements(subsystem);
   }
@@ -20,17 +23,19 @@ public class PneumaticsCommand extends CommandBase
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute()
+  {
+    if (controller.getHID().getYButtonPressed())
+    { subsystem.Up(); }
 
-  // Called once the command ends or is interrupted.
+    else if (controller.getHID().getAButtonPressed())
+    { subsystem.Down(); }
+  }
+
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    return false;
-  }
+  public boolean isFinished() { return false; }
 }

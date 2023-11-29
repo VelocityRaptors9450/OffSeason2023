@@ -22,9 +22,7 @@ public class RobotContainer
   public RobotContainer()
   {
     subsystem.setDefaultCommand
-    (
-      new PneumaticsCommand(subsystem, driverController)
-    );
+    ( new PneumaticsCommand(subsystem, driverController) );
     
     configureBindings();
   }

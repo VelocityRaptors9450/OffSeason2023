@@ -18,7 +18,7 @@ public class PneumaticsCommand extends CommandBase
     this.controller = controller;
 
     addRequirements(subsystem);
-  }
+  } 
 
   @Override
   public void initialize() {}

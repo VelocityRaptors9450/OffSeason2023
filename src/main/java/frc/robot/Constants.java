@@ -45,7 +45,7 @@ public final class Constants {
   {
     public static final int CompressorModuleID = 7;
 
-    public static final double MaxPSI = 1;
-    public static final double MinPSI = 0.8;
+    public static final double MaxPSI = 50;
+    public static final double MinPSI = 40;
   }
 }

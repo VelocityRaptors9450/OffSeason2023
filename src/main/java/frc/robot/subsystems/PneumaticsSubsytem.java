@@ -4,9 +4,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsConstants;
@@ -23,17 +24,19 @@ public class PneumaticsSubsytem extends SubsystemBase
       PneumaticsConstants.PneumaticsHubModuleID
     );
     
-  private static final Solenoid valve =
-    new Solenoid(
+  private static final DoubleSolenoid valve =
+    new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
-      PneumaticsConstants.SolenoidValveChannel
+      PneumaticsConstants.SolenoidValveForwardChannel,
+      PneumaticsConstants.SolenoidValveBackwardsChannel
     );
 
   public PneumaticsSubsytem() {}
 
   public void CompressorPressureUp()
   {
-    valve.set(true);
+    // valve.set(true);
+    valve.set(Value.kForward);
 
     // compressor.enableAnalog(
     //   PneumaticsConstants.MinPSI,
@@ -48,7 +51,8 @@ public class PneumaticsSubsytem extends SubsystemBase
 
   public void CompressorPressureDown()
   { 
-    valve.set(false);
+    // valve.set(false);
+    valve.set(Value.kOff);
 
     // compressor.disable();
     pHub.disableCompressor();

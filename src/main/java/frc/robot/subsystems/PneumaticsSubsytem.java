@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsConstants;
@@ -16,13 +18,24 @@ public class PneumaticsSubsytem extends SubsystemBase
   //   ( PneumaticsConstants.CompressorModuleID,
   //     PneumaticsModuleType.REVPH );
 
-  private static final PneumaticHub pHub = new PneumaticHub();
+  private static final PneumaticHub pHub =
+    new PneumaticHub(
+      PneumaticsConstants.PneumaticsHubModuleID
+    );
+    
+  private static final Solenoid valve =
+    new Solenoid(
+      PneumaticsModuleType.REVPH,
+      PneumaticsConstants.SolenoidValveChannel
+    );
 
   public PneumaticsSubsytem() {}
 
-  public void Up()
+  public void CompressorPressureUp()
   {
-    // compressor.enableHybrid(
+    valve.set(true);
+
+    // compressor.enableAnalog(
     //   PneumaticsConstants.MinPSI,
     //   PneumaticsConstants.MaxPSI
     // );
@@ -33,8 +46,10 @@ public class PneumaticsSubsytem extends SubsystemBase
     );
   }
 
-  public void Down()
+  public void CompressorPressureDown()
   { 
+    valve.set(false);
+
     // compressor.disable();
     pHub.disableCompressor();
   }
@@ -42,6 +57,9 @@ public class PneumaticsSubsytem extends SubsystemBase
   @Override
   public void periodic()
   {
-    SmartDashboard.putNumber("Compressor Pressure", pHub.getPressure(0));
+    SmartDashboard.putNumber(
+      "Compressor Pressure",
+      pHub.getPressure(PneumaticsConstants.AnalogPressureSensorChannel)
+    );
   }
 }

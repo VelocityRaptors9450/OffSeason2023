@@ -27,10 +27,10 @@ public class PneumaticsCommand extends CommandBase
   public void execute()
   {
     if (controller.getHID().getYButtonPressed())
-    { subsystem.Up(); }
+    { subsystem.CompressorPressureUp(); }
 
     else if (controller.getHID().getAButtonPressed())
-    { subsystem.Down(); }
+    { subsystem.CompressorPressureDown(); }
   }
 
   @Override

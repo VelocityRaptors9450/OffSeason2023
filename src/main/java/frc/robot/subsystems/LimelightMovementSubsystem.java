@@ -7,9 +7,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,7 +25,19 @@ public class LimelightMovementSubsystem extends SubsystemBase {
   double y;
   double area;
 
-  CANSparkMax turret = new CANSparkMax(Constants.turretId, MotorType.kBrushless);
+  // PID AND FEEDFORWARD TO BE TUNED
+  CANSparkMax turret = new CANSparkMax(Constants.turretId, MotorType.kBrushless); // 4 : 3 : 14 : 1 (gear ratios)
+  private final ProfiledPIDController turretPIDController =
+    new ProfiledPIDController(0.01,0,0,
+    new TrapezoidProfile.Constraints(Constants.Speeds.maxTurretVel, Constants.Speeds.maxTurretAccel));
+  public SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0, 0, 0); 
+
+
+  // if absolute encoder plugged into cansparkmax:
+  // SparkMaxAbsoluteEncoder wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
+
+  // if absolute encoder plugged into rio
+  DutyCycleEncoder turretEncoder = new DutyCycleEncoder(0); // returns the exact angle of the gear of the turret
   
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry tx = table.getEntry("tx");
@@ -28,7 +45,11 @@ public class LimelightMovementSubsystem extends SubsystemBase {
   NetworkTableEntry ta = table.getEntry("ta");
   //returns vision derived pose
   double[] visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
-  public LimelightMovementSubsystem() {}
+  
+  
+  public LimelightMovementSubsystem() {
+
+  }
 
 
   public void shootNoMatterPosition() {
@@ -38,13 +59,39 @@ public class LimelightMovementSubsystem extends SubsystemBase {
     double minDistance = 0;
     if (getDistance() < maxDistance || getDistance() > minDistance) { //if between the max and min values
       if (Math.abs(x) > 0) {
-        // turn drive train/turret the opposite value of x --> Math.signum(x)
+        // turn turret the opposite value of x --> Math.signum(x)
+        
       } 
     } else {
-      // don't turn drivetrain/turret
+      // don't turn turret
     }
 
   }
+
+  double oldTurretVel = 0;
+  double oldTime = 0;
+  public void turretAngle(double goalAngle) {
+    double pidValue = turretPIDController.calculate(getTurretPosAngle(), goalAngle);
+    double velSetpoint = turretPIDController.getSetpoint().velocity;
+    double accel = (velSetpoint - oldTurretVel) / (Timer.getFPGATimestamp() - oldTime); 
+    double feedForwardVal = turretFeedForward.calculate(turretPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
+    SmartDashboard.putNumber("PID Value", pidValue);
+    SmartDashboard.putNumber("Feed Forward", feedForwardVal);
+    SmartDashboard.putNumber("Position error", turretPIDController.getPositionError());
+    
+    
+    turret.setVoltage(pidValue + feedForwardVal);
+    
+    // update vars for determining acceleration later
+    oldTurretVel = turretPIDController.getSetpoint().velocity;
+    oldTime = Timer.getFPGATimestamp(); 
+    
+  }
+  public double getTurretPosAngle() {
+    double turretGearRevolutions = turret.getEncoder().getPosition() / 9 / 14; // 9:1   14:1 (gear ratios)
+    return turretGearRevolutions * 360;  
+  }
+
 
   public double getDistance() {
     double targetOffsetAngle_Vertical = y;
@@ -66,6 +113,10 @@ public class LimelightMovementSubsystem extends SubsystemBase {
     return distanceFromLimelightToGoalInches;
   }
 
+  public double[] getVisionPose() {
+    return visionPose;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -73,6 +124,7 @@ public class LimelightMovementSubsystem extends SubsystemBase {
     x = tx.getDouble(0.0);
     y = ty.getDouble(0.0);
     area = ta.getDouble(0.0);
+    visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
 
     shootNoMatterPosition();
 

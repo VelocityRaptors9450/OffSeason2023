@@ -41,6 +41,8 @@ public final class Constants {
   public static class Speeds{
     public static final double MaxSpeed = 60;
     public static final double MaxAngularSpeed = 45*Math.PI;
+    public static final double maxTurretVel = 1; // m/s
+    public static final double maxTurretAccel = 1; // m/s
   }
   
   public static final int flDriveId = 1; //1

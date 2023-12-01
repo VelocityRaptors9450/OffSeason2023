@@ -6,11 +6,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -32,9 +34,8 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
   // PID AND FEEDFORWARD TO BE TUNED
   CANSparkMax turret = new CANSparkMax(Constants.turretId, MotorType.kBrushless); // 4 : 3 : 14 : 1 (gear ratios)
-  private final ProfiledPIDController turretPIDController =
-    new ProfiledPIDController(0.001,0,0,
-    new TrapezoidProfile.Constraints(Constants.Speeds.maxTurretVel, Constants.Speeds.maxTurretAccel));
+  private final PIDController turretPIDController =
+    new PIDController(0.01, 0, 0);
   public SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0, 0, 0); 
 
 
@@ -42,13 +43,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   SparkMaxAbsoluteEncoder turretEncoder = turret.getAbsoluteEncoder(Type.kDutyCycle);
 
   
-  
+  // obtaining data with network tables for limelight; see here: https://docs.limelightvision.io/docs/docs-limelight/apis/complete-networktables-api 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  NetworkTableEntry tx = table.getEntry("tx");
-  NetworkTableEntry ty = table.getEntry("ty");
-  NetworkTableEntry ta = table.getEntry("ta");
+  NetworkTableEntry tx = table.getEntry("tx"); // Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees) (prob bigger range b/c LL3)
+  NetworkTableEntry ty = table.getEntry("ty"); // Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees) (prob bigger range b/c LL3)
+  NetworkTableEntry ta = table.getEntry("ta"); // 	Target Area (0% of image to 100% of image)
   //returns vision derived pose
-  double[] visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
+  double[] visionPose = table.getEntry("botpose").getDoubleArray(new double[6]); // Robot transform in field-space. Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw), total latency (cl+tl)
   
   
   public LimelightTurretSubsystem() {
@@ -77,11 +78,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   // range from .1 to .9 (absolute encoder)
   double oldTurretVel = 0;
   double oldTime = 0;
+  double oldAngle = 0;
   public void updateTurretAngle(double goalAngle) {
     double pidValue = turretPIDController.calculate(getTurretPosAngle(), goalAngle);
-    double velSetpoint = turretPIDController.getSetpoint().velocity;
-    double accel = (velSetpoint - oldTurretVel) / (Timer.getFPGATimestamp() - oldTime); 
-    double ffVal = turretFeedForward.calculate(turretPIDController.getSetpoint().velocity, accel); //takes velocity, and acceleration
+    double changeInTime = Timer.getFPGATimestamp() - oldTime;
+    double velSetpoint = getTurretPosAngle() - oldAngle / changeInTime;
+    double accel = (velSetpoint - oldTurretVel) / (changeInTime); 
+    double ffVal = turretFeedForward.calculate(velSetpoint, accel); //takes velocity, and acceleration
     
     double percentOutput = MathUtil.clamp(pidValue + ffVal, -1.0, 1.0);
     double voltage = convertToVolts(percentOutput);
@@ -94,14 +97,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     turret.setVoltage(voltage);
     
     // update vars for determining acceleration later
-    oldTurretVel = turretPIDController.getSetpoint().velocity;
+    oldTurretVel =  velSetpoint;
     oldTime = Timer.getFPGATimestamp(); 
+    oldAngle = getTurretPosAngle();
     
   }
 
-  public void setTurretGoal(double goal) {
-    turretPIDController.setGoal(goal);
-  } 
+  
 
   private double convertToVolts(double percentOutput){
     return percentOutput * Robot.getInstance().getVoltage();
@@ -150,6 +152,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
 
     //shootNoMatterPosition();
+    //updateTurretAngle(.5 * 360);
     
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);

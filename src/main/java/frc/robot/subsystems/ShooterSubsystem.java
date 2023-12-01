@@ -59,7 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
     backSpin.setD(0);
     frontSpin.setP(0);
     backSpin.setD(0);
-
+    //ff is lowest power needed to shoot to closest distance
     backSpin.setFF(0.0);
     
 
@@ -88,8 +88,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setVelocity(double targetVel, double targetAcc){
     //leftFrontSpinMotor.set(frontSpinff.calculate(targetVel));
-    frontSpinMotor.set(frontSpinff.calculate(targetVel, targetAcc));
-    backSpinMotor.set(backSpinff.calculate(targetVel, targetAcc));
+    //frontSpinMotor.set(frontSpinff.calculate(targetVel, targetAcc));
+   // backSpinMotor.set(backSpinff.calculate(targetVel, targetAcc));
     
     //Hi My name is Krish
     //Hi Krish my name is NameNotFoundException

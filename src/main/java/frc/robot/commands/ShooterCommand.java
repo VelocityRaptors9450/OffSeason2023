@@ -34,8 +34,7 @@ public class ShooterCommand extends CommandBase {
   public void execute() {
     shooter.setVoltage(voltagefor, voltageback);
     //shooter.setVelocity(targetVel, targetAcc);
-    SmartDashboard.putNumber("FrontSpinVelocity", shooter.getVelocityFrontSpin());
-    SmartDashboard.putNumber("BackSpinVelocity", shooter.getVelocityBackSpin());  
+     
   }
 
   // Called once the command ends or is interrupted.

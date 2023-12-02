@@ -1,14 +1,13 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +17,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
@@ -32,6 +35,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Hardware;
 import frc.robot.Robot;
 import frc.robot.sim.PhysicsSim;
@@ -293,20 +297,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			steeringMotor.flashMotor();
 		}
 
-		AutoBuilder.configureHolonomic(
-        this::getPose, // Robot pose supplier
-        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            4.5, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options here
-        ),
-        this // Reference to this subsystem to set requirements
-    );
 	}
 
 	/** Drives the robot using forward, strafe, and rotation. Units in meters */
@@ -660,6 +650,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		SmartDashboard.putData("Translational PID", compTranslationalPID);
 		SmartDashboard.putData("Rotational PID", compRotationalPID);
+
 	}
 
 	private double oldTranslationalSetpoint = 0.0;
@@ -702,6 +693,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		frontRightActualAnglePublisher.set(moduleAngles[1].getDegrees());
 		backLeftActualAnglePublisher.set(moduleAngles[2].getDegrees());
 		backRightActualAnglePublisher.set(moduleAngles[3].getDegrees());
+		
+		
 	}
 
 	public void setUseVisionMeasurements(boolean useVisionMeasurements) {
@@ -721,8 +714,56 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		return kinematics.toChassisSpeeds(states);
 	}
+	
 
-	public Command getAuto() {
-		return new PathPlannerAuto("New Path");
+	public Command getAutonomousCommand() {
+		resetGyroAngle();
+		// Create config for trajectory
+		TrajectoryConfig config =
+			new TrajectoryConfig(
+					0.5,
+					0.5)
+				// Add kinematics to ensure max speed is actually obeyed
+				.setKinematics(kinematics);
+	
+		// An example trajectory to follow.  All units in meters.
+		Trajectory exampleTrajectory =
+			TrajectoryGenerator.generateTrajectory(
+				// Start at the origin facing the +X direction
+				new Pose2d(0, 0, new Rotation2d(0)),
+				// Pass through these two interior waypoints, making an 's' curve path
+				List.of(new Translation2d(0.5, 0)),
+				// End 3 meters straight ahead of where we started, facing forward
+				new Pose2d(1, 0, new Rotation2d(0)),
+				config);
+	
+		var thetaController =
+			new ProfiledPIDController(
+				1, 0, 0, kThetaControllerConstraints);
+		thetaController.enableContinuousInput(-Math.PI, Math.PI);
+	
+		SwerveControllerCommand swerveControllerCommand =
+			new SwerveControllerCommand(
+				exampleTrajectory,
+				this::getPose, // Functional interface to feed supplier
+				kinematics,
+	
+				// Position controllers
+				new PIDController(0.034, 0, 0), // kpx
+				new PIDController(0.034, 0, 0), // kpy
+				thetaController,
+				this::drive,
+				this);
+	
+		// Reset odometry to the starting pose of the trajectory.
+		resetPose(exampleTrajectory.getInitialPose());
+	
+		// Run path following command, then stop at the end.
+		return swerveControllerCommand.andThen(() -> this.drive(0, 0, new Rotation2d(), false, false));
 	}
+
+	// Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+        new TrapezoidProfile.Constraints(10, 3);
+
 }

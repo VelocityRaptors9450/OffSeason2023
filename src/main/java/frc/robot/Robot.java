@@ -11,11 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.networktables.NetworkTable;
@@ -313,7 +315,7 @@ public class Robot extends TimedRobot {
 
     // m_autonomousCommand = m_autoChooser.getSelected();
 
-    m_autonomousCommand = subsystems.drivebaseSubsystem.getAuto();
+    m_autonomousCommand = getAuto();
 
     // m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
@@ -330,6 +332,16 @@ public class Robot extends TimedRobot {
     //if(balance != null){
     //   balance.schedule();
     //}
+  }
+
+  public Command getAuto() {
+    List<PathPlannerTrajectory> pathGroup =
+				PathPlanner.loadPathGroup("New Path", new PathConstraints(0.5, 1));
+		HashMap<String, Command> eventMap = new HashMap<String, Command>();
+
+    eventMap.put("outtake", new TimedIntakeCommand(subsystems.intake, -0.3).andThen(new WaitCommand(5)));
+
+    return Robot.getInstance().getAutoBuilder(eventMap).fullAuto(pathGroup);
   }
 
   /** This function is called periodically during autonomous. */
@@ -551,6 +563,38 @@ public class Robot extends TimedRobot {
 
 
   }
+
+  public SwerveAutoBuilder getAutoBuilder(HashMap<String, Command> eventMap) {
+		if (subsystems.drivebaseSubsystem != null) {
+			return new SwerveAutoBuilder(
+					subsystems.drivebaseSubsystem::getPose, // Pose2d supplier
+					subsystems.drivebaseSubsystem
+							::resetPose, // Pose2d consumer, used to reset odometry at the beginning of
+					// auto
+					subsystems.drivebaseSubsystem.getKinematics(), // SwerveDriveKinematics
+					new PIDConstants(
+							10, 0.0,
+							0.0), // PID constants to correct for translation error (used to create the X and
+					// Y
+					// PID controllers)
+					new PIDConstants(
+						  10, 0.0,
+							0.0), // PID constants to correct for rotation error (used to create the rotation
+					// controller)
+					subsystems.drivebaseSubsystem
+							::drive, // Module states consumer used to output to the drive subsystem
+					eventMap,
+					true, // Should the path be automatically mirrored depending on alliance color.
+					// Optional, defaults to true
+					subsystems
+							.drivebaseSubsystem // The drive subsystem. Used to properly set the requirements
+					// of
+					// path following commands
+					);
+		} else {
+			return null;
+		}
+	}
 
   /** This function is called once when the robot is first started up. */
   @Override

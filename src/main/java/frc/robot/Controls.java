@@ -80,6 +80,7 @@ public class Controls {
 	}
 
 	public void bindArmControls() {
+		
 		armController.povDown().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(s.arm,0.063, 0.43), new IntakeCommandWrist(s.intake, s.arm)));
 		armController.leftBumper().onTrue(new InstantCommand(() -> s.arm.goToHeight()));
 
@@ -89,6 +90,7 @@ public class Controls {
 		armController.b().onTrue(new ArmWristSetTargetCommand(s.arm,0.37, 0.6));
 
 		armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(s.arm,0.22, 0.35), new IntakeCommandWrist(s.intake, s.arm)));
+		
 
 		
 	

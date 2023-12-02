@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,9 +24,10 @@ public class PneumaticsSubsytem extends SubsystemBase
     new PneumaticHub(
       PneumaticsConstants.PneumaticsHubModuleID
     );
-    
+   
   private static final DoubleSolenoid valve =
     new DoubleSolenoid(
+      7,
       PneumaticsModuleType.REVPH,
       PneumaticsConstants.SolenoidValveForwardChannel,
       PneumaticsConstants.SolenoidValveBackwardsChannel
@@ -33,7 +35,7 @@ public class PneumaticsSubsytem extends SubsystemBase
 
   public PneumaticsSubsytem() {}
 
-  public void CompressorPressureUp()
+  public void extend()
   {
     // valve.set(true);
     valve.set(Value.kForward);
@@ -43,19 +45,27 @@ public class PneumaticsSubsytem extends SubsystemBase
     //   PneumaticsConstants.MaxPSI
     // );
 
+    
+  }
+
+  public void enableCompressor() {
     pHub.enableCompressorAnalog(
       PneumaticsConstants.MinPSI,
       PneumaticsConstants.MaxPSI
     );
   }
 
-  public void CompressorPressureDown()
-  { 
-    // valve.set(false);
+  public void disableCompressor() {
+    pHub.disableCompressor();
     valve.set(Value.kOff);
+  }
+
+  public void retract()
+  { 
+    valve.set(Value.kReverse);
+    // valve.set(false);
 
     // compressor.disable();
-    pHub.disableCompressor();
   }
 
   @Override

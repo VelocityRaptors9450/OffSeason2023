@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.PneumaticsCommand;
 import frc.robot.subsystems.PneumaticsSubsytem;
 
 public class Robot extends TimedRobot
@@ -49,12 +52,13 @@ public class Robot extends TimedRobot
 
   }
   
-  private Joystick stick = new Joystick(0);
+  private CommandXboxController stick = new CommandXboxController(0);
   @Override
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
-    }    
+    }
+    m_PneumaticsSubsytem.setDefaultCommand(new PneumaticsCommand(m_PneumaticsSubsytem, stick));
   }
 
   @Override

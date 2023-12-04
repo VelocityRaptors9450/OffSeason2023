@@ -84,7 +84,7 @@ public class RobotContainer {
                                                           //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
     //10, 12 max
-    shooter.setDefaultCommand(new ShooterCommand(shooter,1,0,12, 12));
+    shooter.setDefaultCommand(new ShooterCommand(shooter,1,0,1, 1));
     //turret.setDefaultCommand(new LimelightTurretCommand(turret));
     
     //armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(2,1.8)));

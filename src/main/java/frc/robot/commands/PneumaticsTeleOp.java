@@ -32,11 +32,11 @@ public class PneumaticsTeleOp extends CommandBase
     else if (controller.getHID().getAButtonPressed())
     { subsystem.disableCompressor(); }
 
-    if (controller.getHID().getBButtonPressed())
-    { subsystem.setModeExtend(); }
+    // if (controller.getHID().getBButtonPressed())
+    // { subsystem.setModeExtend(); }
     
-    else if (controller.getHID().getXButtonPressed())
-    { subsystem.setModeRetract(); }
+    // else if (controller.getHID().getXButtonPressed())
+    // { subsystem.setModeRetract(); }
   }
 
   @Override

@@ -6,6 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,13 +32,27 @@ public class Robot extends TimedRobot
   private Command high;
   
   private Command m_autonomousCommand;
-  private // auto chooser here
+  private final SendableChooser<Command> m_autoChooser = new SendableChooser<>();
   
 
   @Override
   public void robotInit()
   {
-    
+    //slow =
+    //med =
+    //high =
+
+    m_autoChooser.addOption("slow", slow);
+    m_autoChooser.addOption("medium", med);
+    m_autoChooser.addOption("high", high);
+
+    ShuffleboardTab autoTab =
+      Shuffleboard.getTab("Auto");
+
+    Shuffleboard.getTab("Auto")
+      .add("Autonomous Select:", m_autoChooser)
+      .withWidget(BuiltInWidgets.kSplitButtonChooser)
+      .withSize(4, 1);
   }
 
   @Override
@@ -53,14 +71,11 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
-    
+    m_autonomousCommand = m_autoChooser.getSelected();
   }
 
   @Override
-  public void autonomousPeriodic()
-  {
-
-  }
+  public void autonomousPeriodic() {}
   
   @Override
   public void teleopInit()

@@ -45,8 +45,9 @@ public final class Constants {
   {
     public static final int PneumaticsHubModuleID = 7;
 
-    public static final int SolenoidValveForwardChannel = 7;
-    public static final int SolenoidValveBackwardsChannel = 6;
+    public static final int SolenoidValveChannel = 7;
+    // public static final int DoubleSolenoidValveForwardChannel = 7;
+    // public static final int DoubleSolenoidValveBackwardsChannel = 6;
 
     public static final int AnalogPressureSensorChannel = 0;
 

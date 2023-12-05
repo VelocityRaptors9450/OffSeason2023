@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.PneumaticsSubsytem;
 
-public class PneumaticsCommand extends CommandBase
+public class PneumaticsTeleOp extends CommandBase
 {
   PneumaticsSubsytem subsystem;
   CommandXboxController controller;
 
-  public PneumaticsCommand(PneumaticsSubsytem subsystem, CommandXboxController controller) {
+  public PneumaticsTeleOp(PneumaticsSubsytem subsystem, CommandXboxController controller) {
     this.subsystem = subsystem;
     this.controller = controller;
 
@@ -32,11 +32,11 @@ public class PneumaticsCommand extends CommandBase
     else if (controller.getHID().getAButtonPressed())
     { subsystem.disableCompressor(); }
 
-    if (controller.getHID().getBButtonPressed()) {
-      subsystem.extend();
-    } else if (controller.getHID().getXButtonPressed()) {
-      subsystem.retract();
-    }
+    if (controller.getHID().getBButtonPressed())
+    { subsystem.setModeExtend(); }
+    
+    else if (controller.getHID().getXButtonPressed())
+    { subsystem.setModeRetract(); }
   }
 
   @Override

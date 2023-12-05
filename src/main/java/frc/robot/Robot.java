@@ -4,85 +4,86 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.PneumaticsCommand;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.PneumaticsTeleOp;
 import frc.robot.subsystems.PneumaticsSubsytem;
 
 public class Robot extends TimedRobot
 {
-  private final PneumaticsSubsytem m_PneumaticsSubsytem = new PneumaticsSubsytem();
+  private final PneumaticsSubsytem m_PneumaticsSubsytem =
+    new PneumaticsSubsytem();
 
+  private final CommandXboxController driverController =
+    new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+
+    
+  private Command slow;
+  private Command med;
+  private Command high;
+  
   private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
+  private // auto chooser here
+  
 
   @Override
-  public void robotInit() {
-    m_robotContainer = new RobotContainer();
-  }
-
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-  }
-
-  @Override
-  public void disabledInit() {
-
-  }
-
-  @Override
-  public void disabledPeriodic() {
-
-  }
-
-  Timer t = new Timer();
-  @Override
-  public void autonomousInit() {
+  public void robotInit()
+  {
     
   }
 
   @Override
-  public void autonomousPeriodic() {
+  public void robotPeriodic()
+  {
+    CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void disabledInit() {}
+
+  @Override
+  public void disabledPeriodic() {}
+
+  Timer t = new Timer();
+  @Override
+  public void autonomousInit()
+  {
+    
+  }
+
+  @Override
+  public void autonomousPeriodic()
+  {
 
   }
   
-  private CommandXboxController stick = new CommandXboxController(0);
   @Override
-  public void teleopInit() {
+  public void teleopInit()
+  {
+    m_PneumaticsSubsytem.setDefaultCommand(new PneumaticsTeleOp(m_PneumaticsSubsytem, driverController));
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_PneumaticsSubsytem.setDefaultCommand(new PneumaticsCommand(m_PneumaticsSubsytem, stick));
   }
 
   @Override
-  public void teleopPeriodic() {
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
+  public void testInit() {}
 
   @Override
-  public void testPeriodic() {
-
-  }
+  public void testPeriodic() {}
 
   @Override
-  public void simulationInit() {
-
-  }
+  public void simulationInit() {}
 
   @Override
-  public void simulationPeriodic() {
-
-  }
+  public void simulationPeriodic() {}
 }

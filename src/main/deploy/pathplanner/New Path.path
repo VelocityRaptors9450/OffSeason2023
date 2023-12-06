@@ -32,8 +32,8 @@
         "y": 4.832050227771849
       },
       "nextControl": {
-        "x": 3.2874354716680974,
-        "y": 4.8116554596098515
+        "x": 3.3424901571029104,
+        "y": 4.810279092473981
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
@@ -41,8 +41,10 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "outtake"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -70,18 +72,5 @@
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "outtake"
-      ]
-    }
-  ]
+  "markers": []
 }

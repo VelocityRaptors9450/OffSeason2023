@@ -669,7 +669,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		sharedPoseEstimatorFieldObject.setPose(combinedPose);
 		odometryOnlyFieldObject.setPose(odometryPose);
 		field.setRobotPose(pose);
-
+		
 		if (compTranslationalPID.getSetpoint() != oldTranslationalSetpoint) {
 			for (MotorController motor : moduleDriveMotors) {
 				motor.setPIDF(
@@ -687,14 +687,17 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				oldRotationalSetpoint = compRotationalPID.getSetpoint();
 			}
 		}
+		
 
 		Rotation2d[] moduleAngles = getModuleAngles();
 		frontLeftActualAnglePublisher.set(moduleAngles[0].getDegrees());
 		frontRightActualAnglePublisher.set(moduleAngles[1].getDegrees());
 		backLeftActualAnglePublisher.set(moduleAngles[2].getDegrees());
 		backRightActualAnglePublisher.set(moduleAngles[3].getDegrees());
-		
-		
+
+		if (currentStates != null) {
+			SmartDashboard.putNumber("speed", currentStates[0].speedMetersPerSecond);
+		}
 	}
 
 	public void setUseVisionMeasurements(boolean useVisionMeasurements) {

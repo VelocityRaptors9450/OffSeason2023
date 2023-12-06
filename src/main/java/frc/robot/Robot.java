@@ -336,10 +336,17 @@ public class Robot extends TimedRobot {
 
   public Command getAuto() {
     List<PathPlannerTrajectory> pathGroup =
-				PathPlanner.loadPathGroup("New Path", new PathConstraints(0.5, 1));
+				PathPlanner.loadPathGroup("New Path", new PathConstraints(0.5, 0.5));
 		HashMap<String, Command> eventMap = new HashMap<String, Command>();
 
-    eventMap.put("outtake", new TimedIntakeCommand(subsystems.intake, -0.3).andThen(new WaitCommand(5)));
+    Command moveArm = new SetArmHeightPreset(subsystems.arm, Height.MID)
+      .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
+      .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
+      .andThen(new ArmWristSetTargetCommand(subsystems.arm,0.37, 0.6));
+
+    eventMap.put("outtake", moveArm);
+    //eventMap.put("outtake", new WaitCommand(10));
+
 
     return Robot.getInstance().getAutoBuilder(eventMap).fullAuto(pathGroup);
   }
@@ -573,13 +580,13 @@ public class Robot extends TimedRobot {
 					// auto
 					subsystems.drivebaseSubsystem.getKinematics(), // SwerveDriveKinematics
 					new PIDConstants(
-							5, 0.0,
-							0.0), // PID constants to correct for translation error (used to create the X and
+							3, 0.0,
+							0.1), // PID constants to correct for translation error (used to create the X and
 					// Y
 					// PID controllers)
 					new PIDConstants(
 						  3, 0.0,
-							0.0), // PID constants to correct for rotation error (used to create the rotation
+							0.32), // PID constants to correct for rotation error (used to create the rotation
 					// controller)
 					subsystems.drivebaseSubsystem
 							::drive, // Module states consumer used to output to the drive subsystem

@@ -29,6 +29,8 @@ public class ShooterSubsystem extends SubsystemBase {
   //private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
   private final CANSparkMax frontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
+  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0, 0);
+  private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0, 0);
   
   private final SparkMaxPIDController backSpin;
   private final SparkMaxPIDController frontSpin;

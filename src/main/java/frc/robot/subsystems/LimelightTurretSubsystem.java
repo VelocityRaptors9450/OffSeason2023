@@ -31,11 +31,12 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double x;
   double y;
   double area;
+  
 
   // PID AND FEEDFORWARD TO BE TUNED
   CANSparkMax turret = new CANSparkMax(Constants.turretId, MotorType.kBrushless); // 4 : 3 : 14 : 1 (gear ratios)
   private final PIDController turretPIDController =
-    new PIDController(0.01, 0, 0);
+    new PIDController(0.02, 0, 0);
   public SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0, 0, 0); 
 
 
@@ -74,6 +75,14 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
   }
 
+  public void trackAprilTag() {
+    if (Math.abs(x) > 0) {
+      // turn turret the opposite value of x --> Math.signum(x)
+      // in this case, turning turret left increases encoder pos, so +x below
+      updateTurretAngle(getTurretPosAngle() - x);
+    } 
+  }
+
 
   // range from .1 to .9 (absolute encoder)
   double oldTurretVel = 0;
@@ -91,13 +100,23 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("PID Value", pidValue);
     SmartDashboard.putNumber("Feed Forward", ffVal);
+    SmartDashboard.putNumber("Voltage", voltage);
     SmartDashboard.putNumber("Position error", turretPIDController.getPositionError());
     
     
-    turret.setVoltage(voltage);
+    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) {
+      SmartDashboard.putBoolean("Is Centered", true);
+      turret.setVoltage(0);
+    } else {
+      SmartDashboard.putBoolean("Is Centered", false);
+
+      turret.setVoltage(-voltage);
+      
+    }
+    
     
     // update vars for determining acceleration later
-    oldTurretVel =  velSetpoint;
+    oldTurretVel =  velSetpoint; 
     oldTime = Timer.getFPGATimestamp(); 
     oldAngle = getTurretPosAngle();
     
@@ -152,14 +171,16 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
 
     //shootNoMatterPosition();
-    //updateTurretAngle(.5 * 360);
+    trackAprilTag();
+    //updateTurretAngle(.3 * 360);
+    //turret.set(0.1);
     
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
-  }
+  }  
   /*
       tv Whether the limelight has any valid targets (0 or 1)
       tx Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)

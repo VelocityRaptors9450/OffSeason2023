@@ -11,6 +11,7 @@ import frc.robot.commands.DriveCommandSuppliers;
 
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
+import frc.robot.commands.LimelightTurretCommand;
 //import frc.robot.commands.LimelightTurretCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TimedIntakeCommand;
@@ -43,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightTurretSubsystem;
 //import frc.robot.subsystems.LimelightTurretSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -62,7 +64,7 @@ public class RobotContainer {
   //public DriveTrain driveTrain = new DriveTrain();
 
   public ShooterSubsystem shooter = new ShooterSubsystem();
-  //public LimelightTurretSubsystem turret = new LimelightTurretSubsystem();
+  public LimelightTurretSubsystem turret = new LimelightTurretSubsystem();
   //private ExtensionSubsystem ext = new ExtensionSubsystem();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -84,8 +86,8 @@ public class RobotContainer {
                                                           //() -> driverController.x().getAsBoolean(), () -> driverController.rightBumper().getAsBoolean(), () -> driverController.getHID().getLeftStickButtonPressed(), () -> driverController.getHID().getRightStickButtonPressed()));
 
     //10, 12 max
-    shooter.setDefaultCommand(new ShooterCommand(shooter,1,0,12, 12));
-    //turret.setDefaultCommand(new LimelightTurretCommand(turret));
+    //shooter.setDefaultCommand(new ShooterCommand(shooter,1,0,12, 12));
+    turret.setDefaultCommand(new LimelightTurretCommand(turret));
     
     //armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(2,1.8)));
     //armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));

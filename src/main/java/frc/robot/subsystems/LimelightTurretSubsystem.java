@@ -31,6 +31,8 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double x;
   double y;
   double area;
+  double id;
+  double hasTarget;
   
 
   // PID AND FEEDFORWARD TO BE TUNED
@@ -49,6 +51,8 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   NetworkTableEntry tx = table.getEntry("tx"); // Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees) (prob bigger range b/c LL3)
   NetworkTableEntry ty = table.getEntry("ty"); // Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees) (prob bigger range b/c LL3)
   NetworkTableEntry ta = table.getEntry("ta"); // 	Target Area (0% of image to 100% of image)
+  NetworkTableEntry tagID = table.getEntry("tid"); // 	id of primary tag in view
+  NetworkTableEntry tv = table.getEntry("tv"); // returns either 0 or 1 if there is any tag in frame  
   //returns vision derived pose
   double[] visionPose = table.getEntry("botpose").getDoubleArray(new double[6]); // Robot transform in field-space. Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw), total latency (cl+tl)
   
@@ -67,7 +71,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
       if (Math.abs(x) > 0) {
         // turn turret the opposite value of x --> Math.signum(x)
         // in this case, turning turret left increases encoder pos, so +x below
-        updateTurretAngle(getTurretPosAngle() + x);
+        updateTurretAngle(getTurretPosAngle() + x, hasTarget);
       } 
     } else {
       // don't turn turret
@@ -75,11 +79,24 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
   }
 
-  public void trackAprilTag() {
+  public void trackAprilTag(double hasTarget) {
     if (Math.abs(x) > 0) {
       // turn turret the opposite value of x --> Math.signum(x)
       // in this case, turning turret left increases encoder pos, so +x below
-      updateTurretAngle(getTurretPosAngle() - x);
+      if (id == -1 || hasTarget == 0 || area == 0 ) {
+        SmartDashboard.putBoolean("Is Id 3", false);
+        
+        turret.stopMotor();
+      } /* else if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 //degrees) {
+        SmartDashboard.putBoolean("Is Centered", true);
+        turret.setVoltage(0);
+      } */else {
+        SmartDashboard.putBoolean("Is Centered", false);
+        SmartDashboard.putBoolean("Is Id 3", true);
+        updateTurretAngle(getTurretPosAngle() - x, hasTarget);
+        
+      }
+      
     } 
   }
 
@@ -88,7 +105,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double oldTurretVel = 0;
   double oldTime = 0;
   double oldAngle = 0;
-  public void updateTurretAngle(double goalAngle) {
+  public void updateTurretAngle(double goalAngle, double hasTarget) {
     double pidValue = turretPIDController.calculate(getTurretPosAngle(), goalAngle);
     double changeInTime = Timer.getFPGATimestamp() - oldTime;
     double velSetpoint = getTurretPosAngle() - oldAngle / changeInTime;
@@ -102,14 +119,18 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Feed Forward", ffVal);
     SmartDashboard.putNumber("Voltage", voltage);
     SmartDashboard.putNumber("Position error", turretPIDController.getPositionError());
-    
-    
-    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) {
+    SmartDashboard.putBoolean("broooooooo", hasTarget == 0.0);
+
+    if (id != 3 || hasTarget == 0.0 || area == 0.0 || Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) {
+      SmartDashboard.putBoolean("Is Id 3", false);
+      
+      turret.setVoltage(0);
+    } /* else if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 //degrees) {
       SmartDashboard.putBoolean("Is Centered", true);
       turret.setVoltage(0);
-    } else {
+    } */else {
       SmartDashboard.putBoolean("Is Centered", false);
-
+      SmartDashboard.putBoolean("Is Id 3", true);
       turret.setVoltage(-voltage);
       
     }
@@ -168,10 +189,12 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     x = tx.getDouble(0.0);
     y = ty.getDouble(0.0);
     area = ta.getDouble(0.0);
+    id = tagID.getDouble(0.0);
+    hasTarget = tv.getDouble(0.0);
     visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
 
     //shootNoMatterPosition();
-    trackAprilTag();
+   
     //updateTurretAngle(.3 * 360);
     //turret.set(0.1);
     
@@ -180,6 +203,11 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
+    SmartDashboard.putNumber("ID", id);
+    SmartDashboard.putNumber("Area", area);
+    SmartDashboard.putNumber("has Target", hasTarget);
+
+     trackAprilTag(hasTarget);
   }  
   /*
       tv Whether the limelight has any valid targets (0 or 1)

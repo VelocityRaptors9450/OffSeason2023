@@ -29,6 +29,8 @@ public class ShooterSubsystem extends SubsystemBase {
   //private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
   private final CANSparkMax frontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
+  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0, 0);
+  private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0, 0);
   
   private final SparkMaxPIDController backSpin;
   private final SparkMaxPIDController frontSpin;
@@ -45,17 +47,18 @@ public class ShooterSubsystem extends SubsystemBase {
     backSpinMotor.setInverted(true);
     //leftFrontSpinMotor.setInverted(true);
     //rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
-    frontSpinMotor.setInverted(true);
+    frontSpinMotor.setInverted(false);
     
     backSpinMotor.setIdleMode(IdleMode.kCoast);
     //leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
     frontSpinMotor.setIdleMode(IdleMode.kCoast);
+    
     backSpin = backSpinMotor.getPIDController();
     frontSpin = frontSpinMotor.getPIDController();
     backSpin.setFeedbackDevice(backSpinEncoder);
     frontSpin.setFeedbackDevice(frontSpinEncoder);
 
-    backSpin.setP(0);
+    backSpin.setP(0); 
     backSpin.setD(0);
     frontSpin.setP(0);
     backSpin.setD(0);

@@ -32,7 +32,7 @@ public class ShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setVoltage(voltagefor, voltageback);
+    //shooter.setVoltage(voltagefor, voltageback);
     //shooter.setVelocity(targetVel, targetAcc);
      
   }

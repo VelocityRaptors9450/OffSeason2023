@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -58,9 +60,29 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   
   
   public LimelightTurretSubsystem() {
-    turret.setIdleMode(IdleMode.kCoast);
+    turret.setIdleMode(IdleMode.kBrake);
   }
 
+  public void controllerRotate(DoubleSupplier strafe) {
+    double percentOutput = MathUtil.clamp(strafe.getAsDouble(), -0.5, 0.5);
+    double voltage = convertToVolts(percentOutput);
+    
+    if (strafe.getAsDouble() == 0) {
+      trackAprilTag(hasTarget);
+    } else if (getTurretPosAngle() <= .8*360 && getTurretPosAngle() >= .1*360) {
+      turret.setVoltage(voltage);
+    } else if (getTurretPosAngle() > .8*360) {
+      turret.stopMotor();
+      if (strafe.getAsDouble() > 0) {
+        turret.setVoltage(voltage);
+      }
+    } else if (getTurretPosAngle() < .1*360) {
+      turret.stopMotor();
+      if (strafe.getAsDouble() < 0) {
+        turret.setVoltage(voltage);
+      }
+    }
+  }
 
   public void shootNoMatterPosition() {
     // max distance:
@@ -83,21 +105,14 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     if (Math.abs(x) > 0) {
       // turn turret the opposite value of x --> Math.signum(x)
       // in this case, turning turret left increases encoder pos, so +x below
-      if (id == -1 || hasTarget == 0 || area == 0 ) {
-        SmartDashboard.putBoolean("Is Id 3", false);
+    
         
-        turret.stopMotor();
-      } /* else if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 //degrees) {
-        SmartDashboard.putBoolean("Is Centered", true);
-        turret.setVoltage(0);
-      } */else {
-        SmartDashboard.putBoolean("Is Centered", false);
-        SmartDashboard.putBoolean("Is Id 3", true);
         updateTurretAngle(getTurretPosAngle() - x, hasTarget);
         
-      }
       
-    } 
+    } else {
+      turret.stopMotor();
+    }
   }
 
 
@@ -120,17 +135,17 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Voltage", voltage);
     SmartDashboard.putNumber("Position error", turretPIDController.getPositionError());
     SmartDashboard.putBoolean("broooooooo", hasTarget == 0.0);
+    
 
-    if (id != 3 || hasTarget == 0.0 || area == 0.0 || Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) {
-      SmartDashboard.putBoolean("Is Id 3", false);
-      
-      turret.setVoltage(0);
-    } /* else if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 //degrees) {
+
+    
+
+    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) {
       SmartDashboard.putBoolean("Is Centered", true);
+
       turret.setVoltage(0);
-    } */else {
+    } else {
       SmartDashboard.putBoolean("Is Centered", false);
-      SmartDashboard.putBoolean("Is Id 3", true);
       turret.setVoltage(-voltage);
       
     }
@@ -193,6 +208,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     hasTarget = tv.getDouble(0.0);
     visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
 
+
     //shootNoMatterPosition();
    
     //updateTurretAngle(.3 * 360);
@@ -207,7 +223,10 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Area", area);
     SmartDashboard.putNumber("has Target", hasTarget);
 
-     trackAprilTag(hasTarget);
+    // System.out.print(hasTarget);
+    // System.out.println(hasTarget == 0);
+    // System.out.println(id);
+    // trackAprilTag(hasTarget);
   }  
   /*
       tv Whether the limelight has any valid targets (0 or 1)

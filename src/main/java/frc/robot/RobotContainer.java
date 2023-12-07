@@ -71,7 +71,7 @@ public class RobotContainer {
   private final EventLoop test = new EventLoop();
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final PS4Controller driveReveal = new PS4Controller(0);
-  private final CommandXboxController armController = new CommandXboxController(1);
+  private final CommandXboxController turretController = new CommandXboxController(1);
   //private IntakeCommand intakeCommand = new IntakeCommand(intake);
   //InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
   
@@ -87,7 +87,7 @@ public class RobotContainer {
 
     //10, 12 max
     //shooter.setDefaultCommand(new ShooterCommand(shooter,1,0,12, 12));
-    //turret.setDefaultCommand(new LimelightTurretCommand(turret));
+    turret.setDefaultCommand(new LimelightTurretCommand(turret, turretController::getLeftX));
     
     //armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(2,1.8)));
     //armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));

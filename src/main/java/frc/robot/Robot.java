@@ -48,6 +48,8 @@ import frc.robot.commands.SetArmHeightPreset;
 import frc.robot.commands.TimedIntakeCommand;
 import frc.robot.commands.ArmSetTargetCommand;
 import frc.robot.commands.ArmWristSetTargetCommand;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IntakeCommandWrist;
 import frc.robot.commands.IntakeSetPowerCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem.Height;
@@ -336,15 +338,30 @@ public class Robot extends TimedRobot {
 
   public Command getAuto() {
     List<PathPlannerTrajectory> pathGroup =
-				PathPlanner.loadPathGroup("New Path", new PathConstraints(0.5, 0.5));
+				PathPlanner.loadPathGroup("ChargedUpAuto", new PathConstraints(1, 0.5));
 		HashMap<String, Command> eventMap = new HashMap<String, Command>();
 
-    Command moveArm = new SetArmHeightPreset(subsystems.arm, Height.MID)
+    Command scoreMid = new SetArmHeightPreset(subsystems.arm, Height.MID)
       .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
       .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
       .andThen(new ArmWristSetTargetCommand(subsystems.arm,0.37, 0.6));
 
-    eventMap.put("outtake", moveArm);
+    Command scoreHigh = new SetArmHeightPreset(subsystems.arm, Height.HIGH)
+    .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
+    .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
+    .andThen(new ArmWristSetTargetCommand(subsystems.arm,0.37, 0.6));
+
+    Command intake = new ArmWristSetTargetCommand(subsystems.arm,0.063, 0.43)
+      .andThen(new IntakeCommandWrist(subsystems.intake, subsystems.arm));
+
+    Command creep = new DriveCommand(subsystems.drivebaseSubsystem, () -> 0.2, () -> 0, () -> 0, () -> 0).withTimeout(3);
+
+    eventMap.put("ScoreMid", scoreMid);
+    eventMap.put("ScoreHigh", scoreHigh);
+    eventMap.put("Intake", intake);
+    eventMap.put("Creep", creep);
+
+
     //eventMap.put("outtake", new WaitCommand(10));
 
 

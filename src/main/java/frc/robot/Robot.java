@@ -15,13 +15,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.PneumaticsAuto;
 import frc.robot.commands.PneumaticsTeleOp;
-import frc.robot.subsystems.PneumaticsSubsytem;
+import frc.robot.subsystems.PneumaticsSubsystem;
 
 public class Robot extends TimedRobot
 {
-  private final PneumaticsSubsytem m_PneumaticsSubsytem =
-    new PneumaticsSubsytem();
+  private final PneumaticsSubsystem m_PneumaticsSubsytem =
+    new PneumaticsSubsystem();
 
   private final CommandXboxController driverController =
     new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -38,9 +39,9 @@ public class Robot extends TimedRobot
   @Override
   public void robotInit()
   {
-    //slow =
-    //med =
-    //high =
+    slow = new PneumaticsAuto(m_PneumaticsSubsytem, driverController, 8).withTimeout(20);
+    med = new PneumaticsAuto(m_PneumaticsSubsytem, driverController, 6).withTimeout(20);
+    high = new PneumaticsAuto(m_PneumaticsSubsytem, driverController, 4).withTimeout(20);
 
     m_autoChooser.addOption("slow", slow);
     m_autoChooser.addOption("medium", med);

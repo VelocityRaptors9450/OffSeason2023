@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsConstants;
 
-public class PneumaticsSubsytem extends SubsystemBase
+public class PneumaticsSubsystem extends SubsystemBase
 {
   private static final PneumaticHub pHub =
     new PneumaticHub(
@@ -35,7 +35,7 @@ public class PneumaticsSubsytem extends SubsystemBase
       PneumaticsConstants.SolenoidValveChannel
     );
 
-  public PneumaticsSubsytem() {}
+  public PneumaticsSubsystem() {}
 
   // public void setModeExtend()
   //   { valve.set(Value.kForward); }

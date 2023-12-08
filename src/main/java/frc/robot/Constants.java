@@ -52,6 +52,6 @@ public final class Constants {
     public static final int AnalogPressureSensorChannel = 0;
 
     public static final double MaxPSI = 60;
-    public static final double MinPSI = 45;
+    public static final double MinPSI = 55;
   }
 }

@@ -4,21 +4,26 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.PneumaticsSubsystem;
 
-public class PneumaticsTeleOp extends CommandBase
+public class PneumaticsAuto extends CommandBase
 {
   PneumaticsSubsystem subsystem;
   CommandXboxController controller;
+  int rate;
 
-  public PneumaticsTeleOp(PneumaticsSubsystem subsystem, CommandXboxController controller) {
+  /** Creates a new PneumaticsAuto. */
+  public PneumaticsAuto(PneumaticsSubsystem subsystem, CommandXboxController controller, int rate)
+  {
     this.subsystem = subsystem;
     this.controller = controller;
+    this.rate = rate;
 
     addRequirements(subsystem);
-  } 
+  }
 
   @Override
   public void initialize()
@@ -26,25 +31,25 @@ public class PneumaticsTeleOp extends CommandBase
     subsystem.disableCompressor();
   }
 
+  Timer time = new Timer();
+  boolean lineSwitcher = true;
   @Override
   public void execute()
   {
-    if (controller.getHID().getYButtonPressed())
-    { subsystem.enableCompressor(); }
-
-    else if (controller.getHID().getAButtonPressed())
-    { subsystem.disableCompressor(); }
-
-    // if (controller.getHID().getBButtonPressed())
-    // { subsystem.setModeExtend(); }
+    if (lineSwitcher)
+      subsystem.enableCompressor();
+    else
+      subsystem.disableCompressor();
     
-    // else if (controller.getHID().getXButtonPressed())
-    // { subsystem.setModeRetract(); }
+    if (time.hasElapsed(rate/2.0))
+      lineSwitcher = !lineSwitcher;
   }
 
   @Override
   public void end(boolean interrupted) {}
 
   @Override
-  public boolean isFinished() { return false; }
+  public boolean isFinished() {
+    return false;
+  }
 }

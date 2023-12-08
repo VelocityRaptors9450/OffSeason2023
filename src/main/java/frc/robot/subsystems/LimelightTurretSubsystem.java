@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax;
@@ -23,6 +24,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -35,6 +37,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double area;
   double id;
   double hasTarget;
+
+  // ShuffleboardLayout elevatorCommands = Shuffleboard.getTab("SmartDashboard")
+  // .getLayout("Turret", BuiltInLayouts.kGrid)
+  // .withSize(2, 2);
+
+
+
   
 
   // PID AND FEEDFORWARD TO BE TUNED
@@ -61,6 +70,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   
   public LimelightTurretSubsystem() {
     turret.setIdleMode(IdleMode.kBrake);
+    
   }
 
   public void controllerRotate(DoubleSupplier strafe) {
@@ -69,15 +79,17 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     
     if (strafe.getAsDouble() == 0) {
       trackAprilTag(hasTarget);
-    } else if (getTurretPosAngle() <= .8*360 && getTurretPosAngle() >= .1*360) {
+    } else if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
       turret.setVoltage(voltage);
-    } else if (getTurretPosAngle() > .8*360) {
+    } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
       turret.stopMotor();
-      if (strafe.getAsDouble() > 0) {
+      // only able to move opposite direction
+      if (strafe.getAsDouble() > 0) { // 
         turret.setVoltage(voltage);
       }
-    } else if (getTurretPosAngle() < .1*360) {
+    } else if (getTurretPosAngle() < Constants.minTurretPosition) {
       turret.stopMotor();
+      // only able to move opposite direction
       if (strafe.getAsDouble() < 0) {
         turret.setVoltage(voltage);
       }
@@ -140,13 +152,30 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
     
 
-    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) {
+    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) { // no voltage
       SmartDashboard.putBoolean("Is Centered", true);
 
       turret.setVoltage(0);
-    } else {
+    } else { // set voltage
       SmartDashboard.putBoolean("Is Centered", false);
-      turret.setVoltage(-voltage);
+      if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
+        turret.setVoltage(-voltage);
+      } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
+        turret.stopMotor();
+        // only able to move opposite direction
+        if (x > 0) {
+          turret.setVoltage(-voltage);
+        }
+      } else if (getTurretPosAngle() < Constants.minTurretPosition) {
+        turret.stopMotor();
+        // only able to move opposite direction
+        if (x < 0) {
+          turret.setVoltage(-voltage);
+        }
+      }
+      
+      
+     
       
     }
     
@@ -219,6 +248,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
+    System.out.println(turretEncoder.getPosition());
     SmartDashboard.putNumber("ID", id);
     SmartDashboard.putNumber("Area", area);
     SmartDashboard.putNumber("has Target", hasTarget);

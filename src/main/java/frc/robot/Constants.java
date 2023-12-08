@@ -108,6 +108,11 @@ public final class Constants {
   public static final double upWristBound = 0;
   public static final double lowWristBound = 0;
 
+  // turret stuff
+  public static final double maxTurretPosition = .75*360; //degrees
+  public static final double minTurretPosition = .15*360; //degrees
+
+
   //extension stuff
   public static final double maxExtension = 32; // 34.2 full max
 

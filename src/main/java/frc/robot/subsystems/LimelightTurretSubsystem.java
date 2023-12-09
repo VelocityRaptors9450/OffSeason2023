@@ -38,9 +38,15 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double id;
   double hasTarget;
 
-  // ShuffleboardLayout elevatorCommands = Shuffleboard.getTab("SmartDashboard")
-  // .getLayout("Turret", BuiltInLayouts.kGrid)
-  // .withSize(2, 2);
+
+
+  ShuffleboardLayout turretThings = Shuffleboard.getTab("SmartDashboard")
+  .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .withSize(2, 15) //2x2 size
+  .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); //arranged on the top left
+  
+
+  
 
 
 
@@ -70,6 +76,14 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   
   public LimelightTurretSubsystem() {
     turret.setIdleMode(IdleMode.kBrake);
+
+    turretThings.add("LimelightX", x).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("LimelightY", y);
+    turretThings.add("LimelightArea", area);
+    turretThings.add("Tag ID", id);
+    turretThings.add("Has Target", hasTarget);
+    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition());
+    
     
   }
 
@@ -248,9 +262,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
-    System.out.println(turretEncoder.getPosition());
     SmartDashboard.putNumber("ID", id);
-    SmartDashboard.putNumber("Area", area);
     SmartDashboard.putNumber("has Target", hasTarget);
 
     // System.out.print(hasTarget);

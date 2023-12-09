@@ -354,12 +354,12 @@ public class Robot extends TimedRobot {
     Command intake = new ArmWristSetTargetCommand(subsystems.arm,0.063, 0.43)
       .andThen(new IntakeCommandWrist(subsystems.intake, subsystems.arm));
 
-    Command creep = new DriveCommand(subsystems.drivebaseSubsystem, () -> 0.2, () -> 0, () -> 0, () -> 0).withTimeout(3);
+    Command spin = new DriveCommand(subsystems.drivebaseSubsystem, () -> 0, () -> 0, () -> 0.2, () -> 0).withTimeout(1);
 
     eventMap.put("ScoreMid", scoreMid);
     eventMap.put("ScoreHigh", scoreHigh);
     eventMap.put("Intake", intake);
-    eventMap.put("Creep", creep);
+    eventMap.put("Spin", spin);
 
 
     //eventMap.put("outtake", new WaitCommand(10));

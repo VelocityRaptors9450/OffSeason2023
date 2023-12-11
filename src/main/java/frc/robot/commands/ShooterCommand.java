@@ -33,7 +33,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void execute() {
     //shooter.setVoltage(voltagefor, voltageback);
-    //shooter.setVelocity(targetVel, targetAcc);
+    shooter.setVelocity(targetVel, targetAcc);
      
   }
 

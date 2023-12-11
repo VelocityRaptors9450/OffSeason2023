@@ -26,18 +26,22 @@ import frc.robot.Constants;
 public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax backSpinMotor = new CANSparkMax(Constants.shooterBackSpinId, MotorType.kBrushless);
   //robot's perspectice left and right
-  //private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
-  private final CANSparkMax frontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
+  private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
+  private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
   private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0, 0);
   private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0, 0);
   
-  private final SparkMaxPIDController backSpin;
-  private final SparkMaxPIDController frontSpin;
+  private final SparkMaxPIDController backSpin, frontSpin;
    
 
   private final AbsoluteEncoder backSpinEncoder = backSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
-  private final AbsoluteEncoder frontSpinEncoder = frontSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
+  private final AbsoluteEncoder frontSpinEncoder = rightFrontSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
+
+  private ShooterPos shootPos = ShooterPos.CLOSE;
+  //rpm values taken from interpolation/ from table we made.
+  private double closeShootRpm = 0, mediumShootRpm = 0, farShootRpm = 0;
+  
 /*
 
   Pseuodcode
@@ -45,16 +49,15 @@ public class ShooterSubsystem extends SubsystemBase {
  */ 
   public ShooterSubsystem() {
     backSpinMotor.setInverted(true);
-    //leftFrontSpinMotor.setInverted(true);
-    //rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
-    frontSpinMotor.setInverted(false);
+    leftFrontSpinMotor.setInverted(true);
+    rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
     
     backSpinMotor.setIdleMode(IdleMode.kCoast);
-    //leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
-    frontSpinMotor.setIdleMode(IdleMode.kCoast);
+    leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
+    rightFrontSpinMotor.setIdleMode(IdleMode.kCoast);
     
     backSpin = backSpinMotor.getPIDController();
-    frontSpin = frontSpinMotor.getPIDController();
+    frontSpin = rightFrontSpinMotor.getPIDController();
     backSpin.setFeedbackDevice(backSpinEncoder);
     frontSpin.setFeedbackDevice(frontSpinEncoder);
 
@@ -63,7 +66,9 @@ public class ShooterSubsystem extends SubsystemBase {
     frontSpin.setP(0);
     backSpin.setD(0);
     //ff is lowest power needed to shoot to closest distance
-    backSpin.setFF(0.0);
+    backSpin.setFF(0);
+    frontSpin.setFF(0);
+    
     
 
     //backSpinEncoder.setVelocityConversionFactor(2 * 0.0254 * Math.PI / 30); // rev / min   *   1 min / 60 sec   *  2Math.PI * r / rev    radius(2 inches) in meters
@@ -80,7 +85,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setForwardSpinVoltage(double voltage){
     //leftFrontSpinMotor.setVoltage(voltage);
-    frontSpinMotor.setVoltage(voltage);
+    leftFrontSpinMotor.setVoltage(voltage);
   }
   public void setVoltage(double forSpinVolt, double backSpinVolt){
     setBackSpinVoltage(backSpinVolt);
@@ -93,7 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //leftFrontSpinMotor.set(frontSpinff.calculate(targetVel));
     //frontSpinMotor.set(frontSpinff.calculate(targetVel, targetAcc));
    // backSpinMotor.set(backSpinff.calculate(targetVel, targetAcc));
-    
+      frontSpin.calculate();
     //Hi My name is Krish
     //Hi Krish my name is NameNotFoundException
   }
@@ -108,6 +113,34 @@ public class ShooterSubsystem extends SubsystemBase {
     return backSpinEncoder.getVelocity();
     //return backSpinMotor.getEncoder().getVelocity();
   }
+
+  enum ShooterPos{
+    CLOSE,
+    MEDIUM,
+    FAR
+  }
+ 
+  public void changeShootPos(ShooterPos pos){
+    shootPos = pos;
+  }
+
+public ShooterPos getShootPos(){
+    return shootPos;
+}
+
+public double shoot(){
+  if(shootPos == ShooterPos.CLOSE){
+    return closeShootRpm;
+  }else if(shootPos == ShooterPos.MEDIUM){
+    return mediumShootRpm;
+  }else if(shootPos == ShooterPos.FAR){
+    return farShootRpm;
+  }else{
+    //do nothing
+  }
+  return 0;
+
+}
   
   
   

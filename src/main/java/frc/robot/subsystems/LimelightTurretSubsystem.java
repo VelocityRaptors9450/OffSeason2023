@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -21,6 +24,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -31,11 +35,27 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double x;
   double y;
   double area;
+  double id;
+  double hasTarget;
+
+
+
+  ShuffleboardLayout turretThings = Shuffleboard.getTab("SmartDashboard")
+  .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .withSize(2, 15) //2x2 size
+  .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); //arranged on the top left
+  
+
+  
+
+
+
+  
 
   // PID AND FEEDFORWARD TO BE TUNED
   CANSparkMax turret = new CANSparkMax(Constants.turretId, MotorType.kBrushless); // 4 : 3 : 14 : 1 (gear ratios)
   private final PIDController turretPIDController =
-    new PIDController(0.01, 0, 0);
+    new PIDController(0.02, 0, 0);
   public SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0, 0, 0); 
 
 
@@ -48,14 +68,47 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   NetworkTableEntry tx = table.getEntry("tx"); // Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees) (prob bigger range b/c LL3)
   NetworkTableEntry ty = table.getEntry("ty"); // Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees) (prob bigger range b/c LL3)
   NetworkTableEntry ta = table.getEntry("ta"); // 	Target Area (0% of image to 100% of image)
+  NetworkTableEntry tagID = table.getEntry("tid"); // 	id of primary tag in view
+  NetworkTableEntry tv = table.getEntry("tv"); // returns either 0 or 1 if there is any tag in frame  
   //returns vision derived pose
   double[] visionPose = table.getEntry("botpose").getDoubleArray(new double[6]); // Robot transform in field-space. Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw), total latency (cl+tl)
   
   
   public LimelightTurretSubsystem() {
-    turret.setIdleMode(IdleMode.kCoast);
+    turret.setIdleMode(IdleMode.kBrake);
+
+    turretThings.add("LimelightX", x).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("LimelightY", y);
+    turretThings.add("LimelightArea", area);
+    turretThings.add("Tag ID", id);
+    turretThings.add("Has Target", hasTarget);
+    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition());
+    
+    
   }
 
+  public void controllerRotate(DoubleSupplier strafe) {
+    double percentOutput = MathUtil.clamp(strafe.getAsDouble(), -0.5, 0.5);
+    double voltage = convertToVolts(percentOutput);
+    
+    if (strafe.getAsDouble() == 0) {
+      trackAprilTag(hasTarget);
+    } else if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
+      turret.setVoltage(voltage);
+    } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
+      turret.stopMotor();
+      // only able to move opposite direction
+      if (strafe.getAsDouble() > 0) { // 
+        turret.setVoltage(voltage);
+      }
+    } else if (getTurretPosAngle() < Constants.minTurretPosition) {
+      turret.stopMotor();
+      // only able to move opposite direction
+      if (strafe.getAsDouble() < 0) {
+        turret.setVoltage(voltage);
+      }
+    }
+  }
 
   public void shootNoMatterPosition() {
     // max distance:
@@ -66,7 +119,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
       if (Math.abs(x) > 0) {
         // turn turret the opposite value of x --> Math.signum(x)
         // in this case, turning turret left increases encoder pos, so +x below
-        updateTurretAngle(getTurretPosAngle() + x);
+        updateTurretAngle(getTurretPosAngle() + x, hasTarget);
       } 
     } else {
       // don't turn turret
@@ -74,12 +127,26 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
   }
 
+  public void trackAprilTag(double hasTarget) {
+    if (Math.abs(x) > 0) {
+      // turn turret the opposite value of x --> Math.signum(x)
+      // in this case, turning turret left increases encoder pos, so +x below
+    
+        
+        updateTurretAngle(getTurretPosAngle() - x, hasTarget);
+        
+      
+    } else {
+      turret.stopMotor();
+    }
+  }
+
 
   // range from .1 to .9 (absolute encoder)
   double oldTurretVel = 0;
   double oldTime = 0;
   double oldAngle = 0;
-  public void updateTurretAngle(double goalAngle) {
+  public void updateTurretAngle(double goalAngle, double hasTarget) {
     double pidValue = turretPIDController.calculate(getTurretPosAngle(), goalAngle);
     double changeInTime = Timer.getFPGATimestamp() - oldTime;
     double velSetpoint = getTurretPosAngle() - oldAngle / changeInTime;
@@ -91,13 +158,44 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("PID Value", pidValue);
     SmartDashboard.putNumber("Feed Forward", ffVal);
+    SmartDashboard.putNumber("Voltage", voltage);
     SmartDashboard.putNumber("Position error", turretPIDController.getPositionError());
+    SmartDashboard.putBoolean("broooooooo", hasTarget == 0.0);
     
+
+
     
-    turret.setVoltage(voltage);
+
+    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) { // no voltage
+      SmartDashboard.putBoolean("Is Centered", true);
+
+      turret.setVoltage(0);
+    } else { // set voltage
+      SmartDashboard.putBoolean("Is Centered", false);
+      if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
+        turret.setVoltage(-voltage);
+      } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
+        turret.stopMotor();
+        // only able to move opposite direction
+        if (x > 0) {
+          turret.setVoltage(-voltage);
+        }
+      } else if (getTurretPosAngle() < Constants.minTurretPosition) {
+        turret.stopMotor();
+        // only able to move opposite direction
+        if (x < 0) {
+          turret.setVoltage(-voltage);
+        }
+      }
+      
+      
+     
+      
+    }
+    
     
     // update vars for determining acceleration later
-    oldTurretVel =  velSetpoint;
+    oldTurretVel =  velSetpoint; 
     oldTime = Timer.getFPGATimestamp(); 
     oldAngle = getTurretPosAngle();
     
@@ -149,17 +247,29 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     x = tx.getDouble(0.0);
     y = ty.getDouble(0.0);
     area = ta.getDouble(0.0);
+    id = tagID.getDouble(0.0);
+    hasTarget = tv.getDouble(0.0);
     visionPose = table.getEntry("botpose").getDoubleArray(new double[6]);
 
+
     //shootNoMatterPosition();
-    //updateTurretAngle(.5 * 360);
+   
+    //updateTurretAngle(.3 * 360);
+    //turret.set(0.1);
     
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
-  }
+    SmartDashboard.putNumber("ID", id);
+    SmartDashboard.putNumber("has Target", hasTarget);
+
+    // System.out.print(hasTarget);
+    // System.out.println(hasTarget == 0);
+    // System.out.println(id);
+    // trackAprilTag(hasTarget);
+  }  
   /*
       tv Whether the limelight has any valid targets (0 or 1)
       tx Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)

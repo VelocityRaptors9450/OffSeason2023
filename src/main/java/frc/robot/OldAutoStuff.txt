@@ -1,0 +1,57 @@
+// balance = new SequentialCommandGroup(
+//   new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
+//   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
+//   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
+//   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
+//   new WaitCommand(0.5),
+//   new TimedIntakeCommand(m_robotContainer.intake, -0.2),
+//   new WaitCommand(0.5),
+//   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
+//   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
+//   new WaitCommand(1),
+
+//   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
+//   //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
+//   );
+
+// scoreHighOnly = new SequentialCommandGroup(
+//   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
+//   new WaitCommand(1),
+//   new TimedIntakeCommand(m_robotContainer.intake, -0.8),
+//   new WaitCommand(1),
+//   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
+//   );
+
+
+// redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+// .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+// ));
+
+// blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+// .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
+// ));
+
+// redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+// .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+// ));
+
+// blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
+// .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
+// .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
+// .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
+// .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
+// ));

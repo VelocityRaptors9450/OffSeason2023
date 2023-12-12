@@ -718,7 +718,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		return kinematics.toChassisSpeeds(states);
 	}
 	
-
+	// uses WPILib trajectory code
+	// probably will remove now that we've got pathplanner working
 	public Command getAutonomousCommand() {
 		resetGyroAngle();
 		// Create config for trajectory

@@ -10,20 +10,7 @@ package frc.robot;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.List;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -41,18 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.SetArmHeightPreset;
-import frc.robot.commands.TimedIntakeCommand;
-import frc.robot.commands.ArmSetTargetCommand;
-import frc.robot.commands.ArmWristSetTargetCommand;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.IntakeCommandWrist;
-import frc.robot.commands.IntakeSetPowerCommand;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ArmSubsystem.Height;
 import frc.robot.util.MACAddress;
 
 
@@ -70,19 +46,6 @@ public class Robot extends TimedRobot {
   public double getVoltage(){
     return /*PDP.getVoltage()*/ 12;
   }
-
-  
-  
-  //private ShooterSubsystem shooter = new ShooterSubsystem();
-  //private CANSparkMax leftMotor1 = new CANSparkMax(6, MotorType.kBrushless);
-  //private CANSparkMax leftMotor2 = new CANSparkMax(2, MotorType.kBrushless);
-  //private CANSparkMax rightMotor1 = new CANSparkMax(4, MotorType.kBrushless);
-  //private CANSparkMax rightMotor2 = new CANSparkMax(4, MotorType.kBrushless);
-
-  //private Joystick joy1 = new Joystick(0);
-
-
-
 
   /* Command Declarations */
   private SequentialCommandGroup balance;
@@ -102,10 +65,6 @@ public class Robot extends TimedRobot {
 
 
   Timer time = new Timer();
-  //private TalonFX motor1 = new TalonFX(1);
-  
-  //private DoubleLogEntry telemetry;
- // private Timer time = new Timer();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -128,6 +87,7 @@ public class Robot extends TimedRobot {
  
    public Controls controls;
    public Subsystems subsystems;
+   public Autos autos;
  
    private final RobotType robotType;
    public final Field2d field = new Field2d();
@@ -157,7 +117,7 @@ public class Robot extends TimedRobot {
 
       subsystems = new Subsystems();
       controls = new Controls(subsystems);
-
+      autos = new Autos(subsystems);
 
       if (subsystems.drivebaseSubsystem != null) {
         subsystems.drivebaseSubsystem.enableNoMotionCalibration();
@@ -190,72 +150,22 @@ public class Robot extends TimedRobot {
 
 
       /* Defining the Autonomous Commands. */
-      // balance = new SequentialCommandGroup(
-      //   new InstantCommand(() -> m_robotContainer.driveTrain.resetGyro()),
-      //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0.1, () -> 0, () -> 0).withTimeout(0.5),
-      //   new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 0).withTimeout(0.5),
-      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5),
-      //   new WaitCommand(0.5),
-      //   new TimedIntakeCommand(m_robotContainer.intake, -0.2),
-      //   new WaitCommand(0.5),
-      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.063, 0.9),
-      //   new FirstAutoBalanceCommand(m_robotContainer.driveTrain,() -> 15).withTimeout(10),
-      //   new WaitCommand(1),
-        
-      //   new SecondAutoBalanceCommand(m_robotContainer.driveTrain)
-      //   //new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180))
-      //   );
-
-      // scoreHighOnly = new SequentialCommandGroup(
-      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.5, 0.5),
-      //   new WaitCommand(1),
-      //   new TimedIntakeCommand(m_robotContainer.intake, -0.8),
-      //   new WaitCommand(1),
-      //   new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5)
-      //   );
-
-
-      // redBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(1.5)
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-      // ));
-
-      // blueBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(1.5)
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -12, () -> 0, () -> 0).withTimeout(8)
-      // ));
-
-      // redNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> -5, () -> 0).withTimeout(2)
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-      // ));
-
-      // blueNoBumpAuto = new ArmWristSetTargetCommand(m_robotContainer.arm, 0.26, 0.5).andThen(new WaitCommand(3))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, -0.3)).andThen(new WaitCommand(1))
-      // .andThen(new IntakeSetPowerCommand(m_robotContainer.intake, 0.0))
-      // .andThen(new ArmSetTargetCommand(m_robotContainer.arm, 0.37))
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -3, () -> 5, () -> 0).withTimeout(2)
-      // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> -10, () -> 0, () -> 0).withTimeout(6)
-      // .andThen(new InstantCommand(() -> m_robotContainer.driveTrain.setGyroHeading(180)))
-      // ));
+      
 
       /* Initializing the Autonomous Chooser (stuff) */
       //Adds the options for the auto chooser.
-      m_autoChooser.addOption("Balance", balance);
-      m_autoChooser.addOption("Score High Only", scoreHighOnly);
-      m_autoChooser.addOption("Red Bump", redBumpAuto);
-      m_autoChooser.addOption("Blue Bump", blueBumpAuto);
-      m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
-      m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
+      Command cycleAuto = autos.getAuto("ChargedUpAuto", 1, 0.5);
+      Command testAuto = autos.getAuto("New Path", 1, 0.5);
+
+      //m_autoChooser.addOption("Balance", balance);
+      //m_autoChooser.addOption("Score High Only", scoreHighOnly);
+      //m_autoChooser.addOption("Red Bump", redBumpAuto);
+      //m_autoChooser.addOption("Blue Bump", blueBumpAuto);
+      //m_autoChooser.addOption("Red No Bump", redNoBumpAuto);
+      //m_autoChooser.addOption("Blue No Bump", blueNoBumpAuto);
+
+      m_autoChooser.addOption("Cycle Auto", cycleAuto);
+      m_autoChooser.addOption("Test Auto", testAuto);
 
       //Puts the auto chooser into it's own tab on Shuffleboard.
       ShuffleboardTab autoTab =
@@ -315,9 +225,7 @@ public class Robot extends TimedRobot {
     // Options: balance, redBumpAuto, blueBumpAuto, redNoBumpAuto, blueNoBumpAuto
     // To build: connect ethernet to roborio, click on vscode, and hit shift f5
 
-    // m_autonomousCommand = m_autoChooser.getSelected();
-
-    m_autonomousCommand = getAuto();
+    m_autonomousCommand = m_autoChooser.getSelected();
 
     // m_autonomousCommand = new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 0, () -> 15).withTimeout(5)
     // .andThen(new ManualDriveCommand(m_robotContainer.driveTrain, () -> 0, () -> 5, () -> 0).withTimeout(3))
@@ -334,38 +242,6 @@ public class Robot extends TimedRobot {
     //if(balance != null){
     //   balance.schedule();
     //}
-  }
-
-  public Command getAuto() {
-    List<PathPlannerTrajectory> pathGroup =
-				PathPlanner.loadPathGroup("ChargedUpAuto", new PathConstraints(1, 0.5));
-		HashMap<String, Command> eventMap = new HashMap<String, Command>();
-
-    Command scoreMid = new SetArmHeightPreset(subsystems.arm, Height.MID)
-      .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
-      .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
-      .andThen(new ArmWristSetTargetCommand(subsystems.arm,0.37, 0.6));
-
-    Command scoreHigh = new SetArmHeightPreset(subsystems.arm, Height.HIGH)
-    .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
-    .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
-    .andThen(new ArmWristSetTargetCommand(subsystems.arm,0.37, 0.6));
-
-    Command intake = new ArmWristSetTargetCommand(subsystems.arm,0.063, 0.43)
-      .andThen(new IntakeCommandWrist(subsystems.intake, subsystems.arm));
-
-    Command spin = new DriveCommand(subsystems.drivebaseSubsystem, () -> 0, () -> 0, () -> 0.2, () -> 0).withTimeout(1);
-
-    eventMap.put("ScoreMid", scoreMid);
-    eventMap.put("ScoreHigh", scoreHigh);
-    eventMap.put("Intake", intake);
-    eventMap.put("Spin", spin);
-
-
-    //eventMap.put("outtake", new WaitCommand(10));
-
-
-    return Robot.getInstance().getAutoBuilder(eventMap).fullAuto(pathGroup);
   }
 
   /** This function is called periodically during autonomous. */
@@ -431,60 +307,6 @@ public class Robot extends TimedRobot {
   int _loopCount = 0;
   @Override
   public void teleopPeriodic() {
-
-    //SmartDashboard.putNumber("Pitch", m_robotContainer.driveTrain.getPitch());
-
-    
-
-    
-    
-
-    // System.out.println(cancoder.getPosition());
-    // System.out.println(cancoder.getAbsolutePosition());
-    // System.out.println();
-    // System.out.println(cancoder1.getPosition());
-    // System.out.println(cancoder1.getAbsolutePosition());
-    // System.out.println();
-    // System.out.println(cancoder2.getPosition());
-    // System.out.println(cancoder2.getAbsolutePosition());
-    // System.out.println();
-    // System.out.println(cancoder3.getPosition());
-    // System.out.println(cancoder3.getAbsolutePosition());
-    // System.out.println();
-    // System.out.println();
-    
-
-    
-    
-
-    
-    
-
-    //2048 tics / revolution
-    /*
-     while(motor1.getSelectedSensorPosition() < 5000){
-      motor1.set(ControlMode.PercentOutput, 0.2);
-      telemetry.append(motor1.getSelectedSensorPosition());
-    }
-    motor1.set(ControlMode.PercentOutput, 0);
-    */
-    /* 
-    while(motor2.getEncoder().getPosition() < 42){
-      motor2.set(0.2);
-      System.out.println(motor2.getEncoder().getPosition());
-    }
-    motor2.set(0);
-    */
-    /*
-     
-    while(angle.getPosition() < 180){
-      motor1.set(ControlMode.PercentOutput, 0.2);
-      System.out.println(angle.getPosition());
-    }
-    motor1.set(ControlMode.PercentOutput, 0);
-    */
-
-
 
   }
 
@@ -587,38 +409,6 @@ public class Robot extends TimedRobot {
 
 
   }
-
-  public SwerveAutoBuilder getAutoBuilder(HashMap<String, Command> eventMap) {
-		if (subsystems.drivebaseSubsystem != null) {
-			return new SwerveAutoBuilder(
-					subsystems.drivebaseSubsystem::getPose, // Pose2d supplier
-					subsystems.drivebaseSubsystem
-							::resetPose, // Pose2d consumer, used to reset odometry at the beginning of
-					// auto
-					subsystems.drivebaseSubsystem.getKinematics(), // SwerveDriveKinematics
-					new PIDConstants(
-							3, 0.0,
-							0.1), // PID constants to correct for translation error (used to create the X and
-					// Y
-					// PID controllers)
-					new PIDConstants(
-						  3, 0.0,
-							0.32), // PID constants to correct for rotation error (used to create the rotation
-					// controller)
-					subsystems.drivebaseSubsystem
-							::drive, // Module states consumer used to output to the drive subsystem
-					eventMap,
-					true, // Should the path be automatically mirrored depending on alliance color.
-					// Optional, defaults to true
-					subsystems
-							.drivebaseSubsystem // The drive subsystem. Used to properly set the requirements
-					// of
-					// path following commands
-					);
-		} else {
-			return null;
-		}
-	}
 
   /** This function is called once when the robot is first started up. */
   @Override

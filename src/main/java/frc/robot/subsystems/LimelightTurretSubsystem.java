@@ -78,11 +78,11 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     turret.setIdleMode(IdleMode.kBrake);
 
     turretThings.add("LimelightX", x).withWidget(BuiltInWidgets.kEncoder);
-    turretThings.add("LimelightY", y);
-    turretThings.add("LimelightArea", area);
-    turretThings.add("Tag ID", id);
-    turretThings.add("Has Target", hasTarget);
-    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition());
+    turretThings.add("LimelightY", y).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("LimelightArea", area).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("Tag ID", id).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("Has Target", hasTarget).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition()).withWidget(BuiltInWidgets.kEncoder);
     
     
   }

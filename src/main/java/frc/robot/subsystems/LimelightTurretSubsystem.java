@@ -258,13 +258,15 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     //turret.set(0.1);
     
     //post to smart dashboard periodically
+    
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
     SmartDashboard.putNumber("ID", id);
     SmartDashboard.putNumber("has Target", hasTarget);
-
+    
+  
     // System.out.print(hasTarget);
     // System.out.println(hasTarget == 0);
     // System.out.println(id);

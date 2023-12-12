@@ -29,8 +29,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
   private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
-  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0.0098,0);
-  private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0, 0);
+  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0.0098,0.01024);
+  private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0.00898, 0.0138);
   
   private final SparkMaxPIDController backSpin, frontSpin;
    
@@ -95,10 +95,9 @@ public class ShooterSubsystem extends SubsystemBase {
    
 
   public void setVelocity(double targetVel, double targetAcc){
-    //leftFrontSpinMotor.set(frontSpinff.calculate(targetVel));
-    //frontSpinMotor.set(frontSpinff.calculate(targetVel, targetAcc));
-   // backSpinMotor.set(backSpinff.calculate(targetVel, targetAcc));
-      backSpinMotor.set(backSpinFF.calculate(targetVel, targetAcc));
+    leftFrontSpinMotor.set(frontSpinFF.calculate(targetVel, targetAcc));
+   
+      //backSpinMotor.set(backSpinFF.calculate(targetVel, targetAcc));
     //Hi My name is Krish
     //Hi Krish my name is NameNotFoundException
   }

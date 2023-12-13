@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -40,13 +41,46 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
 
 
-  ShuffleboardLayout turretThings = Shuffleboard.getTab("SmartDashboard")
+  GenericEntry limelightx = Shuffleboard.getTab("SmartDashboard")
   .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .add("LimelightX", x)
+  .withWidget(BuiltInWidgets.kEncoder)
   .withSize(2, 2) //2x2 size
-  .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); //arranged on the top left
-  
+  .getEntry(); 
 
+  GenericEntry limelighty = Shuffleboard.getTab("SmartDashboard")
+  .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .add("LimelightY", y)
+  .withWidget(BuiltInWidgets.kEncoder)
+  .withSize(2, 2) //2x2 size
+  .getEntry(); 
   
+  GenericEntry limelightarea = Shuffleboard.getTab("SmartDashboard")
+  .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .add("Limelight Area", area)
+  .withWidget(BuiltInWidgets.kEncoder)
+  .withSize(2, 2) //2x2 size
+  .getEntry(); 
+  
+  GenericEntry tagid = Shuffleboard.getTab("SmartDashboard")
+  .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .add("Tag ID", id)
+  .withWidget(BuiltInWidgets.kEncoder)
+  .withSize(2, 2) //2x2 size
+  .getEntry(); 
+  
+  GenericEntry hastarget = Shuffleboard.getTab("SmartDashboard")
+  .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+  .add("Has Target", hasTarget)
+  .withWidget(BuiltInWidgets.kEncoder)
+  .withSize(2, 2) //2x2 size
+  .getEntry(); 
+
+  GenericEntry absencoder;
+  
+  
+    
+
 
 
 
@@ -77,13 +111,20 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   public LimelightTurretSubsystem() {
     turret.setIdleMode(IdleMode.kBrake);
 
-    turretThings.add("LimelightX", x);
-    turretThings.add("LimelightY", y);
-    turretThings.add("LimelightArea", area);
-    turretThings.add("Tag ID", id);
-    turretThings.add("Has Target", hasTarget);
-    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition());
+    // turretThings.add("LimelightX", x);
+    // turretThings.add("LimelightY", y);
+    // turretThings.add("LimelightArea", area);
+    // turretThings.add("Tag ID", id);
+    // turretThings.add("Has Target", hasTarget);
+    // turretThings.add("Turret Abs Encoder", turretEncoder.getPosition());
     
+
+    absencoder = Shuffleboard.getTab("SmartDashboard")
+    .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
+    .add("Turret Abs Encoder", turretEncoder.getPosition())
+    .withWidget(BuiltInWidgets.kEncoder)
+    .withSize(2, 2) //2x2 size
+    .getEntry(); 
     
   }
 

@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class SecondAutoBalanceCommand extends CommandBase {
-  private final DriveTrain swerve;
+  private final DrivebaseSubsystem swerve;
   
   public Timer t = new Timer();
   double time = 0.02;
@@ -29,7 +29,7 @@ public class SecondAutoBalanceCommand extends CommandBase {
  
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */
-  public SecondAutoBalanceCommand(DriveTrain swerve) {
+  public SecondAutoBalanceCommand(DrivebaseSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     addRequirements(swerve);
@@ -40,7 +40,7 @@ public class SecondAutoBalanceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    swerve.drive(0, 0, 0, time);
+    // swerve.drive(0, 0, 0, time);
     stop = false;
      
   }
@@ -55,19 +55,19 @@ public class SecondAutoBalanceCommand extends CommandBase {
     }
 
 
-    double anglePower = swerve.getPitch() * kp;
+    // double anglePower = swerve.getPitch() * kp;
 
     
     SmartDashboard.putString("Auto Balance", "Second");
 
-    anglePower = MathUtil.clamp(anglePower, -5, 5);
+    // anglePower = MathUtil.clamp(anglePower, -5, 5);
 
 
-    swerve.drive(0, anglePower, 0, time);
+    // swerve.drive(0, anglePower, 0, time);
 
-    if(swerve.getPitch() < 2){
-      stop = true;
-    }
+    // if(swerve.getPitch() < 2){
+    //   stop = true;
+    // }
 
 
 
@@ -82,7 +82,7 @@ public class SecondAutoBalanceCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(0, 0, 0.01, time);
+    // swerve.drive(0, 0, 0.01, time);
 
     //Not sure if we need this, but just giving enough time for wheels to get to X position
     t.reset();

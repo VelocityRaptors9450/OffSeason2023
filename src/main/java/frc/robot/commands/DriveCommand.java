@@ -1,137 +1,113 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-
-import java.util.function.BooleanSupplier;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DrivebaseSubsystem;
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.DriveTrain;
-
 public class DriveCommand extends CommandBase {
-  private final DriveTrain swerve;
-  private final CommandXboxController controller;
-  //private DoubleSupplier rightX, leftX, leftY;
-  
-  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
-  // make bigger for sharper, make smaller for ramp/coast
-  // decimals are fine, they will make the ramp/coast slower
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(4);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(4);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4);
-  
- 
-  public Timer t = new Timer();
-  double time = 0.02;
-  boolean ranOnce = false;
+	private static final double TURBO_ROTATION_DEFAULT = 1.5;
 
-  double linearModifier;
-  double rotationalModifier;
+	private final DrivebaseSubsystem drivebaseSubsystem;
+	private final DoubleSupplier forward;
+	private final DoubleSupplier strafe;
+	private final DoubleSupplier rotation;
+	private final DoubleSupplier turboRotation;
 
-  /** Creates a new DriveCommand. */
-  public DriveCommand(DriveTrain swerve, CommandXboxController controller/*DoubleSupplier rightX, DoubleSupplier leftX, DoubleSupplier leftY*/) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    // this.leftX = leftX;
-    // this.rightX = rightX;
-    // this.leftY = leftY;
-    linearModifier = 0.5;
-    rotationalModifier = 0.5;
-    this.controller = controller;
+	// shuffleboard
+	private static GenericEntry driveSpeedEntry =
+			Shuffleboard.getTab("Drivebase")
+					.addPersistent("Drive Speed", 1)
+					.withSize(2, 1)
+					.withWidget(BuiltInWidgets.kNumberSlider)
+					.withProperties(Map.of("Min", 0, "Max", 1))
+					.getEntry();
+	private static GenericEntry rotationSpeedEntry =
+			Shuffleboard.getTab("Drivebase")
+					.addPersistent("Rotation Speed", 1)
+					.withSize(2, 1)
+					.withWidget(BuiltInWidgets.kNumberSlider)
+					.withProperties(Map.of("Min", 0, "Max", 1))
+					.getEntry();
+	private static GenericEntry fieldOrientedEntry =
+			Shuffleboard.getTab("Drivebase")
+					.addPersistent("Field Oriented", true)
+					.withWidget(BuiltInWidgets.kToggleSwitch)
+					.getEntry();
+	private static GenericEntry cubeSpeedEntry =
+			Shuffleboard.getTab("Drivebase")
+					.addPersistent("Cube Speed", true)
+					.withWidget(BuiltInWidgets.kToggleSwitch)
+					.getEntry();
+	private static GenericEntry turboRotationEntry =
+			Shuffleboard.getTab("Drivebase")
+					.addPersistent("Turbo Rotation Modifier", TURBO_ROTATION_DEFAULT)
+					.withWidget(BuiltInWidgets.kNumberSlider)
+					.withProperties(Map.of("Min", 0.5, "Max", 2.5))
+					.getEntry();
 
-    this.swerve = swerve;
-    addRequirements(swerve);
-  }
+	public DriveCommand(
+			DrivebaseSubsystem drivebaseSubsystem,
+			DoubleSupplier forward,
+			DoubleSupplier strafe,
+			DoubleSupplier rotation,
+			DoubleSupplier turboRotation) {
+		this.drivebaseSubsystem = drivebaseSubsystem;
+		this.forward = forward;
+		this.strafe = strafe;
+		this.rotation = rotation;
+		// this variable give the right trigger input
+		this.turboRotation = turboRotation;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-     
-  }
+		addRequirements(drivebaseSubsystem);
+	}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if (ranOnce) {
-      time = t.get();
-    } else {
-      ranOnce = true;
-    }
+	@Override
+	public void execute() {
+		double rotationSpeedModifier =
+				rotationSpeedEntry.getDouble(1.0)
+						* (1
+								- (turboRotation.getAsDouble()
+										* (1 - turboRotationEntry.getDouble(TURBO_ROTATION_DEFAULT))));
 
-   
+		double x = deadbandCorrection(-forward.getAsDouble());
+		double y = deadbandCorrection(strafe.getAsDouble());
+		double rot = deadbandCorrection(-rotation.getAsDouble());
 
-    // if(controller.getHID().getBButtonPressed()){
-    //   swerve.fieldRelativeSwitch();
-    // }
+		// math for normalizing and cubing inputs
+		double magnitude = Math.pow(Math.min(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)), 1), 3);
+		double angle = Math.atan2(y, x);
+		double cubed_x = magnitude * Math.cos(angle);
+		double cubed_y = magnitude * Math.sin(angle);
+		
+		drivebaseSubsystem.runPower();
+		// drivebaseSubsystem.drive(0, 0.2, /*Rotation2d.fromRotations(
+		// 	rot
+		// 			* rotationSpeedModifier
+		// 			* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
+		// 					.getRotations()) */ Rotation2d.fromRotations(0), fieldOrientedEntry.getBoolean(true), false);
+		
+		// drivebaseSubsystem.drive(
+		// 		(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)
+		// 				* driveSpeedEntry.getDouble(1.0)
+		// 				* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC, // convert from percent to m/s
+		// 		(cubeSpeedEntry.getBoolean(false) ? cubed_y : y)
+		// 				* driveSpeedEntry.getDouble(1.0)
+		// 				* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC,
+		// 		Rotation2d.fromRotations(
+		// 				rot
+		// 						* rotationSpeedModifier
+		// 						* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
+		// 								.getRotations()), // convert from percent to rotations per second
+		// 		fieldOrientedEntry.getBoolean(true),
+		// 		false);
+	}
 
-
-    // Get the x speed. We are inverting this because Xbox controllers return
-    // negative values when we push forward.
-
-    if(controller.getHID().getXButtonPressed()){
-      swerve.drive(0, 0, 0.01, time);
-
-
-    }else{
-      if (controller.rightBumper().getAsBoolean()) {
-        linearModifier += 0.01;
-        rotationalModifier += 0.01;
-      } else {
-        linearModifier -= 0.01;
-        rotationalModifier -= 0.01;
-      }
-      linearModifier = MathUtil.clamp(linearModifier, 0.5, 1.5);
-      rotationalModifier = MathUtil.clamp(rotationalModifier, 0.5, 1);
-
-      
-
-      final var xSpeed = -xSpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.02)) * swerve.kMaxSpeed * linearModifier;
-      
-      //final double xSpeed = -controller.getLeftX() * swerve.kMaxSpeed;
-
-      // Get the y speed or sideways/strafe speed. We are inverting this because
-      // we want a positive value when we pull to the left. Xbox controllers
-      // return positive values when you pull to the right by default.
-      final var ySpeed = ySpeedLimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.02)) * swerve.kMaxSpeed * linearModifier;
-      //final double ySpeed = controller.getLeftY() * swerve.kMaxSpeed;
-
-      // Get the rate of angular rotation. We are inverting this because we want a
-      // positive value when we pull to the left (remember, CCW is positive in
-      // mathematics). Xbox controllers return positive values when you pull to
-      // the right by default.
-      final var rot = rotLimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.02)) * swerve.kMaxAngularSpeed * rotationalModifier;
-      // final double rot = controller.getRightX() * swerve.kMaxAngularSpeed;
-      SmartDashboard.putNumber("xSpeed", xSpeed);
-      SmartDashboard.putNumber("ySpeed", ySpeed);
-
-      swerve.drive(xSpeed, ySpeed, rot, time);
-
-      
-
-      
-     
-    }
-
-    t.restart();
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+	public double deadbandCorrection(double input) {
+		return Math.abs(input) < 0.05 ? 0 : (input - Math.signum(input) * 0.05) / 0.95;
+	}
 }

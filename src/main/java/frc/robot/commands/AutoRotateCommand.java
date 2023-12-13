@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class AutoRotateCommand extends CommandBase {
-  private final DriveTrain swerve;
+  private final DrivebaseSubsystem swerve;
   
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
   // make bigger for sharper, make smaller for ramp/coast
@@ -37,7 +37,7 @@ public class AutoRotateCommand extends CommandBase {
 
 
   /** Creates a new RotateCommand, which allows rotation to a specified heading. */
-  public AutoRotateCommand(DriveTrain swerve, DoubleSupplier heading, DoubleSupplier power) {
+  public AutoRotateCommand(DrivebaseSubsystem swerve, DoubleSupplier heading, DoubleSupplier power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     addRequirements(swerve);
@@ -60,7 +60,7 @@ public class AutoRotateCommand extends CommandBase {
       ranOnce = true;
     }
 
-    swerve.rotateToHeadingPID(heading.getAsDouble(), time);
+    // swerve.rotateToHeadingPID(heading.getAsDouble(), time);
 
     
 

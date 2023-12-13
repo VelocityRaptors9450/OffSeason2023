@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class ManualDriveCommand extends CommandBase {
-  private final DriveTrain swerve;
+  private final DrivebaseSubsystem swerve;
   
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1. if the rate limit is 3
   // make bigger for sharper, make smaller for ramp/coast
@@ -38,7 +38,7 @@ public class ManualDriveCommand extends CommandBase {
 
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */
-  public ManualDriveCommand(DriveTrain swerve, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation) {
+  public ManualDriveCommand(DrivebaseSubsystem swerve, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     addRequirements(swerve);
@@ -62,7 +62,7 @@ public class ManualDriveCommand extends CommandBase {
       ranOnce = true;
     }
 
-    swerve.drive(-strafe.getAsDouble(), -forward.getAsDouble(), rotation.getAsDouble(), time);
+    // swerve.drive(-strafe.getAsDouble(), -forward.getAsDouble(), rotation.getAsDouble(), time);
 
     
 
@@ -73,7 +73,7 @@ public class ManualDriveCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(0, 0, 0, time);
+    // swerve.drive(0, 0, 0, time);
   }
 
   // Returns true when the command should end.

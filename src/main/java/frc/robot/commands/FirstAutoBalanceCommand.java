@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class FirstAutoBalanceCommand extends CommandBase {
-  private final DriveTrain swerve;
+  private final DrivebaseSubsystem swerve;
   
   public Timer t = new Timer();
   double time = 0.02;
@@ -30,7 +30,7 @@ public class FirstAutoBalanceCommand extends CommandBase {
  
 
   /** Creates a new ManualDriveCommand, which allows inputs from sources other than controllers */
-  public FirstAutoBalanceCommand(DriveTrain swerve, DoubleSupplier power) {
+  public FirstAutoBalanceCommand(DrivebaseSubsystem swerve, DoubleSupplier power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     addRequirements(swerve);
@@ -42,7 +42,7 @@ public class FirstAutoBalanceCommand extends CommandBase {
   @Override
   public void initialize() {
     stop = false;
-    swerve.drive(0, 0, 0, time);
+    // swerve.drive(0, 0, 0, time);
      
   }
 
@@ -57,12 +57,12 @@ public class FirstAutoBalanceCommand extends CommandBase {
 
     //swerve.drive(0, -power.getAsDouble(), 0, time);
 
-    if(Math.abs(swerve.getPitch()) > 15){
-      stop = true;
-    }
+    // if(Math.abs(swerve.getPitch()) > 15){
+    //   stop = true;
+    // }
 
-    SmartDashboard.putString("Auto Balance", "First");
-    swerve.drive(0, power.getAsDouble(), 0, time);
+    // SmartDashboard.putString("Auto Balance", "First");
+    // swerve.drive(0, power.getAsDouble(), 0, time);
 
 
 

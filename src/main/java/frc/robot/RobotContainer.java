@@ -7,7 +7,6 @@ package frc.robot;
 
 
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveCommandSuppliers;
 
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeSetPowerCommand;
@@ -15,7 +14,6 @@ import frc.robot.commands.LimelightTurretCommand;
 //import frc.robot.commands.LimelightTurretCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TimedIntakeCommand;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RotationSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.ManualDriveCommand;
@@ -69,7 +67,7 @@ public class RobotContainer {
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final EventLoop test = new EventLoop();
-  private final CommandXboxController driverController = new CommandXboxController(0);
+  //private final CommandXboxController driverController = new CommandXboxController(0);
   private final PS4Controller driveReveal = new PS4Controller(0);
   private final CommandXboxController turretController = new CommandXboxController(1);
   //private IntakeCommand intakeCommand = new IntakeCommand(intake);
@@ -219,9 +217,9 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return null;
   }
-  public double getDriverRawAxis(int axis){
-      return driverController.getRawAxis(axis);
-  }
+  // public double getDriverRawAxis(int axis){
+      // return driverController.getRawAxis(axis);
+  // }
 
   
 }

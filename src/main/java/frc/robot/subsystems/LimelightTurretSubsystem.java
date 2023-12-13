@@ -42,7 +42,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
 
   ShuffleboardLayout turretThings = Shuffleboard.getTab("SmartDashboard")
   .getLayout("Turret_Limelight", BuiltInLayouts.kGrid)
-  .withSize(2, 15) //2x2 size
+  .withSize(2, 2) //2x2 size
   .withPosition(0, 0).withProperties(Map.of("Label position", "HIDDEN")); //arranged on the top left
   
 
@@ -77,12 +77,12 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   public LimelightTurretSubsystem() {
     turret.setIdleMode(IdleMode.kBrake);
 
-    turretThings.add("LimelightX", x).withWidget(BuiltInWidgets.kEncoder);
-    turretThings.add("LimelightY", y).withWidget(BuiltInWidgets.kEncoder);
-    turretThings.add("LimelightArea", area).withWidget(BuiltInWidgets.kEncoder);
-    turretThings.add("Tag ID", id).withWidget(BuiltInWidgets.kEncoder);
-    turretThings.add("Has Target", hasTarget).withWidget(BuiltInWidgets.kEncoder);
-    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition()).withWidget(BuiltInWidgets.kEncoder);
+    turretThings.add("LimelightX", x);
+    turretThings.add("LimelightY", y);
+    turretThings.add("LimelightArea", area);
+    turretThings.add("Tag ID", id);
+    turretThings.add("Has Target", hasTarget);
+    turretThings.add("Turret Abs Encoder", turretEncoder.getPosition());
     
     
   }

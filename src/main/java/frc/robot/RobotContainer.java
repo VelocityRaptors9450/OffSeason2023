@@ -89,6 +89,9 @@ public class RobotContainer {
     shooter.setDefaultCommand(new ShooterCommand(shooter,25,0,1, 1));
     //turret.setDefaultCommand(new LimelightTurretCommand(turret, turretController::getLeftX));
     
+    // shooter.setDefaultCommand(new ShooterCommand(shooter,30,0,1, 1));
+    turret.setDefaultCommand(new LimelightTurretCommand(turret, turretController::getLeftX));
+    
     //armController.leftBumper().onTrue(new InstantCommand(()-> shooter.setVoltage(2,1.8)));
     //armController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVoltage(0, 0)));
     

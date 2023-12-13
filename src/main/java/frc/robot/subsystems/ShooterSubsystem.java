@@ -29,11 +29,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
   private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
-  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0.0098,0.01024);
-  private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0.00898, 0.0138);
+  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0.0098,0.010256);
+  private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0.00898, 0.01387);
   
-  private final SparkMaxPIDController backSpin, frontSpin;
-   
+  //private final SparkMaxPIDController backSpin, frontSpin;
+    private final PIDController backSpin = new PIDController(0.0001,0,0);
+    private final PIDController frontSpin = new PIDController(0.0002,0,0);
+
+    
 
   private final AbsoluteEncoder backSpinEncoder = backSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
   private final AbsoluteEncoder frontSpinEncoder = rightFrontSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
@@ -56,18 +59,18 @@ public class ShooterSubsystem extends SubsystemBase {
     leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
     rightFrontSpinMotor.setIdleMode(IdleMode.kCoast);
     
-    backSpin = backSpinMotor.getPIDController();
-    frontSpin = rightFrontSpinMotor.getPIDController();
-    backSpin.setFeedbackDevice(backSpinEncoder);
-    frontSpin.setFeedbackDevice(frontSpinEncoder);
+    //backSpin = backSpinMotor.getPIDController();
+   // frontSpin = rightFrontSpinMotor.getPIDController();
+    //backSpin.setFeedbackDevice(backSpinEncoder);
+    //frontSpin.setFeedbackDevice(frontSpinEncoder);
 
-    backSpin.setP(0); 
-    backSpin.setD(0);
-    frontSpin.setP(0);
-    backSpin.setD(0);
+   // backSpin.setP(0.001); 
+   // backSpin.setD(0);
+    //frontSpin.setP(0);
+    //backSpin.setD(0);
     //ff is lowest power needed to shoot to closest distance
-    backSpin.setFF(0);
-    frontSpin.setFF(0);
+    //backSpin.setFF(0);
+    //frontSpin.setFF(0);
     
     
 
@@ -95,9 +98,11 @@ public class ShooterSubsystem extends SubsystemBase {
    
 
   public void setVelocity(double targetVel, double targetAcc){
-    leftFrontSpinMotor.set(frontSpinFF.calculate(targetVel, targetAcc));
    
-      //backSpinMotor.set(backSpinFF.calculate(targetVel, targetAcc));
+      backSpinMotor.set(backSpinFF.calculate(targetVel, targetAcc) + backSpin.calculate(getVelocityBackSpin(), targetVel));
+      leftFrontSpinMotor.set(frontSpinFF.calculate(targetVel, targetAcc) + frontSpin.calculate(getVelocityFrontSpin(), targetVel));
+
+    
     //Hi My name is Krish
     //Hi Krish my name is NameNotFoundException
   }

@@ -84,27 +84,22 @@ public class DriveCommand extends CommandBase {
 		double cubed_x = magnitude * Math.cos(angle);
 		double cubed_y = magnitude * Math.sin(angle);
 		
-		drivebaseSubsystem.runPower();
-		// drivebaseSubsystem.drive(0, 0.2, /*Rotation2d.fromRotations(
-		// 	rot
-		// 			* rotationSpeedModifier
-		// 			* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
-		// 					.getRotations()) */ Rotation2d.fromRotations(0), fieldOrientedEntry.getBoolean(true), false);
+		// drivebaseSubsystem.runPower();
 		
-		// drivebaseSubsystem.drive(
-		// 		(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)
-		// 				* driveSpeedEntry.getDouble(1.0)
-		// 				* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC, // convert from percent to m/s
-		// 		(cubeSpeedEntry.getBoolean(false) ? cubed_y : y)
-		// 				* driveSpeedEntry.getDouble(1.0)
-		// 				* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC,
-		// 		Rotation2d.fromRotations(
-		// 				rot
-		// 						* rotationSpeedModifier
-		// 						* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
-		// 								.getRotations()), // convert from percent to rotations per second
-		// 		fieldOrientedEntry.getBoolean(true),
-		// 		false);
+		drivebaseSubsystem.drive(
+				(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)
+						* driveSpeedEntry.getDouble(1.0)
+						* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC, // convert from percent to m/s
+				(cubeSpeedEntry.getBoolean(false) ? cubed_y : y)
+						* driveSpeedEntry.getDouble(1.0)
+						* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC,
+				Rotation2d.fromRotations(
+						rot
+								* rotationSpeedModifier
+								* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
+										.getRotations()), // convert from percent to rotations per second
+				fieldOrientedEntry.getBoolean(true),
+				false);
 	}
 
 	public double deadbandCorrection(double input) {

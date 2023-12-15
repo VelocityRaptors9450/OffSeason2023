@@ -64,6 +64,12 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController armController = new CommandXboxController(1);
+  //InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));
+
+
+  
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -71,6 +77,53 @@ public class RobotContainer {
     // extension.setDefaultCommand(extensionCommand);
     //shooter.setDefaultCommand(shooterCommand);
     //linkage.setDefaultCommand(linkageCommand);
+   // driveTrain.setDefaultCommand(new DriveCommand(driveTrain, driverController/*driverController::getRightX, driverController::getLeftX, driverController::getLeftY*/));
+
+    //Might not want to be creating a new instance of the command every time its called since its not "finishing any of the commands"
+    
+    
+    /* 
+    
+    armController.y().onTrue(new ArmSetTargetCommand(arm, 2.57));
+    armController.a().onTrue(new SequentialCommandGroup(new ArmSetTargetCommand(arm,0.23), new IntakeCommand(intake)));
+    armController.b().onTrue(new ArmSetTargetCommand(arm, 1.7));
+    armController.x().onTrue(new ArmSetTargetCommand(arm, 2.2));
+    
+
+    // armController.y().onTrue(new InstantCommand(() -> ext.setExtensionGoal(15)));
+    // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
+    // armController.y().onTrue(new InstantCommand(() -> ext.setPower(0.2)));
+    // armController.x().onTrue(new InstantCommand(() -> ext.setExtensionGoal(0)));
+
+
+    //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.5)));
+
+    
+    /*Extension Code test 
+    //driverController.y().onTrue(new ExtensionCommand(ext, 50, 0.1));
+    //driverController.x().onTrue(new ExtensionCommand(ext, 0, 0.1));
+    //driverController.a().onTrue(new ExtensionCommand(ext, 100, 0.1));
+    //armController.x().onTrue(new InstantCommand(() -> arm.setRotationGoal(0.75)));
+
+    
+    
+    //Need to turn off intake 
+    driverController.rightTrigger().onTrue(new InstantCommand(() -> driveTrain.resetGyro()));
+    // driveReveal.touchpad(test).onTrue(new InstantCommand(() -> driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5)));
+    //if (driveReveal.getTouchpadPressed()) driveReveal.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+    // armController.rightBumper().onTrue(new IntakeSetPowerCommand(intake, -1));
+    // armController.leftBumper().onTrue(new IntakeSetPowerCommand(intake, -0.5));
+    // armController.leftBumper().and(armController.rightBumper().onFalse(new IntakeSetPowerCommand(intake, 0)));
+    armController.rightBumper().onTrue(new TimedIntakeCommand(intake, -0.8));
+    armController.leftBumper().onTrue(new TimedIntakeCommand(intake, -0.3));
+    armController.rightTrigger().onTrue(new ArmManualCommand(arm, true));
+    armController.leftTrigger().onTrue(new ArmManualCommand(arm, false));
+    armController.povDown().onTrue(new InstantCommand(() -> arm.resetArm()));
+    
+    //armController.leftTrigger().onTrue(intakeCommand);
+    */
+    
+
     configureBindings();
     //paraLinkage.setDefaultCommand(new ParallelLinkage(paraLinkage));
   }

@@ -66,7 +66,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	// 4 inches * odemetry adjustment
 	private static final double WHEEL_DIAMETER_METERS =
 			0.1016 * ODOMETRY_ADJUSTMENT;
-	private static final double DRIVE_REDUCTION = 6.75;
+	private static final double DRIVE_REDUCTION = 6.75 * (14/16);
 	// steer reduction is the conversion from rotations of motor to rotations of the wheel
 	// module rotation * STEER_REDUCTION = motor rotation
 	public static final double STEER_REDUCTION =
@@ -84,7 +84,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private SwerveModuleState[] currentStates;
 
-	private final BrushlessSparkMaxController[] moduleDriveMotors =
+	private final MotorController[] moduleDriveMotors =
 			new BrushlessSparkMaxController[] {
 			new BrushlessSparkMaxController(Hardware.DRIVEBASE_FRONT_LEFT_DRIVE_MOTOR),
 			new BrushlessSparkMaxController(Hardware.DRIVEBASE_FRONT_RIGHT_DRIVE_MOTOR),
@@ -196,7 +196,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	public static final double driveKd = 0.0;
 
 	// TODO: check actual PID values
-	private PIDController compTranslationalPID = new PIDController(0.0007, 0, 0);
+	private PIDController compTranslationalPID = new PIDController(0.0007, 0, 0); // kp was 0.0007
 	private PIDController compRotationalPID = new PIDController(0.1, 0, 0.5);
 	private final double DEFAULT_COMP_TRANSLATIONAL_F = 0.000175;
 	// old way of getting F
@@ -440,11 +440,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		return currentStates;
 	}
 
-	public void runPower() {
-		for (BrushlessSparkMaxController moduleDriveMotor : moduleDriveMotors) {
-			moduleDriveMotor.setPower(0.1);
-		}
-	}
+	// public void runPower() {
+	// 	for (BrushlessSparkMaxController moduleDriveMotor : moduleDriveMotors) {
+	// 		moduleDriveMotor.setPower(0.1);
+	// 	}
+	// }
 
 	public double getVelocity() {
 		if (currentStates == null) {

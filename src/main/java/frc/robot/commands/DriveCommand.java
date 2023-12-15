@@ -84,7 +84,7 @@ public class DriveCommand extends CommandBase {
 		double cubed_x = magnitude * Math.cos(angle);
 		double cubed_y = magnitude * Math.sin(angle);
 		
-		// drivebaseSubsystem.runPower();
+		
 		
 		drivebaseSubsystem.drive(
 				(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)

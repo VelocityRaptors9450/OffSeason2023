@@ -66,7 +66,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	// 4 inches * odemetry adjustment
 	private static final double WHEEL_DIAMETER_METERS =
 			0.1016 * ODOMETRY_ADJUSTMENT;
-	private static final double DRIVE_REDUCTION = 6.75 * (14/16);
+	private static final double DRIVE_REDUCTION = (45.0 / (15.0 / (17.0 / (27.0 / (50.0 / 16.0)))));
+	//if gear ratio is 14:50 then 27:17 then 15:45 where before ":" is driving gear and after it is driven gear
+	private static final double DRIVE_REDUCTION_GEAR_RATIO = (45.0 / (15.0 / (17.0 / (27.0 / (50.0 / 14.0))))); 
 	// steer reduction is the conversion from rotations of motor to rotations of the wheel
 	// module rotation * STEER_REDUCTION = motor rotation
 	public static final double STEER_REDUCTION =
@@ -188,7 +190,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private DoublePublisher backRightTargetAnglePublisher;
 
 
-	// PID
+	// PID THESE CONSTANTS NOT USED RN
 	public static final double turnKp = 4.0027;//4.0027 //12.0027
 	public static final double turnKd = 0.10234;
 
@@ -197,8 +199,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// TODO: check actual PID values
 	private PIDController compTranslationalPID = new PIDController(0.0007, 0, 0); // kp was 0.0007
-	private PIDController compRotationalPID = new PIDController(0.1, 0, 0.5);
-	private final double DEFAULT_COMP_TRANSLATIONAL_F = 0.000175;
+	private PIDController compRotationalPID = new PIDController(0.08, 0, 0.5); // was 0.1
+	private final double DEFAULT_COMP_TRANSLATIONAL_F = 0.000175 * 0;
 	// old way of getting F
 	// 1 / moduleDriveMotors[0].getFreeSpeedRPS();
 
@@ -344,9 +346,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		for (int i = 0; i < moduleDriveMotors.length; i++) {
 			moduleDriveMotors[i].set(
 					states[i].speedMetersPerSecond * DRIVE_VELOCITY_COEFFICIENT); // set velocity
+			SmartDashboard.putNumber("drive motor set", states[0].speedMetersPerSecond * DRIVE_VELOCITY_COEFFICIENT);
 		}
 		for (int i = 0; i < moduleAngleMotors.length; i++) {
 			moduleAngleMotors[i].set(states[i].angle.getRotations() * STEER_REDUCTION);
+			SmartDashboard.putNumber("angle motor set", states[i].angle.getRotations() * STEER_REDUCTION);
+
 		}
 
 		currentStates = states;

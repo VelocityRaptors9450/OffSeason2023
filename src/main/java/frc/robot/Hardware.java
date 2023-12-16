@@ -8,7 +8,7 @@ public class Hardware {
 	public static final int PDP_ID = 25;
 
 	// Drive devices are from range 1-19
-	public static final int DRIVEBASE_FRONT_LEFT_DRIVE_MOTOR = 1,
+	public static final int DRIVEBASE_FRONT_LEFT_DRIVE_MOTOR = 62,
 			DRIVEBASE_FRONT_RIGHT_DRIVE_MOTOR = 4,
 			DRIVEBASE_BACK_LEFT_DRIVE_MOTOR = 7,
 			DRIVEBASE_BACK_RIGHT_DRIVE_MOTOR = 10;

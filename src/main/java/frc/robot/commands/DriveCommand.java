@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import java.util.Map;
@@ -84,7 +85,11 @@ public class DriveCommand extends CommandBase {
 		double cubed_x = magnitude * Math.cos(angle);
 		double cubed_y = magnitude * Math.sin(angle);
 		
-		
+		SmartDashboard.putNumber(" Controller Y", y);
+		SmartDashboard.putNumber(" Controller X", x);
+		SmartDashboard.putNumber(" Controller rot", rot);
+
+
 		
 		drivebaseSubsystem.drive(
 				(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)

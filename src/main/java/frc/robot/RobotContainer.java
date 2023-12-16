@@ -68,7 +68,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final EventLoop test = new EventLoop();
   //private final CommandXboxController driverController = new CommandXboxController(0);
-  private final PS4Controller driveReveal = new PS4Controller(0);
+  
   private final CommandXboxController turretController = new CommandXboxController(1);
   //private IntakeCommand intakeCommand = new IntakeCommand(intake);
   //InstantCommand intakeOut = new InstantCommand(() -> intake.setIntakePower(-0.5));

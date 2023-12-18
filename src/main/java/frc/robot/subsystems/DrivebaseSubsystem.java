@@ -48,7 +48,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// Rotation2d.fromRadians(2.656849354505539),
 		// Rotation2d.fromRadians(1.958889506757259)
 		Rotation2d.fromRadians(4.84277734735497),
-		Rotation2d.fromRadians(4.207709301170314),
+		Rotation2d.fromRadians(4.207709301170314-Math.PI),
 		Rotation2d.fromRadians(1.3299),
 		Rotation2d.fromRadians(3.77972866135022)
 		

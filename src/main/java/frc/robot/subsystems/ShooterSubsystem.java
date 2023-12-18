@@ -55,9 +55,9 @@ public class ShooterSubsystem extends SubsystemBase {
     leftFrontSpinMotor.setInverted(true);
     rightFrontSpinMotor.follow(leftFrontSpinMotor, true);
     
-    backSpinMotor.setIdleMode(IdleMode.kCoast);
-    leftFrontSpinMotor.setIdleMode(IdleMode.kCoast);
-    rightFrontSpinMotor.setIdleMode(IdleMode.kCoast);
+    backSpinMotor.setIdleMode(IdleMode.kBrake);
+    leftFrontSpinMotor.setIdleMode(IdleMode.kBrake);
+    rightFrontSpinMotor.setIdleMode(IdleMode.kBrake);
     
     //backSpin = backSpinMotor.getPIDController();
    // frontSpin = rightFrontSpinMotor.getPIDController();

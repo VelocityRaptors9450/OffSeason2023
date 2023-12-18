@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
 	private final PowerDistribution PDP;
 
 	public Controls controls;
+	public RobotContainer cont;
 	public Subsystems subsystems;
 
 	private final RobotType robotType;
@@ -46,6 +47,7 @@ public class Robot extends TimedRobot {
 		instance = this;
 		PDP = new PowerDistribution(Hardware.PDP_ID, ModuleType.kRev);
 		robotType = type;
+		
 	}
 
 	public double getVoltage() {
@@ -71,6 +73,7 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
+		cont = new RobotContainer();
 		
 
 		if (subsystems.drivebaseSubsystem != null) {

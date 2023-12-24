@@ -29,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax leftFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinLId, MotorType.kBrushless);
   private final CANSparkMax rightFrontSpinMotor = new CANSparkMax(Constants.shooterFrontSpinRId, MotorType.kBrushless);
 
-  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0.0098,0.010256);
+  private final SimpleMotorFeedforward backSpinFF = new SimpleMotorFeedforward(0.0098,0.01025);
   private final SimpleMotorFeedforward frontSpinFF = new SimpleMotorFeedforward(0.00898, 0.01387);
   
   //private final SparkMaxPIDController backSpin, frontSpin;
@@ -99,8 +99,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setVelocity(double targetVel, double targetAcc){
    
-      backSpinMotor.set(backSpinFF.calculate(targetVel, targetAcc) + backSpin.calculate(getVelocityBackSpin(), targetVel));
-      leftFrontSpinMotor.set(frontSpinFF.calculate(targetVel, targetAcc) + frontSpin.calculate(getVelocityFrontSpin(), targetVel));
+      backSpinMotor.set((backSpinFF.calculate(targetVel, targetAcc) + backSpin.calculate(getVelocityBackSpin(), targetVel)));
+      leftFrontSpinMotor.set((frontSpinFF.calculate(targetVel, targetAcc) + frontSpin.calculate(getVelocityFrontSpin(), targetVel)));
 
     
     //Hi My name is Krish

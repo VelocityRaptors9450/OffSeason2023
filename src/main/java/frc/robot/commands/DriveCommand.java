@@ -84,10 +84,6 @@ public class DriveCommand extends CommandBase {
 		double angle = Math.atan2(y, x);
 		double cubed_x = magnitude * Math.cos(angle);
 		double cubed_y = magnitude * Math.sin(angle);
-		
-		SmartDashboard.putNumber(" Controller Y", y);
-		SmartDashboard.putNumber(" Controller X", x);
-		SmartDashboard.putNumber(" Controller rot", rot);
 
 
 		

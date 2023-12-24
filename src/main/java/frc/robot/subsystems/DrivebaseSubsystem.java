@@ -346,12 +346,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		for (int i = 0; i < moduleDriveMotors.length; i++) {
 			moduleDriveMotors[i].set(
 					states[i].speedMetersPerSecond * DRIVE_VELOCITY_COEFFICIENT); // set velocity
-			SmartDashboard.putNumber("drive motor set", states[0].speedMetersPerSecond * DRIVE_VELOCITY_COEFFICIENT);
 		}
 		for (int i = 0; i < moduleAngleMotors.length; i++) {
 			moduleAngleMotors[i].set(states[i].angle.getRotations() * STEER_REDUCTION);
-			SmartDashboard.putNumber("angle motor set", states[i].angle.getRotations() * STEER_REDUCTION);
-
 		}
 
 		currentStates = states;
@@ -703,12 +700,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		backLeftActualAnglePublisher.set(moduleAngles[2].getDegrees());
 		backRightActualAnglePublisher.set(moduleAngles[3].getDegrees());
 		
+		/* 
+		//FOR TUNING OFFSETS
 		Rotation2d[] absModuleAngles = getAbsModuleAngles();
 		SmartDashboard.putNumber("FLPos", absModuleAngles[0].getRadians());
 		SmartDashboard.putNumber("FRPos", absModuleAngles[1].getRadians());
 		SmartDashboard.putNumber("BLPos", absModuleAngles[2].getRadians());
 		SmartDashboard.putNumber("BRPos", absModuleAngles[3].getRadians());
-		
+		*/
 		
 	}
 

@@ -34,7 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
   
   //private final SparkMaxPIDController backSpin, frontSpin;
     private final PIDController backSpin = new PIDController(0.0001,0,0);
-    private final PIDController frontSpin = new PIDController(0.0002,0,0);
+    private final PIDController frontSpin = new PIDController(0.00021,0,0);
 
     
 
@@ -105,6 +105,14 @@ public class ShooterSubsystem extends SubsystemBase {
     
     //Hi My name is Krish
     //Hi Krish my name is NameNotFoundException
+  }
+
+  //Can set distances as enums as well
+  //current unit for distance is in inches
+  public void shootToPos(double distance){
+    double targetVelocity = -0.00166 * distance * distance + 0.449 * distance - 4.346;
+    //double targetVelocity = 0.2052887 * distance + 3.3682;
+    setVelocity(targetVelocity, 0);
   }
  
 

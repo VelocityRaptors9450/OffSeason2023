@@ -86,7 +86,7 @@ public class RobotContainer {
 
     //10, 12 max
     // shooter.setDefaultCommand(new ShooterCommand(shooter,20,0,3, 3));
-    turretController.leftBumper().onTrue(new InstantCommand(() -> shooter.setVelocity(30,0)));
+    turretController.leftBumper().onTrue(new InstantCommand(() -> shooter.shootToPos(50)));
     turretController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVelocity(0,0)));
     turretController.rightBumper().onTrue(new InstantCommand(() -> turret.setFlipTrue()));
     turret.setDefaultCommand(new LimelightTurretCommand(turret, turretController::getLeftX));

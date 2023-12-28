@@ -86,7 +86,7 @@ public class RobotContainer {
 
     //10, 12 max
     // shooter.setDefaultCommand(new ShooterCommand(shooter,20,0,3, 3));
-    turretController.leftBumper().onTrue(new InstantCommand(() -> shooter.setVelocity(30,0)));
+    turretController.leftBumper().onTrue(new InstantCommand(() -> shooter.shootToPos(50)));
     turretController.leftBumper().onFalse(new InstantCommand(() -> shooter.setVelocity(0,0)));
     // conditional in the below parameter is to set the goal as the farthest from current pos (either .25 or .75 encoder)
     turretController.rightBumper().onTrue(new InstantCommand(() -> turret.setFlipTrue_Goal(Math.abs(turret.getTurretPosAngle() - 0.25 * 360.0) > Math.abs(turret.getTurretPosAngle() - 0.75 * 360.0) ? 0.25 * 360.0 : 0.75 * 360.0)));

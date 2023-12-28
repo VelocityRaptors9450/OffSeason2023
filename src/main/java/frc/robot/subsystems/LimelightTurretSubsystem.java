@@ -97,8 +97,8 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   public SimpleMotorFeedforward turretFeedForward = new SimpleMotorFeedforward(0, 0, 0); 
 
   private final PIDController turretAutoFlipPIDController =
-    new PIDController(0.02, 0, 0);
-  public SimpleMotorFeedforward turretAutoFlipFeedForward = new SimpleMotorFeedforward(0, 0, 0); 
+    new PIDController(0.0067, 0, 0);
+  public SimpleMotorFeedforward turretAutoFlipFeedForward = new SimpleMotorFeedforward(0.001, 0, 0); 
 
 
   // if absolute encoder plugged into cansparkmax:
@@ -140,17 +140,17 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     double percentOutput = MathUtil.clamp(strafe.getAsDouble(), -0.5, 0.5);
     double voltage = convertToVolts(percentOutput);
     
-    if (strafe.getAsDouble() == 0) {
+    if (strafe.getAsDouble() == 0 && !flip) {
       trackAprilTag(hasTarget);
-    } else if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
+    } else if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition && !flip) {
       turret.setVoltage(voltage);
-    } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
+    } else if (getTurretPosAngle() > Constants.maxTurretPosition && !flip) {
       turret.stopMotor();
       // only able to move opposite direction
       if (strafe.getAsDouble() > 0) { // 
         turret.setVoltage(voltage);
       }
-    } else if (getTurretPosAngle() < Constants.minTurretPosition) {
+    } else if (getTurretPosAngle() < Constants.minTurretPosition && !flip) {
       turret.stopMotor();
       // only able to move opposite direction
       if (strafe.getAsDouble() < 0) {
@@ -199,7 +199,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   public void updateTurretAngle(double goalAngle, double hasTarget) {
     double pidValue = turretPIDController.calculate(getTurretPosAngle(), goalAngle);
     double changeInTime = Timer.getFPGATimestamp() - oldTime;
-    double velSetpoint = getTurretPosAngle() - oldAngle / changeInTime;
+    double velSetpoint = (getTurretPosAngle() - oldAngle) / changeInTime;
     double accel = (velSetpoint - oldTurretVel) / (changeInTime); 
     double ffVal = turretFeedForward.calculate(velSetpoint, accel); //takes velocity, and acceleration
     
@@ -245,14 +245,18 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     
   }
 
+
+  double oldTurretVel_ = 0;
+  double oldTime_ = 0;
+  double oldAngle_ = 0;
+  double goalAngle;
   // this pid flips to the farthest goal; either 0.25 or 0.75
   public void turretFlipToFarthest() {
-    SmartDashboard.putBoolean("in method", true);
-    final double goalAngle = Math.abs(getTurretPosAngle() - 0.25) > Math.abs(getTurretPosAngle() - 0.75) ? 0.25 : 0.75;
+    
     double pidValue = turretAutoFlipPIDController.calculate(getTurretPosAngle(), goalAngle);
-    double changeInTime = Timer.getFPGATimestamp() - oldTime;
-    double velSetpoint = getTurretPosAngle() - oldAngle / changeInTime;
-    double accel = (velSetpoint - oldTurretVel) / (changeInTime); 
+    double changeInTime = Timer.getFPGATimestamp() - oldTime_;
+    double velSetpoint = (getTurretPosAngle() - oldAngle_) / changeInTime;
+    double accel = (velSetpoint - oldTurretVel_) / (changeInTime); 
     double ffVal = turretAutoFlipFeedForward.calculate(velSetpoint, accel); //takes velocity, and acceleration
     
     double percentOutput = MathUtil.clamp(pidValue + ffVal, -1.0, 1.0);
@@ -261,36 +265,42 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("PID Value", pidValue);
     SmartDashboard.putNumber("Feed Forward", ffVal);
-    SmartDashboard.putNumber("Voltage", voltage);
+    SmartDashboard.putNumber("Voltage", -voltage);
     SmartDashboard.putNumber("Position error", turretAutoFlipPIDController.getPositionError());
     SmartDashboard.putNumber("Goal Angle", goalAngle);
     
-    if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) { // no voltage
-      turret.setVoltage(0);
-    } else { // set voltage
-      if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
-        turret.setVoltage(-voltage);
-      } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
-        turret.stopMotor();
-        // only able to move opposite direction (turning to the right)
-        if (goalAngle == 0.25) { 
-          turret.setVoltage(-voltage);
-        }
-      } else if (getTurretPosAngle() < Constants.minTurretPosition) {
-        turret.stopMotor();
-        // only able to move opposite direction (turning to the left)
-        if (goalAngle == 0.75) {
-          turret.setVoltage(-voltage);
-        }
-      }
-
+    turret.setVoltage(-voltage);
+    
+    if (Math.abs(turretAutoFlipPIDController.getPositionError()) < 5 /*degrees */) {
+      flip = false;
+      turret.stopMotor();
     }
+    // if (Math.abs(getTurretPosAngle() - goalAngle) <= 0.3 /*degrees*/) { // no voltage
+    //   turret.setVoltage(0);
+    // } else { // set voltage
+    //   if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition) {
+    //     turret.setVoltage(-voltage);
+    //   } else if (getTurretPosAngle() > Constants.maxTurretPosition) {
+    //     turret.stopMotor();
+    //     // only able to move opposite direction (turning to the right)
+    //     if (goalAngle == 0.25) { 
+    //       turret.setVoltage(-voltage);
+    //     }
+    //   } else if (getTurretPosAngle() < Constants.minTurretPosition) {
+    //     turret.stopMotor();
+    //     // only able to move opposite direction (turning to the left)
+    //     if (goalAngle == 0.75) {
+    //       turret.setVoltage(-voltage);
+    //     }
+    //   }
+
+    // }
     
     
     // update vars for determining acceleration later
-    oldTurretVel =  velSetpoint; 
-    oldTime = Timer.getFPGATimestamp(); 
-    oldAngle = getTurretPosAngle();
+    oldTurretVel_ =  velSetpoint; 
+    oldTime_ = Timer.getFPGATimestamp(); 
+    oldAngle_ = getTurretPosAngle();
     
   }
 
@@ -332,8 +342,9 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   }
 
   // change boolean values for "flip" var
-  public void setFlipTrue() {
+  public void setFlipTrue_Goal(double goalAngle) {
     flip = true;
+    this.goalAngle = goalAngle;
   }
   public void setFlipFalse() {
     flip = false;
@@ -371,7 +382,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("has Target", hasTarget);
     */
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
-
+    SmartDashboard.putBoolean("in method", flip);
     // System.out.print(hasTarget);
     // System.out.println(hasTarget == 0);
     // System.out.println(id);

@@ -65,7 +65,7 @@ public class IntakeCommandWrist extends CommandBase{
                 intake.setIntakePower(0.05);
                 SmartDashboard.putBoolean("Has Cube", true);
                 if (!hasHadCube && timer.get() > 2) {
-                    arm.setWristGoal(0.9);
+                    arm.setWristGoal(0.65);
                     hasHadCube = true;
                 }
             }else{

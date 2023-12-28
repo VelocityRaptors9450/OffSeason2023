@@ -154,8 +154,9 @@ public class Robot extends TimedRobot {
 
       /* Initializing the Autonomous Chooser (stuff) */
       //Adds the options for the auto chooser.
-      Command cycleAuto = autos.getAuto("ChargedUpAuto", 1, 0.5);
-      Command testAuto = autos.getAuto("New Path", 1, 0.5);
+      Command cycleAuto = autos.getAuto("ChargedUpAuto", 4, 1);
+      Command testAuto = autos.getAuto("New Path", 4, 1);
+      Command distTestAuto = autos.getAuto("DistanceTest", 4, 4);
 
       //m_autoChooser.addOption("Balance", balance);
       //m_autoChooser.addOption("Score High Only", scoreHighOnly);
@@ -166,6 +167,7 @@ public class Robot extends TimedRobot {
 
       m_autoChooser.addOption("Cycle Auto", cycleAuto);
       m_autoChooser.addOption("Test Auto", testAuto);
+      m_autoChooser.addOption("Distance Test", distTestAuto);
 
       //Puts the auto chooser into it's own tab on Shuffleboard.
       ShuffleboardTab autoTab =

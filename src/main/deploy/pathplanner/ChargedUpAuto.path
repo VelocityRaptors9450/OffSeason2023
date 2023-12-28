@@ -17,9 +17,12 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreMid"
+          "ResetIMU",
+          "ArmMid",
+          "Wait",
+          "Score"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -44,11 +47,11 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "Spin"
+          "ArmMid"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 2.0
       }
     },
     {
@@ -71,7 +74,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "ScoreHigh"
+          "Score"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -103,7 +106,7 @@
   ],
   "markers": [
     {
-      "position": 0.47272727272728887,
+      "position": 0.1,
       "names": [
         "Intake"
       ]

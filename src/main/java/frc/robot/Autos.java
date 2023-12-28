@@ -49,25 +49,34 @@ public class Autos {
 
     // Set up commands
     Command scoreMid = new SetArmHeightPreset(subsystems.arm, Height.MID)
-        .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
-        .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
-        .andThen(new ArmWristSetTargetCommand(subsystems.arm, 0.37, 0.6));
+        .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()));
 
     Command scoreHigh = new SetArmHeightPreset(subsystems.arm, Height.HIGH)
-        .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()))
-        .andThen(new WaitCommand(1)).andThen(new TimedIntakeCommand(subsystems.intake, -0.3))
-        .andThen(new ArmWristSetTargetCommand(subsystems.arm, 0.37, 0.6));
+        .andThen(new InstantCommand(() -> subsystems.arm.goToHeight()));
 
     Command intake = new ArmWristSetTargetCommand(subsystems.arm, 0.063, 0.43)
         .andThen(new IntakeCommandWrist(subsystems.intake, subsystems.arm));
 
-    Command spin = new DriveCommand(subsystems.drivebaseSubsystem, () -> 0, () -> 0, () -> 0.2, () -> 0).withTimeout(1);
+    Command spin = new DriveCommand(subsystems.drivebaseSubsystem, () -> -0.2, () -> 0, () -> 0, () -> 0).withTimeout(2);
+
+    Command wristUp = new InstantCommand(() -> subsystems.arm.setWristGoal(0.65));
+
+    Command resetIMU = new InstantCommand(() -> subsystems.drivebaseSubsystem.resetGyroAngle());
+
+    Command score = new TimedIntakeCommand(subsystems.intake, -0.5)
+        .andThen(new ArmWristSetTargetCommand(subsystems.arm, 0.37, 0.6));
+
+    Command wait = new WaitCommand(2);
 
     // Add commands to event map
-    eventMap.put("ScoreMid", scoreMid);
-    eventMap.put("ScoreHigh", scoreHigh);
+    eventMap.put("ArmMid", scoreMid);
+    eventMap.put("ArmHigh", scoreHigh);
     eventMap.put("Intake", intake);
-    eventMap.put("Spin", spin);
+    eventMap.put("Creep", spin);
+    eventMap.put("Wrist Up", wristUp);
+    eventMap.put("ResetIMU", resetIMU);
+    eventMap.put("Score", score);
+    eventMap.put("Wait", wait);
 
     return eventMap;
   }
@@ -89,7 +98,7 @@ public class Autos {
 					// PID controllers)
 					new PIDConstants(
 						  3, 0.0,
-							0.32), // PID constants to correct for rotation error (used to create the rotation
+							0.3), // PID constants to correct for rotation error (used to create the rotation
 					// controller)
 					subsystems.drivebaseSubsystem
 							::drive, // Module states consumer used to output to the drive subsystem

@@ -349,7 +349,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   public void setFlipFalse() {
     flip = false;
   }
-
+  public boolean getHasTarget(){
+     if(hasTarget != 0.0){
+        return true;
+     }else{
+        return false;
+     }
+  }
   
 
   @Override

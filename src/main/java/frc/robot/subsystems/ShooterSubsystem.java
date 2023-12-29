@@ -115,7 +115,7 @@ public class ShooterSubsystem extends SubsystemBase {
     setVelocity(targetVelocity, 0);
   }
  
-
+  
   
   public double getVelocityFrontSpin(){
       return frontSpinEncoder.getVelocity();

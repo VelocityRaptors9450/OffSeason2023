@@ -39,7 +39,6 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   double area;
   double id;
   double hasTarget;
-  boolean targetLock;
 
   // toggle for autoFlipPID
   boolean flip = false;
@@ -145,17 +144,14 @@ public class LimelightTurretSubsystem extends SubsystemBase {
       trackAprilTag(hasTarget);
     } else if (getTurretPosAngle() <= Constants.maxTurretPosition && getTurretPosAngle() >= Constants.minTurretPosition && !flip) {
       turret.setVoltage(voltage);
-      targetLock = true;
     } else if (getTurretPosAngle() > Constants.maxTurretPosition && !flip) {
       turret.stopMotor();
-      targetLock = false;
       // only able to move opposite direction
       if (strafe.getAsDouble() > 0) { // 
         turret.setVoltage(voltage);
       }
     } else if (getTurretPosAngle() < Constants.minTurretPosition && !flip) {
       turret.stopMotor();
-      targetLock = false;
       // only able to move opposite direction
       if (strafe.getAsDouble() < 0) {
         turret.setVoltage(voltage);
@@ -184,20 +180,17 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     if (Math.abs(x) > 0) {
       // turn turret the opposite value of x --> Math.signum(x)
       // in this case, turning turret left increases encoder pos, so +x below
-      targetLock = true;
+    
         
         updateTurretAngle(getTurretPosAngle() - x, hasTarget);
         
       
     } else {
-      targetLock = false;
       turret.stopMotor();
     }
   }
 
-  public boolean getTargetLockOn(){
-    return targetLock;
-  }
+
   // range from .1 to .9 (absolute encoder)
   double oldTurretVel = 0;
   double oldTime = 0;
@@ -328,13 +321,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     double targetOffsetAngle_Vertical = y;
 
     // how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = 28.0; 
+    double limelightMountAngleDegrees = 25.0; 
 
     // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 35.0; 
+    double limelightLensHeightInches = 20.0; 
 
     // distance from the target to the floor
-    double goalHeightInches = 55.0; 
+    double goalHeightInches = 60.0; 
 
     double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
     double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
@@ -356,7 +349,13 @@ public class LimelightTurretSubsystem extends SubsystemBase {
   public void setFlipFalse() {
     flip = false;
   }
-  
+  public boolean getHasTarget(){
+     if(hasTarget != 0.0){
+        return true;
+     }else{
+        return false;
+     }
+  }
   
 
   @Override
@@ -390,10 +389,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     */
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
     SmartDashboard.putBoolean("in method", flip);
-    SmartDashboard.putNumber("LimeLight Distance", getDistance());
-    SmartDashboard.putBoolean("Locked on", targetLock);
-    SmartDashboard.putNumber("TargetValue", hasTarget);
-        // System.out.print(hasTarget);
+    // System.out.print(hasTarget);
     // System.out.println(hasTarget == 0);
     // System.out.println(id);
     // trackAprilTag(hasTarget);

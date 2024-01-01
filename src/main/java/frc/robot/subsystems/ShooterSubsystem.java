@@ -111,8 +111,12 @@ public class ShooterSubsystem extends SubsystemBase {
   //current unit for distance is in inches
   public void shootToPos(double distance){
     double targetVelocity = -0.00166 * distance * distance + 0.449 * distance - 4.346;
+    if(distance == 0){
+      setVelocity(0, 0);
+    }else{
+      setVelocity(targetVelocity, 0);
+    }
     //double targetVelocity = 0.2052887 * distance + 3.3682;
-    setVelocity(targetVelocity, 0);
   }
  
   

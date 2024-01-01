@@ -165,7 +165,7 @@ public double shoot(){
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("FrontSpinPosition", getVelocityFrontSpin());
-    SmartDashboard.putNumber("BackSpinPosition", getVelocityBackSpin()); 
+    SmartDashboard.putNumber("FrontSpinVel", getVelocityFrontSpin());
+    SmartDashboard.putNumber("BackSpinVel", getVelocityBackSpin()); 
   }
 }

@@ -6,20 +6,25 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.LimelightTurretSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterCommand extends CommandBase {
   ShooterSubsystem shooter;
+  LimelightTurretSubsystem limeTurret;
   private double targetVel;
   private double targetAcc;
-  private double voltagefor;
-  private double voltageback;
+  private boolean leftBumper;
+
   /** Creates a new ShooterCommand. */
-  public ShooterCommand(ShooterSubsystem shooter, double targetVel, double targetAcc, double voltagefor, double voltageback) {
+  public ShooterCommand(ShooterSubsystem shooter, LimelightTurretSubsystem limeTurret, boolean leftBumper, double targetVel, double targetAcc) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
-    this.voltagefor = voltagefor;
-    this.voltageback = voltageback;
+    this.limeTurret = limeTurret;
+    
+    this.leftBumper = leftBumper;
+
     this.targetVel = targetVel;
     this.targetAcc = targetAcc;
     addRequirements(shooter);
@@ -32,11 +37,12 @@ public class ShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //shooter.setVoltage(voltagefor, voltageback);
-    shooter.setVelocity(targetVel, targetAcc);
-    SmartDashboard.putNumber("BackspinVelocity", shooter.getVelocityBackSpin());
-    SmartDashboard.putNumber("FrontspinVelocity", shooter.getVelocityFrontSpin());
-
+    //shooter.setVelocity(targetVel, targetAcc);
+    if(leftBumper){
+      shooter.shootToPos(limeTurret.getHasTarget() ? limeTurret.getDistance() : 0);
+    }else{
+      shooter.setVelocity(0, 0);
+    }
      
   }
 

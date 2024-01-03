@@ -1,5 +1,5 @@
-Hello there,
-This is a Romi beginner program that will hopefully help you understands the basics of programing a robot.
+This is a Romi beginner program that will hopefully help you understand the basics of programming a Romi robot. A Romi is a small and inexpensive two-wheeled robot, used for educational purposes. WPIlib maintains basic instructions to getting started with programming a Romi. This program will be specific to Team 9450's training program. 
+
 This program is in java and it is suggested to know the basics of java. We will you a coding library called WPILIB to code the Romi (you should aready have the library  installed). You will hop through files and learn stuff from comments and links throughout the file.
 Before though you will have to know a few things in java:
 * variables

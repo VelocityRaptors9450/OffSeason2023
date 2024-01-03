@@ -12,19 +12,14 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterCommand extends CommandBase {
   ShooterSubsystem shooter;
-  LimelightTurretSubsystem limeTurret;
   private double targetVel;
   private double targetAcc;
-  private boolean leftBumper;
 
   /** Creates a new ShooterCommand. */
-  public ShooterCommand(ShooterSubsystem shooter, LimelightTurretSubsystem limeTurret, boolean leftBumper, double targetVel, double targetAcc) {
+  public ShooterCommand(ShooterSubsystem shooter, double targetVel, double targetAcc) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
-    this.limeTurret = limeTurret;
-    
-    this.leftBumper = leftBumper;
-
+ 
     this.targetVel = targetVel;
     this.targetAcc = targetAcc;
     addRequirements(shooter);
@@ -38,12 +33,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void execute() {
     //shooter.setVelocity(targetVel, targetAcc);
-    if(leftBumper){
-      shooter.shootToPos(limeTurret.getHasTarget() ? limeTurret.getDistance() : 0);
-    }else{
-      shooter.setVelocity(0, 0);
-    }
-     
+
   }
 
   // Called once the command ends or is interrupted.

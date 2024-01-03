@@ -41,6 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final AbsoluteEncoder backSpinEncoder = backSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
   private final AbsoluteEncoder frontSpinEncoder = rightFrontSpinMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
+ 
   private ShooterPos shootPos = ShooterPos.CLOSE;
   //rpm values taken from interpolation/ from table we made.
   private double closeShootRpm = 0, mediumShootRpm = 0, farShootRpm = 0;
@@ -110,6 +111,7 @@ public class ShooterSubsystem extends SubsystemBase {
   //Can set distances as enums as well
   //current unit for distance is in inches
   public void shootToPos(double distance){
+   
     double targetVelocity = -0.00166 * distance * distance + 0.449 * distance - 4.346;
     if(distance == 0){
       setVelocity(0, 0);
@@ -118,6 +120,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     //double targetVelocity = 0.2052887 * distance + 3.3682;
   }
+ 
  
   
   
@@ -158,6 +161,11 @@ public double shoot(){
   return 0;
 
 }
+
+boolean flip = false;
+public void toggleShooter() {
+  flip = true;
+}
   
   
   
@@ -165,6 +173,7 @@ public double shoot(){
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    
     SmartDashboard.putNumber("FrontSpinVel", getVelocityFrontSpin());
     SmartDashboard.putNumber("BackSpinVel", getVelocityBackSpin()); 
   }

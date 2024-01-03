@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmWristSetTargetCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ExtensionSetTargetCommand;
 import frc.robot.commands.IntakeCommandWrist;
 import frc.robot.commands.SetArmHeightPreset;
 import frc.robot.commands.TimedIntakeCommand;
@@ -89,6 +90,9 @@ public class Controls {
 		//armController.y().onTrue(new SetArmHeightPreset(s.arm, Height.HIGH));
 		armController.b().onTrue(new ArmWristSetTargetCommand(s.arm,0.53, 0.6));
 		armController.povDown().onTrue(new ArmWristSetTargetCommand(s.arm, 0.285, 0));
+
+		armController.a().onTrue(new ExtensionSetTargetCommand(s.arm,1));
+		armController.y().onTrue(new ExtensionSetTargetCommand(s.arm,30));
 
 		//armController.povUp().onTrue(new SequentialCommandGroup(new ArmWristSetTargetCommand(s.arm,0.22, 0.35), new IntakeCommandWrist(s.intake, s.arm)));
 		

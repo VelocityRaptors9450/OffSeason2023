@@ -20,10 +20,10 @@ import frc.robot.Robot;
 
 
 public class ExtensionSubsystem extends SubsystemBase {
-  private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
+  private CANSparkMax extensionMotor = new CANSparkMax(35,MotorType.kBrushless);
   
-  ProfiledPIDController pid = new ProfiledPIDController(0.4, 0, 0, new Constraints(6, 5));
-  ElevatorFeedforward elevFF = new ElevatorFeedforward(0.001, 0.035, 0.015);
+  ProfiledPIDController pid = new ProfiledPIDController(0, 0, 0, new Constraints(0, 0)); //0.4, 0, 0
+  //ElevatorFeedforward elevFF = new ElevatorFeedforward(0.001, , ); // 0.001, 0.035, 0.015
 
   public ExtensionSubsystem() {
     extensionMotor.setIdleMode(IdleMode.kBrake);
@@ -54,7 +54,7 @@ public class ExtensionSubsystem extends SubsystemBase {
   }
 
   public double calculateExtensionFF() {
-      return elevFF.calculate(pid.getSetpoint().velocity);
+      return 0;
   }
 
   public double calculateExtensionPID() {
@@ -85,7 +85,11 @@ public class ExtensionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    updateExtensionOutput();
+    //updateExtensionOutput();
+    extensionMotor.setVoltage(-0.23);
+
+    //Horizontal -> -0.23
+    //Up top -> 0.13
     
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Extension Position", getPosition());

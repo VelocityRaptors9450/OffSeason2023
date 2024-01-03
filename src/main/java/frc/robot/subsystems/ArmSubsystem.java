@@ -37,6 +37,7 @@ public class ArmSubsystem extends SubsystemBase{
     private Height currentHeight = Height.GROUND;
 
     private double armTarget = 0.53;
+    private double extensionTarget = 1;
 
     //double p = 0;
 
@@ -50,14 +51,20 @@ public class ArmSubsystem extends SubsystemBase{
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
     SparkMaxAbsoluteEncoder wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
+
+    private CANSparkMax extensionMotor = new CANSparkMax(Constants.extensionId,MotorType.kBrushless);
     
     
-    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(1, 0.5));//maxVel = 3.5 and maxAccel = 2.5
-    private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
+    private final ProfiledPIDController rotation = new ProfiledPIDController(6.1, 0, 0, new Constraints(1, 0.5));//maxVel = 3.5 and maxAccel = 2.5
+    private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001); //0.027, 0.00001
+    private final ArmFeedforward rotationExtendedFF = new ArmFeedforward(0, 0.03, 0.00001);
 
     // wrist i guess
     private final ProfiledPIDController wrist = new ProfiledPIDController(2, 0, 0, new Constraints(1.2, 1.2));
     private final ArmFeedforward wristFF = new ArmFeedforward(0, 0.1, 0.027);
+
+    //Extension
+    private final PIDController extension = new PIDController(0.37, 0,0);
 
     private PIDController wristPID = new PIDController(0.007,  0,0), downWristPID = new PIDController(0.002,0,0);
     private PIDController pid = new PIDController(0.1, 0, 0), downPID = new PIDController(0.0085, 0, 0);
@@ -75,6 +82,10 @@ public class ArmSubsystem extends SubsystemBase{
         wristMotor.setSmartCurrentLimit(40);
         rightMotor.setIdleMode(IdleMode.kBrake);
         wristMotor.setIdleMode(IdleMode.kBrake);
+        extensionMotor.setIdleMode(IdleMode.kBrake);
+
+        extensionMotor.getEncoder().setPosition(0);
+
         // leftMotor.restoreFactoryDefaults();
        
 
@@ -117,6 +128,9 @@ public class ArmSubsystem extends SubsystemBase{
 
         //wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535); 
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); 
+
+
+        
         
         setArmGoal(0.53);
         setWristGoal(0.40); //Need to change
@@ -136,6 +150,12 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void initialize(){
         rightMotor.restoreFactoryDefaults();
+        extensionMotor.restoreFactoryDefaults();
+
+
+        extensionMotor.setIdleMode(IdleMode.kCoast);
+        extensionMotor.getEncoder().setPosition(0);
+        
 
         
         rightMotor.setIdleMode(IdleMode.kBrake);
@@ -149,7 +169,8 @@ public class ArmSubsystem extends SubsystemBase{
 
         //initialSetWristEncoder();
            
-        setArmGoal(0.53);
+        setArmGoal(0.285);
+        setExtensionGoal(1);
         setWristGoal(0.18); //Need to change
 
     }
@@ -182,6 +203,10 @@ public class ArmSubsystem extends SubsystemBase{
 
     }
 
+    public void setExtensionVoltage(double voltage){
+        extensionMotor.setVoltage(voltage);
+    }
+
     public void downManual(){
         armTarget -= 0.01;
 
@@ -192,6 +217,12 @@ public class ArmSubsystem extends SubsystemBase{
         armTarget += 0.01;
 
         //wrist.setGoal(2.57 - armTarget);
+    }
+
+    public double getExtensionPosition(){
+        
+        return extensionMotor.getEncoder().getPosition();
+          
     }
 
     public void setArmWristGoal(double armTarget, double wristTarget){
@@ -221,6 +252,10 @@ public class ArmSubsystem extends SubsystemBase{
         armTarget = target;
     }
 
+    public void setExtensionGoal(double target){
+        extensionTarget = target;
+    }
+
     public double getGoal(){
         return rotation.getGoal().position;
     }
@@ -240,6 +275,36 @@ public class ArmSubsystem extends SubsystemBase{
     public void setWristVoltage(double voltage) {
         wristMotor.setVoltage(voltage);
     }
+
+    public double calculateExtensionPID(){
+        return extension.calculate(getExtensionPosition(), extensionTarget);
+    }
+
+    public double calculateExtensionFF() {
+        return (-1 * Math.abs((1.44 * getPosition()) - 0.7632)) + 0.135;
+    }
+
+    public void updateExtensionOutput(){
+        double ffValue = calculateExtensionFF();
+        SmartDashboard.putNumber("Extension FF", ffValue);
+        double percentOutput = MathUtil.clamp(calculateExtensionPID(), -1.0, 1.0);
+        SmartDashboard.putNumber("Extension Percent", percentOutput);
+
+        double voltage = convertToVolts(percentOutput);
+
+        voltage = MathUtil.clamp(voltage /*+ ffValue*/, -6, 6);
+
+        SmartDashboard.putNumber("Extension Voltage", voltage);
+
+        
+        setExtensionVoltage(voltage);
+        
+        
+    }
+
+
+
+    
 
     public void updateRotationOutput(){
         double ffValue = calculateRotationFF();
@@ -277,7 +342,11 @@ public class ArmSubsystem extends SubsystemBase{
     
 
     public double calculateRotationFF(){
-        return rotationFF.calculate(/*getPosition()*/getPosition(), rotation.getSetpoint().velocity);
+        if(extensionTarget == 30){
+            return rotationExtendedFF.calculate(getPosition(), rotation.getSetpoint().velocity);
+        }
+
+        return rotationFF.calculate(getPosition(), rotation.getSetpoint().velocity);
 
         
     }
@@ -292,15 +361,21 @@ public class ArmSubsystem extends SubsystemBase{
         
         if(runStuff){
             updateRotationOutput();
-            updateWristOutput();
+            //updateWristOutput();
+            updateExtensionOutput();
+            //setArmVoltage(0);
 
         }else{
             setArmVoltage(0);
            
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
-        SmartDashboard.putNumber("Right Arm Position", getPosition());
-        SmartDashboard.putNumber("Target", armTarget);
+        // SmartDashboard.putNumber("Right Arm Position", getPosition());
+        // SmartDashboard.putNumber("Target", armTarget);
+        SmartDashboard.putNumber("Extension Position", getExtensionPosition());
+        SmartDashboard.putNumber("Extension Target", extensionTarget);
+
+
         //SmartDashboard.putNumber("Wrist Error", wrist.getPositionError());
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         

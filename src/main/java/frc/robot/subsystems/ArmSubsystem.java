@@ -36,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
     private Height currentHeight = Height.GROUND;
 
-    private double armTarget = 0.37;
+    private double armTarget = 0.53;
 
     //double p = 0;
 
@@ -45,13 +45,14 @@ public class ArmSubsystem extends SubsystemBase{
     // private CANSparkMax leftMotor = new CANSparkMax(Constants.rotationLeftId,MotorType.kBrushless);
     private CANSparkMax rightMotor = new CANSparkMax(Constants.rotationRightId, MotorType.kBrushless);
     
+    
     private boolean runStuff = true;
     
     private CANSparkMax wristMotor = new CANSparkMax(Constants.wristId,MotorType.kBrushless);
     SparkMaxAbsoluteEncoder wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
     
     
-    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(3.5, 2.5));
+    private final ProfiledPIDController rotation = new ProfiledPIDController(6, 0, 0, new Constraints(1, 0.5));//maxVel = 3.5 and maxAccel = 2.5
     private final ArmFeedforward rotationFF = new ArmFeedforward(0, 0.027, 0.00001);
 
     // wrist i guess
@@ -117,8 +118,8 @@ public class ArmSubsystem extends SubsystemBase{
         //wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535); 
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); 
         
-        setArmGoal(0.37);
-        setWristGoal(0.40);
+        setArmGoal(0.53);
+        setWristGoal(0.40); //Need to change
 
 
     }
@@ -148,8 +149,8 @@ public class ArmSubsystem extends SubsystemBase{
 
         //initialSetWristEncoder();
            
-        setArmGoal(0.37);
-        setWristGoal(0.18);
+        setArmGoal(0.53);
+        setWristGoal(0.18); //Need to change
 
     }
     
@@ -299,12 +300,12 @@ public class ArmSubsystem extends SubsystemBase{
         }
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         SmartDashboard.putNumber("Right Arm Position", getPosition());
-        SmartDashboard.putNumber("Target?", wrist.getGoal().position);
-        SmartDashboard.putNumber("Wrist Error", wrist.getPositionError());
+        SmartDashboard.putNumber("Target", armTarget);
+        //SmartDashboard.putNumber("Wrist Error", wrist.getPositionError());
         //SmartDashboard.putNumber("Position Error", rotation.getPositionError());
         
-        SmartDashboard.putNumber("Wrist Position", getWristPosition());
-        SmartDashboard.putNumber("Arm current", rightMotor.getOutputCurrent());
+        //SmartDashboard.putNumber("Wrist Position", getWristPosition());
+        //SmartDashboard.putNumber("Arm current", rightMotor.getOutputCurrent());
         
 
         
@@ -366,16 +367,16 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void goToHeight() {
         if(currentHeight == Height.HIGH){
-            setArmGoal(0.5);
+            setArmGoal(0.5); //Need to change
             setWristGoal(0.28);
         }else if(currentHeight == Height.MID){
-            setArmGoal(0.5);
+            setArmGoal(0.5); //Need to change
             setWristGoal(0.45);
         }else if(currentHeight == Height.LOW){
-            setArmGoal(0.5);
+            setArmGoal(0); //Need to change
             setWristGoal(0.67);
         }else{
-            setArmGoal(0.37);
+            setArmGoal(0.285);
             setWristGoal(0.58);
         }
     }

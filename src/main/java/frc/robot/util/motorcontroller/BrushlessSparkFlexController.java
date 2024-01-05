@@ -11,11 +11,12 @@ import frc.robot.sim.SparkMaxSimProfile;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class BrushlessSparkFlexController extends MotorController {
-	private static final double TICKS_PER_ROTATION = 42.0;
-	private static final double FREE_SPEED_RPS = 5676.0 / 60.0;
+	private static final double TICKS_PER_ROTATION = 7168.0;
+	private static final double FREE_SPEED_RPS = 6784.0 / 60.0;
 
 	private final CANSparkMax motor;
 	private final SparkMaxPIDController motorPID;
+	
 
 	private MotorControlMode mode;
 

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
@@ -110,10 +112,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   //Can set distances as enums as well
   //current unit for distance is in inches
-  public void shootToPos(double distance){
+  public void shootToPos(Supplier<Double> distance){
    
-    double targetVelocity = -0.00166 * distance * distance + 0.449 * distance - 4.346;
-    if(distance == 0){
+    double targetVelocity = -0.00166 * distance.get() * distance.get() + 0.449 * distance.get() - 4.346;
+    if(distance.get() == 0.0){
       setVelocity(0, 0);
     }else{
       setVelocity(targetVelocity, 0);
@@ -163,17 +165,20 @@ public double shoot(){
 }
 
 boolean flip = false;
-public void toggleShooter() {
-  flip = true;
+Supplier<Double> distance;
+public void toggleBooleanAndValue(Supplier<Double> distance) {
+  flip = !flip;
+  this.distance = distance;
 }
-  
   
   
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+    if (flip) {
+      shootToPos()
+    }
     SmartDashboard.putNumber("FrontSpinVel", getVelocityFrontSpin());
     SmartDashboard.putNumber("BackSpinVel", getVelocityBackSpin()); 
   }

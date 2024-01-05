@@ -1,26 +1,26 @@
 package frc.robot.util.motorcontroller;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.REVLibError;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.sim.PhysicsSim;
-import frc.robot.sim.SparkMaxSimProfile;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class BrushlessSparkFlexController extends MotorController {
-	private static final double TICKS_PER_ROTATION = 42.0;
-	private static final double FREE_SPEED_RPS = 5676.0 / 60.0;
+	private static final double TICKS_PER_ROTATION = 7168.0;
+	private static final double FREE_SPEED_RPS = 6784.0 / 60.0;
 
-	private final CANSparkMax motor;
-	private final SparkMaxPIDController motorPID;
+	private final CANSparkFlex motor;
+	private final SparkPIDController motorPID;
+	
 
 	private MotorControlMode mode;
 
 	public BrushlessSparkFlexController(int id, MotorControlMode mode) {
-		this.motor = new CANSparkMax(id, MotorType.kBrushless);
+		this.motor = new CANSparkFlex(id, MotorType.kBrushless);
 		this.motorPID = motor.getPIDController();
 		this.mode = mode;
 
@@ -159,6 +159,6 @@ public class BrushlessSparkFlexController extends MotorController {
 
 	@Override
 	public void simulationConfig(PhysicsSim sim) {
-		sim.addSparkMax(motor, SparkMaxSimProfile.SparkMaxConstants.STALL_TORQUE, FREE_SPEED_RPS * 60);
+		//sim.addSparkMax(motor, SparkMaxSimProfile.SparkMaxConstants.STALL_TORQUE, FREE_SPEED_RPS * 60);
 	}
 }

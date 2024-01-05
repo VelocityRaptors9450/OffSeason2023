@@ -1,10 +1,10 @@
 package frc.robot.util.motorcontroller;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.REVLibError;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.sim.PhysicsSim;
 import frc.robot.sim.SparkMaxSimProfile;
@@ -15,7 +15,7 @@ public class BrushlessSparkMaxController extends MotorController {
 	private static final double FREE_SPEED_RPS = 5676.0 / 60.0;
 
 	private final CANSparkMax motor;
-	private final SparkMaxPIDController motorPID;
+	private final SparkPIDController motorPID;
 
 	private MotorControlMode mode;
 

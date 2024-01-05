@@ -1,6 +1,7 @@
 package frc.robot.sim;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -95,12 +96,12 @@ public class PhysicsSim {
 	/**
 	 * Adds a SparkMAX controller to the simulator.
 	 *
-	 * @param spark The SparkMAX device to add.
+	 * @param motor The SparkMAX device to add.
 	 * @param stallTorque The stall torque of the motor connected to SparkMAX (units are N m).
 	 * @param freeSpeed The maximum free speed in RPM.
 	 */
-	public void addSparkMax(CANSparkMax spark, double stallTorque, double freeSpeed) {
-		revPhysicsSim.addSparkMax(spark, (float) stallTorque, (float) freeSpeed);
+	public void addSparkMax(CANSparkMax motor, double stallTorque, double freeSpeed) {
+		revPhysicsSim.addSparkMax(motor, (float) stallTorque, (float) freeSpeed);
 	}
 
 	/**

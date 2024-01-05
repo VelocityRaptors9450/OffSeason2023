@@ -4,11 +4,9 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PneumaticsConstants;
@@ -19,46 +17,53 @@ public class PneumaticsSubsystem extends SubsystemBase
     new PneumaticHub(
       PneumaticsConstants.PneumaticsHubModuleID
     );
-   
-  // private static final DoubleSolenoid valve =
-  //   new DoubleSolenoid(
-  //     PneumaticsConstants.PneumaticsHubModuleID,
-  //     PneumaticsModuleType.REVPH,
-  //     PneumaticsConstants.SolenoidValveForwardChannel,
-  //     PneumaticsConstants.SolenoidValveBackwardsChannel
-  //   );
 
-  private static final Solenoid valve =
+  private static final Solenoid forward =
     new Solenoid(
       PneumaticsConstants.PneumaticsHubModuleID,
       PneumaticsModuleType.REVPH,
-      PneumaticsConstants.SolenoidValveChannel
+      PneumaticsConstants.SolenoidValveForwardChannel
+    );
+
+  private static final Solenoid backward =
+    new Solenoid(
+      PneumaticsConstants.PneumaticsHubModuleID,
+      PneumaticsModuleType.REVPH,
+      PneumaticsConstants.SolenoidValveBackwardsChannel
     );
 
   public PneumaticsSubsystem() {}
-
-  // public void setModeExtend()
-  //   { valve.set(Value.kForward); }
-
-  // public void setModeRetract()
-  //   { valve.set(Value.kReverse); }
   
-  public void enableCompressor()
+  public void disableCompressor()
   {
-    valve.set(true);
+    pHub.disableCompressor();
 
-    pHub.enableCompressorAnalog(
+    forward.set(false);
+    backward.set(false);
+  }
+
+  public void extend()
+  {
+    forward.set(true);
+    backward.set(false);
+
+    pHub.enableCompressorAnalog
+    (
       PneumaticsConstants.MinPSI,
       PneumaticsConstants.MaxPSI
     );
   }
 
-  public void disableCompressor()
+  public void retract()
   {
-    pHub.disableCompressor();
+    forward.set(false);
+    backward.set(false);
 
-    // valve.set(Value.kOff);
-    valve.set(false);
+    pHub.enableCompressorAnalog
+    (
+      PneumaticsConstants.MinPSI,
+      PneumaticsConstants.MaxPSI
+    );
   }
 
   @Override

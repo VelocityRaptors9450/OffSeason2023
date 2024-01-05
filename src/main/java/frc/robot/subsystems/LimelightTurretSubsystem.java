@@ -389,6 +389,7 @@ public class LimelightTurretSubsystem extends SubsystemBase {
     */
     SmartDashboard.putNumber("Turret Abs Encoder", turretEncoder.getPosition());
     SmartDashboard.putBoolean("in method", flip);
+    SmartDashboard.putNumber("Limelight Distance", getDistance());
     // System.out.print(hasTarget);
     // System.out.println(hasTarget == 0);
     // System.out.println(id);

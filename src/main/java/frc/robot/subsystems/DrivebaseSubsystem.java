@@ -43,6 +43,7 @@ import frc.robot.util.ModuleUtil;
 import frc.robot.util.PFFController;
 import frc.robot.util.gyroscope.Gyroscope;
 import frc.robot.util.gyroscope.Pigeon2Gyro;
+import frc.robot.util.motorcontroller.BrushlessSparkFlexController;
 import frc.robot.util.motorcontroller.BrushlessSparkMaxController;
 import frc.robot.util.motorcontroller.MotorController;
 import frc.robot.util.motorcontroller.MotorController.MotorControlMode;
@@ -96,19 +97,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private SwerveModuleState[] currentStates;
 
 	private final MotorController[] moduleDriveMotors =
-			new BrushlessSparkMaxController[] {
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_FRONT_LEFT_DRIVE_MOTOR),
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_FRONT_RIGHT_DRIVE_MOTOR),
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_BACK_LEFT_DRIVE_MOTOR),
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_BACK_RIGHT_DRIVE_MOTOR)
+			new BrushlessSparkFlexController[] {
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_FRONT_LEFT_DRIVE_MOTOR),
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_FRONT_RIGHT_DRIVE_MOTOR),
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_BACK_LEFT_DRIVE_MOTOR),
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_BACK_RIGHT_DRIVE_MOTOR)
 		};
 
 	private final MotorController[] moduleAngleMotors =
-			new BrushlessSparkMaxController[] {
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_FRONT_LEFT_ANGLE_MOTOR),
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_FRONT_RIGHT_ANGLE_MOTOR),
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_BACK_LEFT_ANGLE_MOTOR),
-			new BrushlessSparkMaxController(Hardware.DRIVEBASE_BACK_RIGHT_ANGLE_MOTOR)
+			new BrushlessSparkFlexController[] {
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_FRONT_LEFT_ANGLE_MOTOR),
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_FRONT_RIGHT_ANGLE_MOTOR),
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_BACK_LEFT_ANGLE_MOTOR),
+			new BrushlessSparkFlexController(Hardware.DRIVEBASE_BACK_RIGHT_ANGLE_MOTOR)
 		};
 
 	private final WPI_CANCoder[] moduleEncoders = {

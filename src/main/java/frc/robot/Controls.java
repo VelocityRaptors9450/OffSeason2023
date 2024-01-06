@@ -88,6 +88,8 @@ public class Controls {
 		//armController.a().onTrue(new SetArmHeightPreset(s.arm, Height.LOW));
 		//armController.x().onTrue(new SetArmHeightPreset(s.arm, Height.MID));
 		//armController.y().onTrue(new SetArmHeightPreset(s.arm, Height.HIGH));
+		
+		/* 
 		armController.b().onTrue(new ArmWristSetTargetCommand(s.arm,0.53, 0.6));
 		armController.povDown().onTrue(new ArmWristSetTargetCommand(s.arm, 0.285, 0));
 
@@ -104,6 +106,7 @@ public class Controls {
 		
 		armController.rightTrigger().onTrue(new TimedIntakeCommand(s.intake, -0.8));
 		armController.leftTrigger().onTrue(new TimedIntakeCommand(s.intake, -0.3));
+		*/
 	}
 
 

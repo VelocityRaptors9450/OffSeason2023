@@ -358,7 +358,8 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        
+        /* 
+
         if(runStuff){
             updateRotationOutput();
             //updateWristOutput();
@@ -369,6 +370,7 @@ public class ArmSubsystem extends SubsystemBase{
             setArmVoltage(0);
            
         }
+        */
         // SmartDashboard.putNumber("LeftPosition", getLeftPosition());
         // SmartDashboard.putNumber("Right Arm Position", getPosition());
         // SmartDashboard.putNumber("Target", armTarget);

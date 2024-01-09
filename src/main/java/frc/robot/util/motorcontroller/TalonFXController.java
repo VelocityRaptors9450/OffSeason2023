@@ -73,7 +73,10 @@ public class TalonFXController extends MotorController {
 	public void stop() {
 		motor.stopMotor();
 	}
-
+	@Override
+	public void setPower(double power) {
+		motor.set(power);
+	}
 	@Override
 	public void setIntegratedEncoderPosition(double position) {
 		// convert from rotations to ticks

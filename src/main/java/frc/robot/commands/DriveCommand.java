@@ -13,10 +13,10 @@ public class DriveCommand extends CommandBase {
 	private static final double TURBO_ROTATION_DEFAULT = 1.5;
 
 	private final DrivebaseSubsystem drivebaseSubsystem;
-	private final DoubleSupplier forward;
-	private final DoubleSupplier strafe;
-	private final DoubleSupplier rotation;
-	private final DoubleSupplier turboRotation;
+	// private final DoubleSupplier forward;
+	// private final DoubleSupplier strafe;
+	// private final DoubleSupplier rotation;
+	// private final DoubleSupplier turboRotation;
 
 	// shuffleboard
 	private static GenericEntry driveSpeedEntry =
@@ -50,54 +50,62 @@ public class DriveCommand extends CommandBase {
 					.withProperties(Map.of("Min", 0.5, "Max", 2.5))
 					.getEntry();
 
-	public DriveCommand(
-			DrivebaseSubsystem drivebaseSubsystem,
-			DoubleSupplier forward,
-			DoubleSupplier strafe,
-			DoubleSupplier rotation,
-			DoubleSupplier turboRotation) {
-		this.drivebaseSubsystem = drivebaseSubsystem;
-		this.forward = forward;
-		this.strafe = strafe;
-		this.rotation = rotation;
-		// this variable give the right trigger input
-		this.turboRotation = turboRotation;
+	// public DriveCommand(
+	// 		DrivebaseSubsystem drivebaseSubsystem,
+	// 		DoubleSupplier forward,
+	// 		DoubleSupplier strafe,
+	// 		DoubleSupplier rotation,
+	// 		DoubleSupplier turboRotation) {
+	// 	this.drivebaseSubsystem = drivebaseSubsystem;
+	// 	this.forward = forward;
+	// 	this.strafe = strafe;
+	// 	this.rotation = rotation;
+	// 	// this variable give the right trigger input
+	// 	this.turboRotation = turboRotation;
 
+	// 	addRequirements(drivebaseSubsystem);
+	// }
+
+	public DriveCommand(
+			DrivebaseSubsystem drivebaseSubsystem) {
+		this.drivebaseSubsystem = drivebaseSubsystem;
+		
 		addRequirements(drivebaseSubsystem);
 	}
 
 	@Override
 	public void execute() {
-		double rotationSpeedModifier =
-				rotationSpeedEntry.getDouble(1.0)
-						* (1
-								- (turboRotation.getAsDouble()
-										* (1 - turboRotationEntry.getDouble(TURBO_ROTATION_DEFAULT))));
+		// double rotationSpeedModifier =
+		// 		rotationSpeedEntry.getDouble(1.0)
+		// 				* (1
+		// 						- (turboRotation.getAsDouble()
+		// 								* (1 - turboRotationEntry.getDouble(TURBO_ROTATION_DEFAULT))));
 
-		double x = deadbandCorrection(-forward.getAsDouble());
-		double y = deadbandCorrection(strafe.getAsDouble());
-		double rot = deadbandCorrection(-rotation.getAsDouble());
+		// double x = deadbandCorrection(-forward.getAsDouble());
+		// double y = deadbandCorrection(strafe.getAsDouble());
+		// double rot = deadbandCorrection(-rotation.getAsDouble());
 
-		// math for normalizing and cubing inputs
-		double magnitude = Math.pow(Math.min(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)), 1), 3);
-		double angle = Math.atan2(y, x);
-		double cubed_x = magnitude * Math.cos(angle);
-		double cubed_y = magnitude * Math.sin(angle);
+		// // math for normalizing and cubing inputs
+		// double magnitude = Math.pow(Math.min(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)), 1), 3);
+		// double angle = Math.atan2(y, x);
+		// double cubed_x = magnitude * Math.cos(angle);
+		// double cubed_y = magnitude * Math.sin(angle);
 
-		drivebaseSubsystem.drive(
-				(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)
-						* driveSpeedEntry.getDouble(1.0)
-						* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC, // convert from percent to m/s
-				(cubeSpeedEntry.getBoolean(false) ? cubed_y : y)
-						* driveSpeedEntry.getDouble(1.0)
-						* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC,
-				Rotation2d.fromRotations(
-						rot
-								* rotationSpeedModifier
-								* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
-										.getRotations()), // convert from percent to rotations per second
-				fieldOrientedEntry.getBoolean(true),
-				false);
+		// drivebaseSubsystem.drive(
+		// 		(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)
+		// 				* driveSpeedEntry.getDouble(1.0)
+		// 				* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC, // convert from percent to m/s
+		// 		(cubeSpeedEntry.getBoolean(false) ? cubed_y : y)
+		// 				* driveSpeedEntry.getDouble(1.0)
+		// 				* DrivebaseSubsystem.MAX_DRIVE_SPEED_METERS_PER_SEC,
+		// 		Rotation2d.fromRotations(
+		// 				rot
+		// 						* rotationSpeedModifier
+		// 						* DrivebaseSubsystem.MAX_ROTATIONS_PER_SEC
+		// 								.getRotations()), // convert from percent to rotations per second
+		// 		fieldOrientedEntry.getBoolean(true),
+		// 		false);
+		drivebaseSubsystem.runPower();
 	}
 
 	public double deadbandCorrection(double input) {

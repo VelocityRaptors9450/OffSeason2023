@@ -208,9 +208,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	public static final double driveKd = 0.0;
 
 	// TODO: check actual PID values
-	private PIDController compTranslationalPID = new PIDController(0.0007, 0, 0);
-	private PIDController compRotationalPID = new PIDController(0.1, 0, 0.5);
-	private final double DEFAULT_COMP_TRANSLATIONAL_F = 0.000175;
+	private PIDController compTranslationalPID = new PIDController(0.000, 0, 0); //0.0007
+	private PIDController compRotationalPID = new PIDController(0, 0, 0.5); //0.1
+	private final double DEFAULT_COMP_TRANSLATIONAL_F = 0.00000; //0.000175
 	// old way of getting F
 	// 1 / moduleDriveMotors[0].getFreeSpeedRPS();
 
@@ -440,6 +440,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public SwerveModuleState[] getCurrentStates() {
 		return currentStates;
+	}
+
+	public void runPower() {
+		for (MotorController moduleDriveMotor : moduleDriveMotors) {
+			moduleDriveMotor.setPower(0.2);
+		}
+		
+
 	}
 
 	public double getVelocity() {
@@ -689,16 +697,25 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			}
 		}
 		
+		
 
 		Rotation2d[] moduleAngles = getModuleAngles();
 		frontLeftActualAnglePublisher.set(moduleAngles[0].getDegrees());
 		frontRightActualAnglePublisher.set(moduleAngles[1].getDegrees());
 		backLeftActualAnglePublisher.set(moduleAngles[2].getDegrees());
 		backRightActualAnglePublisher.set(moduleAngles[3].getDegrees());
+		
+		SmartDashboard.putNumber("FL", moduleAngles[0].getDegrees());
+		SmartDashboard.putNumber("FR", moduleAngles[1].getDegrees());
+		SmartDashboard.putNumber("BL", moduleAngles[2].getDegrees());
+		SmartDashboard.putNumber("BR", moduleAngles[3].getDegrees());
+
 
 		if (currentStates != null) {
 			SmartDashboard.putNumber("speed", currentStates[0].speedMetersPerSecond);
 		}
+		// to test
+		moduleDriveMotors[0].getVelocity();
 	}
 
 	public void setUseVisionMeasurements(boolean useVisionMeasurements) {
@@ -754,7 +771,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				kinematics,
 	
 				// Position controllers
-				new PIDController(0.034, 0, 0), // kpx
+				new PIDController(0.034, 0, 0), // kpx 0.034
 				new PIDController(0.034, 0, 0), // kpy
 				thetaController,
 				this::drive,

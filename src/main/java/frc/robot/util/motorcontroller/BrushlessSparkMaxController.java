@@ -53,7 +53,10 @@ public class BrushlessSparkMaxController extends MotorController {
 	public void set(double setpoint) {
 		set(setpoint, mode);
 	}
-
+	@Override
+	public void setPower(double power) {
+		motor.set(power);
+	}
 	@Override
 	public void set(double setpoint, MotorControlMode mode) {
 		if (mode == MotorControlMode.VELOCITY) {

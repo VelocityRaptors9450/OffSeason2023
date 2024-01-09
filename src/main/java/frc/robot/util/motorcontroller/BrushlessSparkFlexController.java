@@ -16,6 +16,7 @@ public class BrushlessSparkFlexController extends MotorController {
 	private final CANSparkFlex motor;
 	private final SparkPIDController motorPID;
 	
+	
 
 	private MotorControlMode mode;
 
@@ -40,6 +41,7 @@ public class BrushlessSparkFlexController extends MotorController {
 	public void configFactoryDefault() {
 		this.motor.restoreFactoryDefaults();
 	}
+
 
 	@Override
 	public void setPIDF(double P, double I, double D, double F) {
@@ -155,6 +157,11 @@ public class BrushlessSparkFlexController extends MotorController {
 	@Override
 	public void flashMotor() {
 		motor.burnFlash();
+	}
+
+	@Override
+	public void setPower(double power) {
+		motor.set(power);
 	}
 
 	@Override

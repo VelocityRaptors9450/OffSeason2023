@@ -52,6 +52,8 @@ public abstract class MotorController {
 		}
 	}
 
+	public abstract void setPower(double power);
+
 	public abstract void setNeutralMode(MotorNeutralMode mode);
 
 	public abstract void configFactoryDefault();

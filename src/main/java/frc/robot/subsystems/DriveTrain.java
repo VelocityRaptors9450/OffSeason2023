@@ -21,6 +21,10 @@ public class DriveTrain extends SubsystemBase
 
   public void move(double leftY, double rightX)
   {
+    // Inverts the back motors so they go in the same direction as the front ones.
+    backleft.setInverted(false);
+    backright.setInverted(false);
+
     if (leftY > NumericConstants.deadzone) // If using the LEFT stick, the robot will move forwards and backwards.
     {
       frontleft.set( leftY / 1.5 );

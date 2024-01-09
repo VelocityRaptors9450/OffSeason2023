@@ -10,36 +10,37 @@ import frc.robot.Constants.OperatorConstants;
 public class DriveTrain extends SubsystemBase
 {
   /* Motor Declarations */
-  private final CANSparkMax frontleft = new CANSparkMax(OperatorConstants.frontleft, MotorType.kBrushless);
-  private final CANSparkMax backleft = new CANSparkMax(OperatorConstants.backleft, MotorType.kBrushless);
+  private final CANSparkMax frontleft = new CANSparkMax( OperatorConstants.frontLeft, MotorType.kBrushless); // Front Left Motor
+  private final CANSparkMax frontright = new CANSparkMax( OperatorConstants.frontRight, MotorType.kBrushless); // Front Right Motor
 
-  private final CANSparkMax frontright = new CANSparkMax(OperatorConstants.frontright, MotorType.kBrushless);
-  private final CANSparkMax backright = new CANSparkMax(OperatorConstants.backright, MotorType.kBrushless);
+  private final CANSparkMax backleft = new CANSparkMax( OperatorConstants.backLeft, MotorType.kBrushless ); // Back Left Motor
+  private final CANSparkMax backright = new CANSparkMax( OperatorConstants.backRight, MotorType.kBrushless ); // Back Right Motor
 
 
   public DriveTrain() {}
 
-  public void move(double leftY, double rightX)
+  
+  public void move( double leftY, double rightX )
   {
     // Inverts the back motors so they go in the same direction as the front ones.
-    backleft.setInverted(false);
-    backright.setInverted(false);
+    backleft.setInverted( false );
+    backright.setInverted( false );
 
     if (leftY > NumericConstants.deadzone) // If using the LEFT stick, the robot will move forwards and backwards.
     {
-      frontleft.set( leftY / 1.5 );
-      backleft.set( leftY / 1.5 );
+      frontleft.set( leftY * NumericConstants.driveSpeedLimit );
+      backleft.set( leftY * NumericConstants.driveSpeedLimit );
 
-      frontright.set( leftY / 1.5 );
-      backright.set( leftY / 1.5 );
+      frontright.set( leftY * NumericConstants.driveSpeedLimit );
+      backright.set( leftY * NumericConstants.driveSpeedLimit );
     }
     else if (rightX > NumericConstants.deadzone) // If using the RIGHT stick, the robot will turn.
     {
-      frontleft.set( rightX / 2 );
-      backleft.set( rightX / 2 );
+      frontleft.set( rightX * NumericConstants.turnSpeedLimit );
+      backleft.set( rightX * NumericConstants.turnSpeedLimit );
 
-      frontright.set( rightX / -2 );
-      backright.set( rightX / -2 );
+      frontright.set( rightX * NumericConstants.turnSpeedLimit * -1 );
+      backright.set( rightX * NumericConstants.turnSpeedLimit * -1 );
     }
   }
 

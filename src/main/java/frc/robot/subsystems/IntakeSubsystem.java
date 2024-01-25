@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intake.setSmartCurrentLimit(20);
         //Might need this line
         intake.setIdleMode(IdleMode.kBrake);
-        intake.burnFlash();
+       
 
         intake.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 300);   //For follower motors
         intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535); //Analog Sensor Voltage + Velocity + position
@@ -49,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intake.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535); //Duty Cycle Absolute Encoder Position and Abs angle
         intake.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535); //Duty Cycle Absolute Encoder Velocity + Frequency
         
-    
+        intake.burnFlash();
         
     }
 

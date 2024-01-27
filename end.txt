@@ -1,0 +1,7 @@
+6) Now this is simple, Here are some good habits you should follow
+* All controller stuff goes in RobotContainer.
+* Don't add your drivetrain as an instance directly into your Robot.java, instead go through your Container, otherwise, there can be 2 instances of the same object, that is not good.
+
+Now you're done with the course, you can now test out more stuff with the Romi robot or move on to your team's competition bot.
+Have fun and keep coding! 
+

@@ -8,13 +8,15 @@ public class ShooterCommand extends CommandBase
 {
   ShooterSubsytem shooter;
   CommandXboxController controller;
-
   private static boolean finished = false;
+  
 
-  public ShooterCommand( ShooterSubsytem shooter, CommandXboxController controller )
+  public ShooterCommand( ShooterSubsytem shooter, CommandXboxController controlle , )
   {
     this.shooter = shooter;
     this.controller = controller;
+    
+    
   }
 
 

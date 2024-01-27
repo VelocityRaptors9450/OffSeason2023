@@ -24,6 +24,13 @@ public class ShooterSubsytem extends SubsystemBase
     left.set( NumericConstants.shooterSpeed );
     right.set( NumericConstants.shooterSpeed );
   }
+  public void shoot(double speed)
+  {
+    left.setInverted( true );
+
+    left.set(speed);
+    right.set(speed);
+  }
 
 
   @Override

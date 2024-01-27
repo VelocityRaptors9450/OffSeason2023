@@ -47,7 +47,9 @@ public class Robot extends TimedRobot
   }
   
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_robotContainer.drive.x.set(1);
+  }
 
 
   @Override

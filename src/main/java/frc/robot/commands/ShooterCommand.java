@@ -11,7 +11,7 @@ public class ShooterCommand extends CommandBase
   private static boolean finished = false;
   
 
-  public ShooterCommand( ShooterSubsytem shooter, CommandXboxController controlle , )
+  public ShooterCommand( ShooterSubsytem shooter, CommandXboxController controller )
   {
     this.shooter = shooter;
     this.controller = controller;

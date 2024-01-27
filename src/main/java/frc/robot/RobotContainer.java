@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer
 {
   /* Subsystem Declarations */
-  private final DriveTrain drive = new DriveTrain();
+  public final DriveTrain drive = new DriveTrain();
   private final ShooterSubsytem shooter = new ShooterSubsytem();
 
   // Controller Definition

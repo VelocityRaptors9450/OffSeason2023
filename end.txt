@@ -10,6 +10,8 @@ instead go through your Container, otherwise, there can be 2 instances of the sa
 
 * Use commands to organize multiple methods to into a larger system for a specific job.
 
+* Use comments often to explain a body of code especially when working with others.
+
 Now you're done with the course, you can now test out more stuff with the Romi robot or move onto one of your team's robots.
 Have fun and keep coding! 
 

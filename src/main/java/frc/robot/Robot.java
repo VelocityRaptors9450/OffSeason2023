@@ -19,19 +19,23 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer Container;
-  /*  2) Now we have to get the functions from the RomiDriveTrain.java this is the code.
-  This code is written for you this once, but from now on you will have to write these *objects* yourselves. This is the syntax for objects:
-  public <name of file> <variable name> = new <name of file>();    */
-  public RomiDrivetrain drive = new RomiDrivetrain();
+  /*  2) Now create a new object calling the RomiDrivetrain class called drive. We will use this to get acces to the classes methods
+    Declare the object below
+  */
+
+
+
   /*2) The Robot.java file is the main program with it being the program that runs when we actually simulate the code.
   To run the program turn on the Romi and connect to the WI-FI then press ctrl+shift+p (cmd+shift+p on Mac) to open the command palette then type 
   "simulate" and select "WPILIB: Simulate Robot Code". After processing for a bit A new simulated window will open with all 
   the things needed to control the robot such as the different modes, controllers, & controller statistics.
   Watch this video to learn about the simulation interface https://www.youtube.com/watch?v=XqvFC604eRo */
   
-  /*2) OPTIONAL (but recommended): If you want to test this yourself, put your drive.go1Foot() functions with the parameters 1,1 in the
+  /*2) Now to test this yourself, put your drive.go1Foot() functions with the parameters 1,1 in the
   autonomousPeriodic() method below and simulate the program connected to a Romi Wi-Fi */ 
-  //2->3) Now go to RobotContainer.java for the next part of the program (recommend deleting section 2 comments for readability)
+
+  /*2->3) Now go to RobotContainer.java for the next part of the program, but delete the 
+  RomiDrivetrain object, otherwise you will get errors in the future (also recommend deleting section 2 comments for readability)*/
 
 
 

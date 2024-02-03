@@ -14,15 +14,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 public class RobotContainer {
-  private final RomiDrivetrain drive = new RomiDrivetrain();
+  
+  //3) We will also need to re-create a new RomiDrivetrain object in this file, call it drive.
   
   /*3) We can see the RomiDrivetrain is here above as an object called drive
   Below, we have declared an CommandXboxController object called controller for
   Xbox controller inputs.
-  As we can see the syntax is similar to the RomiDrivetrain, but has a 0 as an parameter. 
-  This 0 indicates that the controller will be in port 0.
-  Don't worry much about this parameter though. 
-  Now go to the bottom of this program and read the comments there to start coding.*/
+  We can see this object uses a constructor because it has parameters, this parameter is the port value
+  of the controller we use, this value doesn't metter much though for now. After inspecting the line below, 
+  go to the bottom of the file and search for the the next "3)" file*/
   public CommandXboxController controller = new CommandXboxController (0);
 
 
@@ -88,8 +88,9 @@ public class RobotContainer {
 
 
   
-  /*Now that you're done with the methods, go to the Robot.java teleopPeriodic() and use the already created object Container to test 
-  one of the 2 methods and run the program connect controller and go to teleoperated mode, repeat this with the other method as well. 
+  /*Now that you're done with the methods, go to the Robot.java and create a new RobotContainer object called container. Then go to the
+  teleopPeriodic() method and test your methods by calling the methods above from this class in the teleopPeriodic() method.
+  *Remeber to do one method at a time to avoid problems.
   Rememeber to come back to this comment afterwards (look down to the next comment for the next intructions)*/
 
  

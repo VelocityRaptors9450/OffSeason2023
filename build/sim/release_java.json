@@ -1,0 +1,33 @@
+[
+  {
+    "type": "java",
+    "name": "jar (in project OffSeason2023)",
+    "extensions": [
+      {
+        "name": "Sim GUI",
+        "libName": "/Users/aadishah/Documents/GitHub/OffSeason2023/build/jni/release/libhalsim_gui.dylib",
+        "defaultEnabled": true
+      },
+      {
+        "name": "Sim Websockets Client",
+        "libName": "/Users/aadishah/Documents/GitHub/OffSeason2023/build/jni/release/libhalsim_ws_client.dylib",
+        "defaultEnabled": true
+      },
+      {
+        "name": "Sim Websockets Server",
+        "libName": "/Users/aadishah/Documents/GitHub/OffSeason2023/build/jni/release/libhalsim_ws_server.dylib",
+        "defaultEnabled": true
+      },
+      {
+        "name": "Use Real DriverStation",
+        "libName": "/Users/aadishah/Documents/GitHub/OffSeason2023/build/jni/release/libhalsim_ds_socket.dylib",
+        "defaultEnabled": false
+      }
+    ],
+    "environment": {
+      "HALSIMWS_HOST": "10.0.0.2"
+    },
+    "libraryDir": "/Users/aadishah/Documents/GitHub/OffSeason2023/build/jni/release",
+    "mainClassName": "frc.robot.Main"
+  }
+]

@@ -1,7 +1,17 @@
-6) Now this is simple, Here are some good habits you should follow
-* All controller stuff goes in RobotContainer.
-* Don't add your drivetrain as an instance directly into your Robot.java, instead go through your Container, otherwise, there can be 2 instances of the same object, that is not good.
+6) Now this is simple, Here are some good things to remember while coding 
 
-Now you're done with the course, you can now test out more stuff with the Romi robot or move on to your team's competition bot.
+* All controller based code goes in RobotContainer.
+
+* Don't add your drivetrain as an instance directly into your Robot.java,
+instead go through your Container, otherwise, there can be 2 instances of the same object, that is not good and can result in an error.
+
+* Subsystems are used to store methods for specific parts of the robot 
+(the drivetrain, arm, and shooter are all examples of different parts of the robot that require their own subsystems).
+
+* Use commands to organize multiple methods to into a larger system for a specific job.
+
+* Use comments often to explain a body of code especially when working with others.
+
+Now you're done with the course, you can now test out more stuff with the Romi robot or move onto one of your team's robots.
 Have fun and keep coding! 
 

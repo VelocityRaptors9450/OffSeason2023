@@ -13,7 +13,7 @@ public class ExampleCommand extends CommandBase {
   boolean isFinished = false;
   private final RomiDrivetrain subsystem;
 
-  //This method helps define variables used in the command by taking in parameters 
+  //This is the constructor of the program that helps assign values using parameters
   public ExampleCommand(RomiDrivetrain subsystem) {
     this.subsystem = subsystem;// this will set the command variable subsystem to the parameter subsystem
     
